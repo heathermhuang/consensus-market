@@ -7,5 +7,7 @@ typechain-types
 dist
 .wrangler
 test-results
-qa-evidence/screenshots
+qa-evidence/*.png
+qa-evidence/report.json
 .env
+.claude/skills/
