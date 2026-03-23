@@ -201,6 +201,11 @@ h4 {
   text-wrap: balance;
 }
 
+h3,
+h4 {
+  letter-spacing: -0.01em;
+}
+
 h1 {
   font-size: clamp(2rem, 4vw, 3.45rem);
 }
@@ -969,7 +974,8 @@ a {
 .market-title-copy {
   display: grid;
   gap: 8px;
-  max-width: 22rem;
+  flex: 1;
+  min-width: 0;
 }
 
 .board-metrics {
@@ -1013,8 +1019,8 @@ a {
 
 /* Interactive chips get a taller tap target via padding expansion */
 .chip {
-  min-height: 38px;
-  padding: 0 14px;
+  min-height: 44px;
+  padding: 0 16px;
 }
 
 .chip,
@@ -1408,6 +1414,8 @@ a {
 
 .market-section-nav {
   padding-top: 14px;
+  padding-bottom: 6px;
+  margin-bottom: 4px;
   border-top: 1px solid var(--panel-divider);
   gap: 8px;
   overflow-x: auto;
@@ -1499,9 +1507,11 @@ a {
   margin-top: 7px;
   margin-bottom: 5px;
   font-family: "IBM Plex Mono", monospace;
-  font-size: 1rem;
+  font-size: 1.08rem;
+  font-weight: 700;
   color: var(--navy);
   font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
 }
 
 .market-signal-card p {
@@ -2700,6 +2710,9 @@ a {
 }
 
 .app-footer-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: var(--blue);
   transition: color var(--transition);
 }
