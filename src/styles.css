@@ -1026,12 +1026,25 @@ a {
 
 .chip {
   cursor: pointer;
+  transition:
+    background var(--transition),
+    color var(--transition),
+    border-color var(--transition),
+    box-shadow var(--transition);
+}
+
+.chip:hover {
+  background: rgba(255, 255, 255, 1);
+  border-color: rgba(47, 104, 154, 0.2);
+  color: var(--text);
+  box-shadow: 0 4px 10px rgba(26, 19, 13, 0.06);
 }
 
 .chip.active {
   color: #fff;
   background: var(--navy);
   border-color: var(--navy);
+  box-shadow: 0 8px 18px rgba(23, 50, 76, 0.18);
 }
 
 .chip-removable::after {
