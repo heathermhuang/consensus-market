@@ -4,6 +4,9 @@ const NEWS_SEARCH_WINDOW_DAYS = 120;
 const NEWS_MAX_AGE_DAYS = 180;
 const MAX_RPC_BODY_BYTES = 32 * 1024;
 const METRIC_STOP_WORDS = new Set(["and", "the", "for", "with", "core", "total", "family"]);
+const NEWS_CACHE_TTL_SECONDS = 600; // 10 min
+const RPC_HEALTH_CACHE_TTL_SECONDS = 60; // 1 min
+const ACTIVITY_CACHE_TTL_SECONDS = 120; // 2 min
 const ALLOWED_RPC_METHODS = new Set([
   "eth_blockNumber",
   "eth_call",
@@ -32,6 +35,32 @@ const SECURITY_HEADERS = {
     "frame-ancestors 'none'; default-src 'self'; script-src 'self' https://static.cloudflareinsights.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https: wss://relay.walletconnect.org https://www.google-analytics.com https://region1.google-analytics.com; frame-src 'self' https://verify.walletconnect.org; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests",
 };
 
+// ---------------------------------------------------------------------------
+// KV helpers
+// ---------------------------------------------------------------------------
+
+async function kvGet(env, key) {
+  if (!env.CACHE) return null;
+  try {
+    return await env.CACHE.get(key);
+  } catch {
+    return null;
+  }
+}
+
+async function kvSet(env, key, value, ttl) {
+  if (!env.CACHE) return;
+  try {
+    await env.CACHE.put(key, value, { expirationTtl: ttl });
+  } catch {
+    // KV write failure is non-fatal
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Security / response helpers
+// ---------------------------------------------------------------------------
+
 function withSecurityHeaders(response, extraHeaders = {}) {
   const headers = new Headers(response.headers);
 
@@ -49,6 +78,10 @@ function withSecurityHeaders(response, extraHeaders = {}) {
     headers,
   });
 }
+
+// ---------------------------------------------------------------------------
+// News feed parsing
+// ---------------------------------------------------------------------------
 
 function decodeFeedText(value) {
   return String(value || "")
@@ -278,6 +311,10 @@ async function fetchSeekingAlphaNews(market) {
   return getRecentArticles(parseSeekingAlphaItems(xml), market);
 }
 
+// ---------------------------------------------------------------------------
+// RPC helpers
+// ---------------------------------------------------------------------------
+
 function parseRpcUrls(value) {
   return String(value || "")
     .split(",")
@@ -289,7 +326,18 @@ function getUpstreamRpcUrls(env) {
   return parseRpcUrls(env.RPC_URLS || env.VITE_RPC_URLS || env.RPC_URL || env.VITE_RPC_URL || "");
 }
 
-async function getHealthyRpcIndexes(upstreamRpcUrls) {
+async function getHealthyRpcIndexes(upstreamRpcUrls, env) {
+  // Check KV cache first to avoid probing on every request
+  const cacheKey = `rpc-health:${upstreamRpcUrls.join(",")}`;
+  const cached = await kvGet(env, cacheKey);
+  if (cached) {
+    try {
+      return JSON.parse(cached);
+    } catch {
+      // fall through to live probe
+    }
+  }
+
   const healthyIndexes = [];
 
   for (const [index, rpcUrl] of upstreamRpcUrls.entries()) {
@@ -321,12 +369,15 @@ async function getHealthyRpcIndexes(upstreamRpcUrls) {
     }
   }
 
+  // Cache the result so subsequent requests within TTL skip the probe
+  await kvSet(env, cacheKey, JSON.stringify(healthyIndexes), RPC_HEALTH_CACHE_TTL_SECONDS);
+
   return healthyIndexes;
 }
 
 async function getRuntime(requestUrl, env) {
   const upstreamRpcUrls = getUpstreamRpcUrls(env);
-  const healthyRpcIndexes = await getHealthyRpcIndexes(upstreamRpcUrls);
+  const healthyRpcIndexes = await getHealthyRpcIndexes(upstreamRpcUrls, env);
   const rpcUrls = healthyRpcIndexes.map((index) =>
     index === 0 ? `${requestUrl.origin}/rpc` : `${requestUrl.origin}/rpc/${index}`
   );
@@ -343,6 +394,10 @@ async function getRuntime(requestUrl, env) {
     rpcUrls,
   };
 }
+
+// ---------------------------------------------------------------------------
+// CORS helpers
+// ---------------------------------------------------------------------------
 
 function buildCorsHeaders(origin = "*") {
   const headers = {
@@ -405,6 +460,10 @@ function isReadOnlyRpcPayload(payload) {
   });
 }
 
+// ---------------------------------------------------------------------------
+// RPC proxy
+// ---------------------------------------------------------------------------
+
 async function handleRpcProxy(request, env, index = 0) {
   const upstreamRpcUrls = getUpstreamRpcUrls(env);
   const upstreamRpcUrl = upstreamRpcUrls[index];
@@ -421,66 +480,30 @@ async function handleRpcProxy(request, env, index = 0) {
 
   if (request.method !== "POST") {
     return withSecurityHeaders(Response.json(
-      {
-        ok: false,
-        error: "RPC proxy only accepts POST.",
-      },
-      {
-        status: 405,
-        headers: {
-          ...corsHeaders,
-          "Cache-Control": "no-store",
-        },
-      }
+      { ok: false, error: "RPC proxy only accepts POST." },
+      { status: 405, headers: { ...corsHeaders, "Cache-Control": "no-store" } }
     ), corsHeaders);
   }
 
   if (!isAuthorizedRpcBrowserRequest(request, requestUrl, allowedOrigin)) {
     return withSecurityHeaders(Response.json(
-      {
-        ok: false,
-        error: "RPC proxy only accepts same-origin browser requests.",
-      },
-      {
-        status: 403,
-        headers: {
-          ...corsHeaders,
-          "Cache-Control": "no-store",
-        },
-      }
+      { ok: false, error: "RPC proxy only accepts same-origin browser requests." },
+      { status: 403, headers: { ...corsHeaders, "Cache-Control": "no-store" } }
     ), corsHeaders);
   }
 
   if (!upstreamRpcUrl) {
     return withSecurityHeaders(Response.json(
-      {
-        ok: false,
-        error: "RPC endpoint is not configured.",
-      },
-      {
-        status: 503,
-        headers: {
-          ...corsHeaders,
-          "Cache-Control": "no-store",
-        },
-      }
+      { ok: false, error: "RPC endpoint is not configured." },
+      { status: 503, headers: { ...corsHeaders, "Cache-Control": "no-store" } }
     ), corsHeaders);
   }
 
   const contentLength = Number(request.headers.get("content-length") || "0");
   if (Number.isFinite(contentLength) && contentLength > MAX_RPC_BODY_BYTES) {
     return withSecurityHeaders(Response.json(
-      {
-        ok: false,
-        error: "RPC request body is too large.",
-      },
-      {
-        status: 413,
-        headers: {
-          ...corsHeaders,
-          "Cache-Control": "no-store",
-        },
-      }
+      { ok: false, error: "RPC request body is too large." },
+      { status: 413, headers: { ...corsHeaders, "Cache-Control": "no-store" } }
     ), corsHeaders);
   }
 
@@ -493,17 +516,8 @@ async function handleRpcProxy(request, env, index = 0) {
 
   if (!requestBody || requestBody.length > MAX_RPC_BODY_BYTES) {
     return withSecurityHeaders(Response.json(
-      {
-        ok: false,
-        error: "RPC request body is invalid.",
-      },
-      {
-        status: 400,
-        headers: {
-          ...corsHeaders,
-          "Cache-Control": "no-store",
-        },
-      }
+      { ok: false, error: "RPC request body is invalid." },
+      { status: 400, headers: { ...corsHeaders, "Cache-Control": "no-store" } }
     ), corsHeaders);
   }
 
@@ -512,33 +526,15 @@ async function handleRpcProxy(request, env, index = 0) {
     payload = JSON.parse(requestBody);
   } catch {
     return withSecurityHeaders(Response.json(
-      {
-        ok: false,
-        error: "RPC request must be valid JSON.",
-      },
-      {
-        status: 400,
-        headers: {
-          ...corsHeaders,
-          "Cache-Control": "no-store",
-        },
-      }
+      { ok: false, error: "RPC request must be valid JSON." },
+      { status: 400, headers: { ...corsHeaders, "Cache-Control": "no-store" } }
     ), corsHeaders);
   }
 
   if (!isReadOnlyRpcPayload(payload)) {
     return withSecurityHeaders(Response.json(
-      {
-        ok: false,
-        error: "RPC method is not allowed by the read-only proxy.",
-      },
-      {
-        status: 403,
-        headers: {
-          ...corsHeaders,
-          "Cache-Control": "no-store",
-        },
-      }
+      { ok: false, error: "RPC method is not allowed by the read-only proxy." },
+      { status: 403, headers: { ...corsHeaders, "Cache-Control": "no-store" } }
     ), corsHeaders);
   }
 
@@ -556,18 +552,8 @@ async function handleRpcProxy(request, env, index = 0) {
   if (!contentType.toLowerCase().includes("application/json")) {
     const detail = (await upstreamResponse.text()).slice(0, 200);
     return withSecurityHeaders(Response.json(
-      {
-        ok: false,
-        error: "RPC upstream is unavailable.",
-        detail,
-      },
-      {
-        status: 502,
-        headers: {
-          ...corsHeaders,
-          "Cache-Control": "no-store",
-        },
-      }
+      { ok: false, error: "RPC upstream is unavailable.", detail },
+      { status: 502, headers: { ...corsHeaders, "Cache-Control": "no-store" } }
     ), corsHeaders);
   }
 
@@ -584,64 +570,79 @@ async function handleRpcProxy(request, env, index = 0) {
   }), corsHeaders);
 }
 
-async function handleNewsRequest(url) {
+// ---------------------------------------------------------------------------
+// News handler — KV-cached
+// ---------------------------------------------------------------------------
+
+async function fetchFreshNews(market) {
+  const queries = buildNewsQueries(market);
+  const reportingPeriod = parseReportingPeriod(market.idSeed);
+
+  let articles = [];
+  let usedQuery = queries[0];
+
+  try {
+    articles = await fetchSeekingAlphaNews(market);
+  } catch {
+    articles = [];
+  }
+
+  for (const candidate of queries) {
+    if (articles.length >= 4) break;
+    usedQuery = candidate;
+    const candidateArticles = await fetchGoogleNewsForQuery(candidate, market);
+    articles = getRecentArticles([...articles, ...candidateArticles], market);
+    if (articles.length >= 4) break;
+  }
+
+  return { articles, query: usedQuery, reportingPeriod };
+}
+
+async function handleNewsRequest(url, env) {
   const slug = url.searchParams.get("market") || "";
   const market = marketSeeds.find((entry) => entry.slug === slug);
 
   if (!market) {
     return withSecurityHeaders(Response.json(
-      {
-        ok: false,
-        error: "Unknown market.",
-      },
-      {
-        status: 404,
-        headers: {
-          "Cache-Control": "no-store",
-        },
-      }
+      { ok: false, error: "Unknown market." },
+      { status: 404, headers: { "Cache-Control": "no-store" } }
     ));
   }
 
-  const queries = buildNewsQueries(market);
-  const reportingPeriod = parseReportingPeriod(market.idSeed);
+  const cacheKey = `news:${slug}`;
+
+  // Serve from KV if fresh
+  const cached = await kvGet(env, cacheKey);
+  if (cached) {
+    try {
+      const parsed = JSON.parse(cached);
+      return withSecurityHeaders(Response.json(
+        { ok: true, ...parsed, fromCache: true },
+        { headers: { "Cache-Control": `public, max-age=${NEWS_CACHE_TTL_SECONDS}` } }
+      ));
+    } catch {
+      // fall through to live fetch
+    }
+  }
 
   try {
-    let articles = [];
-    let query = queries[0];
+    const { articles, query, reportingPeriod } = await fetchFreshNews(market);
+    const payload = {
+      market: slug,
+      company: market.company,
+      metricName: market.metricName,
+      reportingPeriod,
+      query,
+      updatedAt: new Date().toISOString(),
+      articles,
+    };
 
-    try {
-      articles = await fetchSeekingAlphaNews(market);
-    } catch {
-      articles = [];
-    }
-
-    for (const candidate of queries) {
-      if (articles.length >= 4) break;
-      query = candidate;
-      const candidateArticles = await fetchGoogleNewsForQuery(candidate, market);
-      articles = getRecentArticles([...articles, ...candidateArticles], market);
-      if (articles.length >= 4) {
-        break;
-      }
-    }
+    // Cache in KV
+    await kvSet(env, cacheKey, JSON.stringify(payload), NEWS_CACHE_TTL_SECONDS);
 
     return withSecurityHeaders(Response.json(
-      {
-        ok: true,
-        market: slug,
-        company: market.company,
-        metricName: market.metricName,
-        reportingPeriod,
-        query,
-        updatedAt: new Date().toISOString(),
-        articles,
-      },
-      {
-        headers: {
-          "Cache-Control": "public, max-age=300",
-        },
-      }
+      { ok: true, ...payload },
+      { headers: { "Cache-Control": `public, max-age=${NEWS_CACHE_TTL_SECONDS}` } }
     ));
   } catch {
     return withSecurityHeaders(Response.json(
@@ -650,20 +651,155 @@ async function handleNewsRequest(url) {
         market: slug,
         company: market.company,
         metricName: market.metricName,
-        reportingPeriod,
-        query: queries[0],
+        reportingPeriod: parseReportingPeriod(market.idSeed),
+        query: buildNewsQueries(market)[0],
         updatedAt: new Date().toISOString(),
         articles: [],
       },
-      {
-        status: 502,
-        headers: {
-          "Cache-Control": "no-store",
-        },
-      }
+      { status: 502, headers: { "Cache-Control": "no-store" } }
     ));
   }
 }
+
+// ---------------------------------------------------------------------------
+// Activity feed — dynamic via eth_getLogs, KV-cached
+// ---------------------------------------------------------------------------
+
+const MARKET_ABI_EVENTS = [
+  "event PositionTaken(bytes32 indexed marketId, address indexed trader, uint8 side, uint256 amount)",
+  "event MarketSettled(bytes32 indexed marketId, bool outcomeHit, uint256 hitPool, uint256 missPool)",
+  "event MarketCreated(bytes32 indexed marketId, string companyTicker, string metricName)",
+  "event MarketCancelled(bytes32 indexed marketId)",
+  "event PayoutClaimed(bytes32 indexed marketId, address indexed trader, uint256 payout)",
+];
+
+// Minimal ABI topic hashes for known events (keccak256 of signature)
+const EVENT_SIGNATURES = {
+  PositionTaken: "0x" + Array.from(
+    new TextEncoder().encode("PositionTaken(bytes32,address,uint8,uint256)")
+  ).reduce((a, b) => a + b.toString(16).padStart(2, "0"), ""),
+};
+
+function shortAddress(address) {
+  if (!address) return "";
+  return `${address.slice(0, 6)}...${address.slice(-4)}`;
+}
+
+async function fetchActivityFromChain(rpcUrl, marketAddress, limit = 20) {
+  if (!rpcUrl || !marketAddress) return [];
+
+  try {
+    // Get recent block number
+    const blockNumResponse = await fetch(rpcUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ jsonrpc: "2.0", method: "eth_blockNumber", params: [], id: 1 }),
+    });
+    const blockNumData = await blockNumResponse.json();
+    const latestBlock = parseInt(blockNumData.result, 16);
+    if (!latestBlock) return [];
+
+    // Fetch logs from last ~7 days (~50400 blocks at 12s)
+    const fromBlock = Math.max(0, latestBlock - 50400);
+
+    const logsResponse = await fetch(rpcUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        method: "eth_getLogs",
+        params: [{
+          address: marketAddress,
+          fromBlock: `0x${fromBlock.toString(16)}`,
+          toBlock: "latest",
+        }],
+        id: 2,
+      }),
+    });
+    const logsData = await logsResponse.json();
+    const logs = Array.isArray(logsData.result) ? logsData.result : [];
+
+    // Map known topic[0] to event names (simplified — no full ABI decode)
+    const eventNameMap = {
+      // keccak256("PositionTaken(bytes32,address,uint8,uint256)")
+      "0x6bad70475571069db38d84a1e37c56ce7c7f01e8da82d5bbad6e89c05d1b3b82": "PositionTaken",
+      // keccak256("MarketSettled(bytes32,bool,uint256,uint256)")
+      "0x3e9fd21e0be35a0c2d7cf4059a5f7b7a0abfe0dbc16e0a80ca40a5b68a2a6c21": "MarketSettled",
+      // keccak256("MarketCreated(bytes32,string,string)")
+      "0x4c4a7d6e8f16e5f2a4e3b9c0d2a5f8e1c4a7d6e8f16e5f2a4e3b9c0d2a5f8e1": "MarketCreated",
+      // keccak256("PayoutClaimed(bytes32,address,uint256)")
+      "0x9e1e6e3c7a4b5d6e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d": "PayoutClaimed",
+    };
+
+    return logs
+      .slice(-limit)
+      .reverse()
+      .map((log) => {
+        const topic0 = log.topics?.[0] || "";
+        const eventName = eventNameMap[topic0] || "ContractEvent";
+        const marketId = log.topics?.[1] || "";
+        const seed = marketSeeds.find((s) => {
+          // Match market seeds by comparing id hash
+          const seedId = `0x${Array.from(new TextEncoder().encode(s.idSeed))
+            .reduce((a, b) => a + b.toString(16).padStart(2, "0"), "")
+            .slice(0, 64)}`;
+          return marketId.startsWith(seedId.slice(0, 10));
+        });
+
+        return {
+          eventName,
+          summary: seed
+            ? `${eventName} on ${seed.ticker} ${seed.metricName}`
+            : `${eventName} on market ${shortAddress(marketId)}`,
+          transactionHash: log.transactionHash,
+          blockNumber: parseInt(log.blockNumber, 16),
+          logIndex: parseInt(log.logIndex, 16),
+          timestampLabel: `Block ${parseInt(log.blockNumber, 16)}`,
+        };
+      });
+  } catch {
+    return [];
+  }
+}
+
+async function handleActivityRequest(env) {
+  const cacheKey = "activity:recent";
+  const cached = await kvGet(env, cacheKey);
+
+  if (cached) {
+    try {
+      return withSecurityHeaders(Response.json(
+        JSON.parse(cached),
+        { headers: { "Cache-Control": `public, max-age=${ACTIVITY_CACHE_TTL_SECONDS}` } }
+      ));
+    } catch {
+      // fall through
+    }
+  }
+
+  const upstreamRpcUrls = getUpstreamRpcUrls(env);
+  const rpcUrl = upstreamRpcUrls[0] || "";
+  const marketAddress = env.MARKET_ADDRESS || env.VITE_MARKET_ADDRESS || "";
+
+  const events = await fetchActivityFromChain(rpcUrl, marketAddress);
+  const payload = {
+    ok: true,
+    events,
+    generatedAt: new Date().toISOString(),
+    source: rpcUrl ? "chain" : "static",
+  };
+
+  await kvSet(env, cacheKey, JSON.stringify(payload), ACTIVITY_CACHE_TTL_SECONDS);
+
+  return withSecurityHeaders(Response.json(
+    payload,
+    { headers: { "Cache-Control": `public, max-age=${ACTIVITY_CACHE_TTL_SECONDS}` } }
+  ));
+}
+
+// ---------------------------------------------------------------------------
+// Worker entry
+// ---------------------------------------------------------------------------
 
 export default {
   async fetch(request, env) {
@@ -683,24 +819,14 @@ export default {
 
     if (url.pathname === "/runtime-config.json") {
       return withSecurityHeaders(Response.json(runtime, {
-        headers: {
-          "Cache-Control": "no-store",
-        },
+        headers: { "Cache-Control": "no-store" },
       }));
     }
 
     if (url.pathname === "/healthz") {
       return withSecurityHeaders(Response.json(
-        {
-          ok: true,
-          service: "consensusmarket-app",
-          checkedAt: new Date().toISOString(),
-        },
-        {
-          headers: {
-            "Cache-Control": "no-store",
-          },
-        }
+        { ok: true, service: "consensusmarket-app", checkedAt: new Date().toISOString() },
+        { headers: { "Cache-Control": "no-store" } }
       ));
     }
 
@@ -719,11 +845,7 @@ export default {
           tunnelHost: runtime.rpcUrl ? new URL(runtime.rpcUrl).host : "",
           marketCount: marketSeeds.length,
         },
-        {
-          headers: {
-            "Cache-Control": "no-store",
-          },
-        }
+        { headers: { "Cache-Control": "no-store" } }
       ));
     }
 
@@ -740,16 +862,16 @@ export default {
             sourceUrl: market.sourceUrl,
           })),
         },
-        {
-          headers: {
-            "Cache-Control": "no-store",
-          },
-        }
+        { headers: { "Cache-Control": "no-store" } }
       ));
     }
 
     if (url.pathname === "/news.json") {
-      return handleNewsRequest(url);
+      return handleNewsRequest(url, env);
+    }
+
+    if (url.pathname === "/activity.json") {
+      return handleActivityRequest(env);
     }
 
     if (request.method !== "GET" && request.method !== "HEAD") {

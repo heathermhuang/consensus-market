@@ -17,6 +17,13 @@
       "zone_name": "capital.markets"
     }
   ],
+  "kv_namespaces": [
+    {
+      "binding": "CACHE",
+      "id": "",
+      "preview_id": ""
+    }
+  ],
   "vars": {
     "VITE_CHAIN_ID": "1",
     "VITE_MARKET_ADDRESS": "",
@@ -29,5 +36,20 @@
   "workers_dev": true,
   "observability": {
     "enabled": true
+  },
+  "env": {
+    "staging": {
+      "name": "capital-markets-app-staging",
+      "vars": {
+        "VITE_CHAIN_ID": "1",
+        "VITE_MARKET_ADDRESS": "",
+        "VITE_ORACLE_ADDRESS": "",
+        "VITE_REGISTRY_ADDRESS": "",
+        "VITE_OPERATOR_ADDRESS": "",
+        "VITE_RPC_URL": "",
+        "VITE_RPC_URLS": ""
+      },
+      "workers_dev": true
+    }
   }
 }
