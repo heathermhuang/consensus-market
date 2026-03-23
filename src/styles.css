@@ -840,6 +840,14 @@ a {
   font-variant-numeric: tabular-nums;
 }
 
+/* Numeric-heavy cards get mono for sharper data presentation */
+.snapshot-card strong,
+.story-stat strong {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.96rem;
+  letter-spacing: -0.01em;
+}
+
 .panel-heading {
   display: flex;
   justify-content: space-between;
@@ -2026,7 +2034,7 @@ a {
 }
 
 .activity-card {
-  padding: 16px 18px;
+  padding: 14px 16px;
 }
 
 .admin-market-toolbar {
@@ -2226,7 +2234,10 @@ a {
 
 .revision-card strong {
   color: var(--navy);
-  font-size: 1.05rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.96rem;
+  letter-spacing: -0.01em;
 }
 
 .revision-card p {
@@ -2393,11 +2404,27 @@ a {
 }
 
 .history-period {
+  font-family: "IBM Plex Mono", monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--navy);
+}
+
+/* Consensus and actual numeric columns use mono for legibility */
+.history-row-summary > .history-cell:nth-child(2),
+.history-row-summary > .history-cell:nth-child(3) {
+  font-family: "IBM Plex Mono", monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.86rem;
   color: var(--navy);
 }
 
 .history-outcome {
   align-content: center;
+  font-weight: 700;
+  font-size: 0.86rem;
 }
 
 .history-outcome-beat {
