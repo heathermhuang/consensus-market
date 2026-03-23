@@ -11,3 +11,4 @@ qa-evidence/*.png
 qa-evidence/report.json
 .env
 .claude/skills/
+.gstack/
