@@ -1,0 +1,11 @@
+node_modules
+.npm-cache
+artifacts
+cache
+coverage
+typechain-types
+dist
+.wrangler
+test-results
+qa-evidence/screenshots
+.env

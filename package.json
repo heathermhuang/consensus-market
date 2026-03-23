@@ -1,0 +1,67 @@
+{
+  "name": "pred",
+  "version": "1.0.0",
+  "description": "Compliance-first KPI prediction market prototype",
+  "type": "module",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "scripts": {
+    "build": "npm run contracts:build && npm run frontend:build",
+    "contracts:artifacts:clean": "node scripts/clean-hardhat-artifacts.mjs",
+    "cf:domain:attach": "node scripts/attach-custom-domain.mjs",
+    "cf:runtime:publish": "node scripts/publish-runtime-manifest.mjs",
+    "cf:vars:set": "node scripts/set-worker-runtime-vars.mjs",
+    "contracts:admin": "node scripts/operator-actions.mjs",
+    "contracts:build": "npm run contracts:artifacts:clean && hardhat compile",
+    "deploy:cf:prod": "wrangler pages deploy dist --project-name capital-markets",
+    "deploy:worker": "node scripts/prepare-worker-assets.mjs && wrangler deploy --config wrangler.worker.jsonc",
+    "demo:deploy": "hardhat run scripts/bootstrap.js",
+    "dev:node": "hardhat node",
+    "events:index": "node scripts/index-events.mjs",
+    "frontend:build": "vite build",
+    "frontend:dev": "vite",
+    "frontend:preview": "vite preview",
+    "markets:sync": "node scripts/sync-seed-markets.mjs",
+    "qa:smoke:live": "playwright test qa-evidence/tests/live-smoke.spec.js --reporter=line",
+    "validate:prod": "node scripts/validate-production.mjs",
+    "validate:prod:live": "VALIDATE_BASE_URL=https://consensusmarket.com node scripts/validate-production.mjs",
+    "deploy:prod": "npm run validate:prod && npm run deploy:worker && npm run validate:prod:live",
+    "runtime:manifest": "node scripts/build-runtime-manifest.mjs",
+    "test": "npm run contracts:artifacts:clean && hardhat test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-ethers": "^4.0.6",
+    "@nomicfoundation/hardhat-ethers-chai-matchers": "^3.0.3",
+    "@nomicfoundation/hardhat-mocha": "^3.0.14",
+    "@playwright/test": "^1.58.2",
+    "@types/chai": "^5.2.3",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "chai": "^6.2.0",
+    "hardhat": "^3.2.0",
+    "mocha": "^11.7.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3",
+    "vite": "^8.0.1",
+    "wrangler": "^4.76.0"
+  },
+  "dependencies": {
+    "@powfaucet/client": "^2.4.2",
+    "@walletconnect/ethereum-provider": "^2.23.8",
+    "ethers": "^6.16.0",
+    "qrcode": "^1.5.4",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  },
+  "overrides": {
+    "diff": "8.0.3",
+    "serialize-javascript": "7.0.4"
+  }
+}
