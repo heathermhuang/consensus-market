@@ -199,7 +199,7 @@ export default function MarketView({
 
           {marketSurface === "overview" ? (
             <div className="market-hero-actions">
-              <button type="button" className="primary" onClick={copySelectedMarketLink}>
+              <button type="button" className="secondary" onClick={copySelectedMarketLink}>
                 Copy market link
               </button>
               <button type="button" className="ghost" onClick={refreshNow} disabled={busyAction !== ""}>

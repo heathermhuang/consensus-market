@@ -237,7 +237,6 @@ export default function BoardView({
                             {marketStatus}
                           </span>
                           <span className="hero-pill">{market.reportingPeriod}</span>
-                          <span className="hero-pill">{market.focus}</span>
                         </div>
                         <h3>{market.company}</h3>
                         <p>{market.metricName}</p>
