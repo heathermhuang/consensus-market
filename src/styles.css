@@ -557,7 +557,7 @@ a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 36px;
+  min-height: 34px;
   padding: 0 12px;
   border-radius: 999px;
   border: 1px solid transparent;
@@ -1044,6 +1044,7 @@ a {
   font-family: "IBM Plex Mono", monospace;
   font-size: 1rem;
   font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
   color: var(--navy);
 }
 
@@ -1700,7 +1701,7 @@ a {
 
 .trade-panel {
   display: grid;
-  gap: 16px;
+  gap: 12px;
   align-self: start;
 }
 
@@ -1812,6 +1813,7 @@ a {
 
 .trade-quote {
   position: relative;
+  padding: 11px 14px;
 }
 
 .trade-quote-beat {
@@ -1857,6 +1859,7 @@ a {
   color: #fff;
   background: linear-gradient(145deg, #157f5c, #0f6a4d);
   box-shadow: 0 16px 32px rgba(15, 106, 77, 0.2);
+  transition: background var(--transition), box-shadow var(--transition), transform var(--transition);
 }
 
 .action-buy-beat:hover:not(:disabled) {
@@ -1873,6 +1876,7 @@ a {
   background: linear-gradient(145deg, #c56849, #a64f39);
   border-color: transparent;
   box-shadow: 0 16px 32px rgba(166, 79, 57, 0.18);
+  transition: background var(--transition), box-shadow var(--transition), transform var(--transition);
 }
 
 .action-buy-miss:hover:not(:disabled) {
@@ -1891,6 +1895,13 @@ a {
 
 .market-sidebar {
   gap: 16px;
+}
+
+/* Operator actions (Settle / Claim) sit below a hairline divider to distinguish
+   them from the user-facing Buy beat / Buy miss row */
+.trade-panel > .action-row:not(.action-row-trade) {
+  border-top: 1px solid var(--panel-divider);
+  padding-top: 4px;
 }
 
 .market-sidebar .rail-card-grid {
