@@ -224,6 +224,105 @@ describe("KpiPredictionMarket", function () {
     );
   });
 
+  describe("commit-reveal", function () {
+    // Shared EIP-712 domain + type helpers
+    async function makePayload(marketId, nonce = 42) {
+      return {
+        marketId,
+        actualValue: 425_000,
+        sourceHash: ethers.id("tesla-q2-2026-release"),
+        sourceUri: "https://ir.tesla.com/q2-2026",
+        observedAt: 1_720_000_000,
+        validAfter: 0,
+        validBefore: 0,
+        nonce,
+      };
+    }
+
+    const TYPES = {
+      ResolutionPayload: [
+        { name: "marketId", type: "bytes32" },
+        { name: "actualValue", type: "int256" },
+        { name: "sourceHash", type: "bytes32" },
+        { name: "sourceUri", type: "string" },
+        { name: "observedAt", type: "uint64" },
+        { name: "validAfter", type: "uint64" },
+        { name: "validBefore", type: "uint64" },
+        { name: "nonce", type: "uint256" },
+      ],
+    };
+
+    it("commit then reveal succeeds when digest matches", async function () {
+      const { reporter, alice, oracle, marketId } = await deployFixture();
+
+      const networkData = await ethers.provider.getNetwork();
+      const oracleAddress = await oracle.getAddress();
+      const domain = { name: "PRED KPI Oracle", version: "1", chainId: networkData.chainId, verifyingContract: oracleAddress };
+
+      const payload = await makePayload(marketId, 50);
+      const digest = await oracle.hashResolutionPayload(payload);
+
+      // Signer pre-commits the digest before lock
+      await oracle.connect(reporter).commitResolution(marketId, digest);
+      expect(await oracle.resolutionCommits(marketId)).to.equal(digest);
+
+      // Reveal: signed payload whose digest matches the commit
+      const signature = await reporter.signTypedData(domain, TYPES, payload);
+      await oracle.connect(alice).publishSignedResolution(payload, signature);
+
+      const [resolved, actualValue] = await oracle.getResolution(marketId);
+      expect(resolved).to.be.true;
+      expect(actualValue).to.equal(425_000);
+    });
+
+    it("reverts CommitMismatch when payload digest differs from commit", async function () {
+      const { reporter, alice, oracle, marketId } = await deployFixture();
+
+      const networkData = await ethers.provider.getNetwork();
+      const oracleAddress = await oracle.getAddress();
+      const domain = { name: "PRED KPI Oracle", version: "1", chainId: networkData.chainId, verifyingContract: oracleAddress };
+
+      // Commit a digest for one payload
+      const committedPayload = await makePayload(marketId, 60);
+      const committedDigest = await oracle.hashResolutionPayload(committedPayload);
+      await oracle.connect(reporter).commitResolution(marketId, committedDigest);
+
+      // Attempt to reveal a *different* payload (different actualValue)
+      const differentPayload = { ...committedPayload, actualValue: 300_000, nonce: 61 };
+      const signature = await reporter.signTypedData(domain, TYPES, differentPayload);
+
+      await expect(oracle.connect(alice).publishSignedResolution(differentPayload, signature))
+        .to.be.revertedWithCustomError(oracle, "CommitMismatch");
+    });
+
+    it("no commit → existing signed resolution flow is unaffected", async function () {
+      const { reporter, alice, oracle, marketId } = await deployFixture();
+
+      const networkData = await ethers.provider.getNetwork();
+      const oracleAddress = await oracle.getAddress();
+      const domain = { name: "PRED KPI Oracle", version: "1", chainId: networkData.chainId, verifyingContract: oracleAddress };
+
+      // No commitResolution call — commit slot is zero
+      expect(await oracle.resolutionCommits(marketId)).to.equal(ethers.ZeroHash);
+
+      const payload = await makePayload(marketId, 70);
+      const signature = await reporter.signTypedData(domain, TYPES, payload);
+
+      // Should resolve normally without a prior commit
+      await oracle.connect(alice).publishSignedResolution(payload, signature);
+      const [resolved] = await oracle.getResolution(marketId);
+      expect(resolved).to.be.true;
+    });
+
+    it("non-signer cannot commit", async function () {
+      const { alice, oracle, marketId } = await deployFixture();
+
+      const fakeDigest = ethers.id("arbitrary-digest");
+      await expect(oracle.connect(alice).commitResolution(marketId, fakeDigest))
+        .to.be.revertedWithCustomError(oracle, "NotAuthorizedSigner");
+    });
+  });
+
   it("rejects malleable high-s oracle signatures", async function () {
     const { alice, reporter, oracle, marketId } = await deployFixture();
 

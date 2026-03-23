@@ -41,6 +41,9 @@ contract KpiOracle is Owned {
     mapping(address => bool) public authorizedSigners;
     mapping(bytes32 => bool) public usedAttestations;
     mapping(bytes32 => Resolution) private resolutions;
+    /// @notice Pre-lock commit hashes: marketId => EIP-712 digest committed by an authorized signer.
+    ///         When non-zero, publishSignedResolution MUST present a payload whose digest matches.
+    mapping(bytes32 => bytes32) public resolutionCommits;
 
     event ReporterUpdated(address indexed reporter, bool authorized);
     event SignerUpdated(address indexed signer, bool authorized);
@@ -52,6 +55,7 @@ contract KpiOracle is Owned {
         uint64 resolvedAt
     );
     event SignedResolutionAccepted(bytes32 indexed marketId, address indexed signer, bytes32 indexed attestationDigest);
+    event ResolutionCommitted(bytes32 indexed marketId, bytes32 indexed payloadDigest, address indexed committer);
 
     error NotAuthorizedReporter();
     error NotAuthorizedSigner();
@@ -60,6 +64,7 @@ contract KpiOracle is Owned {
     error AttestationTooEarly();
     error AttestationExpired();
     error InvalidSignature();
+    error CommitMismatch();
 
     constructor(address initialOwner) Owned(initialOwner) {}
 
@@ -68,6 +73,18 @@ contract KpiOracle is Owned {
             revert NotAuthorizedReporter();
         }
         _;
+    }
+
+    /// @notice Commit an EIP-712 payload digest before market lock so the actual resolution
+    ///         value remains hidden on-chain until reveal. Optional but auditable: if a commit
+    ///         exists for a marketId, publishSignedResolution will revert unless the payload
+    ///         digest matches exactly.
+    /// @param marketId  The market being committed.
+    /// @param payloadDigest  EIP-712 digest of the ResolutionPayload (from hashResolutionPayload).
+    function commitResolution(bytes32 marketId, bytes32 payloadDigest) external {
+        if (msg.sender != owner && !authorizedSigners[msg.sender]) revert NotAuthorizedSigner();
+        resolutionCommits[marketId] = payloadDigest;
+        emit ResolutionCommitted(marketId, payloadDigest, msg.sender);
     }
 
     function setReporter(address reporter, bool authorized) external onlyOwner {
@@ -106,6 +123,10 @@ contract KpiOracle is Owned {
 
         digest = hashResolutionPayload(payload);
         if (usedAttestations[digest]) revert AttestationAlreadyUsed();
+
+        // If the signer pre-committed a digest for this market, the payload must match.
+        bytes32 committed = resolutionCommits[payload.marketId];
+        if (committed != bytes32(0) && committed != digest) revert CommitMismatch();
 
         signer = _recoverSigner(digest, signature);
         if (signer != owner && !authorizedSigners[signer]) revert NotAuthorizedSigner();
