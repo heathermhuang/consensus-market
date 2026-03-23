@@ -54,14 +54,22 @@ export default function ConsensusPanel({ market }) {
 
   const width = 640;
   const height = 200;
-  const values = timeline.map((point) => point.value);
-  const minValue = Math.min(...values) * 0.985;
-  const maxValue = Math.max(...values) * 1.015;
-  const path = buildPath(timeline, width, height, minValue, maxValue);
-  const dots = buildDots(timeline, width, height, minValue, maxValue);
   const lowEstimate = analysts[0]?.estimate ?? timeline[timeline.length - 1].value;
   const highEstimate = analysts[analysts.length - 1]?.estimate ?? timeline[timeline.length - 1].value;
   const spreadRatio = lowEstimate ? (highEstimate - lowEstimate) / lowEstimate : 0;
+  const values = timeline.map((point) => point.value);
+  const allValues = [...values, lowEstimate, highEstimate];
+  const minValue = Math.min(...allValues) * 0.985;
+  const maxValue = Math.max(...allValues) * 1.015;
+  const path = buildPath(timeline, width, height, minValue, maxValue);
+  const dots = buildDots(timeline, width, height, minValue, maxValue);
+
+  // Analyst range band — horizontal fill between low and high estimate
+  const innerHeight = height - 36;
+  const range = Math.max(maxValue - minValue, 1);
+  const bandHighY = (16 + innerHeight - ((highEstimate - minValue) / range) * innerHeight).toFixed(1);
+  const bandLowY  = (16 + innerHeight - ((lowEstimate  - minValue) / range) * innerHeight).toFixed(1);
+  const bandPath  = `M 20 ${bandHighY} L ${width - 20} ${bandHighY} L ${width - 20} ${bandLowY} L 20 ${bandLowY} Z`;
 
   return (
     <div className="consensus-shell">
@@ -110,6 +118,9 @@ export default function ConsensusPanel({ market }) {
 
           <svg className="consensus-chart" viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Consensus revision timeline">
             <line x1="20" y1={height - 20} x2={width - 20} y2={height - 20} className="chart-axis" />
+            <path d={bandPath} className="chart-band chart-band-analyst" />
+            <line x1="20" y1={bandHighY} x2={width - 20} y2={bandHighY} className="chart-ref-line chart-ref-high" />
+            <line x1="20" y1={bandLowY}  x2={width - 20} y2={bandLowY}  className="chart-ref-line chart-ref-low" />
             <path d={path} className="chart-line chart-line-consensus-live" />
             {dots.map((point) => (
               <g key={`${point.label}-${point.observedAt}`}>

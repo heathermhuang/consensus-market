@@ -27,6 +27,28 @@ function buildPath(points, width, height, minValue, maxValue, valueKey) {
     .join(" ");
 }
 
+function buildAreaPath(points, width, height, minValue, maxValue, highKey, lowKey) {
+  const innerWidth = width - 48;
+  const innerHeight = height - 42;
+  const xStep = points.length > 1 ? innerWidth / (points.length - 1) : innerWidth;
+  const range = Math.max(maxValue - minValue, 1);
+
+  const topEdge = points.map((point, index) => {
+    const x = 24 + index * xStep;
+    const y = 18 + innerHeight - ((point[highKey] - minValue) / range) * innerHeight;
+    return `${index === 0 ? "M" : "L"} ${x.toFixed(1)} ${y.toFixed(1)}`;
+  });
+
+  const bottomEdge = [...points].reverse().map((point, index) => {
+    const originalIndex = points.length - 1 - index;
+    const x = 24 + originalIndex * xStep;
+    const y = 18 + innerHeight - ((point[lowKey] - minValue) / range) * innerHeight;
+    return `L ${x.toFixed(1)} ${y.toFixed(1)}`;
+  });
+
+  return [...topEdge, ...bottomEdge, "Z"].join(" ");
+}
+
 function buildDots(points, width, height, minValue, maxValue, valueKey) {
   const innerWidth = width - 48;
   const innerHeight = height - 42;
@@ -83,15 +105,26 @@ export default function HistoricalChart({ history, reportingPeriod }) {
   );
   const canToggleArchive = mobileView && descendingHistory.length > 6;
 
-  const values = visibleChronologicalHistory.flatMap((point) => [point.consensus, point.actual]);
-  const minValue = values.length ? Math.min(...values) * 0.96 : 0;
-  const maxValue = values.length ? Math.max(...values) * 1.04 : 1;
+  // Derive Street estimate range (high/low) from the revision trail
+  const historyWithBand = visibleChronologicalHistory.map((point) => {
+    const revVals = (point.revisions || []).map((r) => r.value).filter(Number.isFinite);
+    return {
+      ...point,
+      consensusHigh: revVals.length ? Math.max(...revVals) : point.consensus,
+      consensusLow:  revVals.length ? Math.min(...revVals) : point.consensus,
+    };
+  });
+
+  const allValues = historyWithBand.flatMap((p) => [p.consensus, p.actual, p.consensusHigh, p.consensusLow]);
+  const minValue = allValues.length ? Math.min(...allValues) * 0.96 : 0;
+  const maxValue = allValues.length ? Math.max(...allValues) * 1.04 : 1;
   const width = 640;
   const height = 260;
-  const consensusPath = buildPath(visibleChronologicalHistory, width, height, minValue, maxValue, "consensus");
-  const actualPath = buildPath(visibleChronologicalHistory, width, height, minValue, maxValue, "actual");
-  const consensusDots = buildDots(visibleChronologicalHistory, width, height, minValue, maxValue, "consensus");
-  const actualDots = buildDots(visibleChronologicalHistory, width, height, minValue, maxValue, "actual");
+  const consensusBandPath = buildAreaPath(historyWithBand, width, height, minValue, maxValue, "consensusHigh", "consensusLow");
+  const consensusPath = buildPath(historyWithBand, width, height, minValue, maxValue, "consensus");
+  const actualPath = buildPath(historyWithBand, width, height, minValue, maxValue, "actual");
+  const consensusDots = buildDots(historyWithBand, width, height, minValue, maxValue, "consensus");
+  const actualDots = buildDots(historyWithBand, width, height, minValue, maxValue, "actual");
   const beatCount = visibleChronologicalHistory.filter((point) => point.actual >= point.consensus).length;
   const archiveTone =
     beatCount >= Math.ceil(Math.max(visibleChronologicalHistory.length, 1) / 2)
@@ -104,6 +137,10 @@ export default function HistoricalChart({ history, reportingPeriod }) {
         <>
           <div className="history-chart-header">
             <div className="history-chart-legend">
+              <span className="legend-item">
+                <i className="legend-swatch legend-band" />
+                Street range
+              </span>
               <span className="legend-item">
                 <i className="legend-swatch legend-consensus" />
                 Consensus
@@ -119,6 +156,7 @@ export default function HistoricalChart({ history, reportingPeriod }) {
           <svg className="history-chart" viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Historical consensus versus actual chart">
             <line x1="24" y1={height - 24} x2={width - 24} y2={height - 24} className="chart-axis" />
             <line x1="24" y1="18" x2="24" y2={height - 24} className="chart-axis" />
+            <path d={consensusBandPath} className="chart-band" />
             <path d={consensusPath} className="chart-line chart-line-consensus" />
             <path d={actualPath} className="chart-line chart-line-actual" />
             {consensusDots.map((point) => (
@@ -161,6 +199,9 @@ export default function HistoricalChart({ history, reportingPeriod }) {
             {visibleDescendingHistory.map((point) => {
               const hit = point.actual >= point.consensus;
               const isExpanded = Boolean(expandedPeriods[point.period]);
+              const revVals = (point.revisions || []).map((r) => r.value).filter(Number.isFinite);
+              const streetHigh = revVals.length ? Math.max(...revVals) : null;
+              const streetLow  = revVals.length ? Math.min(...revVals) : null;
               return (
                 <article key={point.period} className={`history-row ${hit ? "history-row-beat" : "history-row-miss"} ${isExpanded ? "history-row-open" : ""}`}>
                   <div className="history-row-summary">
@@ -168,6 +209,11 @@ export default function HistoricalChart({ history, reportingPeriod }) {
                     <span className="history-cell">
                       <em>Consensus</em>
                       {formatNumber(point.consensus)}
+                      {streetHigh !== null && (
+                        <span className="history-range">
+                          {formatNumber(streetLow)}–{formatNumber(streetHigh)}
+                        </span>
+                      )}
                     </span>
                     <span className="history-cell">
                       <em>Actual</em>
