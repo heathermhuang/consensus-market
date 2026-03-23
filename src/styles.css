@@ -300,9 +300,9 @@ a {
   position: relative;
   top: 0;
   display: grid;
-  gap: 14px;
-  padding: 22px 22px 16px;
-  border-radius: 24px;
+  gap: 10px;
+  padding: 14px 22px 12px;
+  border-radius: 20px;
   margin-bottom: 14px;
   background:
     radial-gradient(circle at top left, rgba(180, 135, 73, 0.1), transparent 22%),
@@ -413,15 +413,15 @@ a {
 .brand-mark {
   display: grid;
   place-items: center;
-  width: 60px;
-  height: 60px;
-  border-radius: 18px;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
   background:
     linear-gradient(155deg, rgba(18, 34, 54, 0.98), rgba(29, 57, 86, 0.96)),
     linear-gradient(135deg, rgba(255, 255, 255, 0.05), transparent);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    0 14px 28px rgba(23, 50, 76, 0.16);
+    0 8px 18px rgba(23, 50, 76, 0.16);
 }
 
 .brand-mark-frame {
@@ -429,40 +429,40 @@ a {
   display: flex;
   align-items: end;
   justify-content: center;
-  gap: 5px;
-  width: 34px;
-  height: 34px;
+  gap: 3px;
+  width: 22px;
+  height: 22px;
 }
 
 .brand-mark-column {
   display: block;
-  width: 6px;
+  width: 4px;
   border-radius: 999px;
   background: linear-gradient(180deg, #f3d49f, #b48749);
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
 .brand-mark-column-left {
-  height: 15px;
+  height: 10px;
 }
 
 .brand-mark-column-mid {
-  height: 24px;
+  height: 16px;
 }
 
 .brand-mark-column-right {
-  height: 30px;
+  height: 20px;
 }
 
 .brand-mark-spark {
   position: absolute;
-  top: 2px;
-  right: -1px;
-  width: 10px;
-  height: 10px;
+  top: 1px;
+  right: -2px;
+  width: 7px;
+  height: 7px;
   border-radius: 999px;
   background: radial-gradient(circle, #fff8db 0%, #dcb06a 60%, #9f6c21 100%);
-  box-shadow: 0 0 18px rgba(220, 176, 106, 0.55);
+  box-shadow: 0 0 12px rgba(220, 176, 106, 0.55);
 }
 
 .brand-copy {
@@ -488,19 +488,20 @@ a {
   margin: 0;
   color: var(--navy);
   font-family: "Fraunces", serif;
-  font-size: clamp(1.9rem, 2.6vw, 2.7rem);
+  font-size: clamp(1.25rem, 1.6vw, 1.7rem);
   font-weight: 700;
   line-height: 1;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.03em;
 }
 
 .brand-subtitle {
   margin: 0;
   color: var(--text-soft);
-  font-size: 0.88rem;
-  font-weight: 600;
+  font-size: 0.78rem;
+  font-weight: 500;
   line-height: 1.4;
   letter-spacing: 0.01em;
+  display: none;
 }
 
 .topbar-nav {
@@ -509,7 +510,7 @@ a {
 }
 
 .topbar-nav-band {
-  padding-top: 14px;
+  padding-top: 10px;
   border-top: 1px solid var(--panel-divider);
 }
 
@@ -522,12 +523,13 @@ a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 44px;
-  padding: 0 18px;
+  min-height: 36px;
+  padding: 0 16px;
   border-radius: 999px;
   color: var(--text-soft);
   background: rgba(255, 255, 255, 0.78);
   border: 1px solid var(--card-border);
+  font-size: 0.84rem;
   font-weight: 700;
   white-space: nowrap;
 }
