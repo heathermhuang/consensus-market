@@ -860,7 +860,7 @@ a {
 
 .scanner-header {
   display: grid;
-  grid-template-columns: minmax(260px, 1.5fr) repeat(4, minmax(0, 1fr)) auto;
+  grid-template-columns: minmax(300px, 1.8fr) minmax(0, 0.9fr) minmax(120px, 1.4fr) minmax(0, 0.9fr) minmax(0, 1fr) auto;
   gap: 18px;
   padding: 0 16px 2px;
   color: var(--muted);
@@ -891,7 +891,7 @@ a {
 
 .scanner-grid {
   display: grid;
-  grid-template-columns: minmax(260px, 1.5fr) repeat(4, minmax(0, 1fr)) auto;
+  grid-template-columns: minmax(300px, 1.8fr) minmax(0, 0.9fr) minmax(120px, 1.4fr) minmax(0, 0.9fr) minmax(0, 1fr) auto;
   gap: 18px;
   align-items: center;
   padding: 14px 18px;
@@ -913,14 +913,22 @@ a {
 .scanner-cell strong {
   color: var(--navy);
   font-family: "IBM Plex Mono", monospace;
-  font-size: 0.96rem;
+  font-size: 0.88rem;
   font-variant-numeric: tabular-nums;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .scanner-cell p {
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   color: var(--text-soft);
-  line-height: 1.45;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .scanner-action {
@@ -1489,7 +1497,9 @@ a {
 }
 
 .market-question {
-  max-width: 22ch;
+  max-width: 28ch;
+  font-size: clamp(1.8rem, 3vw, 2.7rem);
+  line-height: 1.1;
   text-wrap: balance;
 }
 
