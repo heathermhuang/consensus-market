@@ -1391,6 +1391,23 @@ export default function App({ runtimeConfig }) {
         onDisconnect={disconnectWallet}
         onOpenAccount={openAccountView}
       />
+
+      <footer className="app-footer" aria-label="Site info">
+        <span className="app-footer-version">
+          v{__APP_VERSION__} · {__GIT_HASH__}
+        </span>
+        <span className="app-footer-sep" aria-hidden="true">·</span>
+        <span className="app-footer-legal">Demo credits only — no real money</span>
+        <span className="app-footer-sep" aria-hidden="true">·</span>
+        <a
+          className="app-footer-link"
+          href="https://consensusmarket.com"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          consensusmarket.com
+        </a>
+      </footer>
     </div>
   );
 }

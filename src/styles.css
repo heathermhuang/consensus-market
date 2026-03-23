@@ -2522,3 +2522,63 @@ a {
     grid-template-columns: 1fr;
   }
 }
+
+/* ── App footer ── */
+
+.app-footer {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  max-width: 1440px;
+  margin: 32px auto 0;
+  padding: 16px 18px 24px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  border-top: 1px solid var(--panel-divider);
+}
+
+.app-footer-version {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: var(--text-soft);
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  padding: 2px 8px;
+  letter-spacing: 0.02em;
+}
+
+.app-footer-sep {
+  color: var(--panel-divider);
+  font-weight: 400;
+  user-select: none;
+}
+
+.app-footer-legal {
+  color: var(--muted);
+}
+
+.app-footer-link {
+  color: var(--blue);
+  transition: color var(--transition);
+}
+
+.app-footer-link:hover {
+  color: var(--navy);
+}
+
+@media (max-width: 560px) {
+  .app-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .app-footer-sep {
+    display: none;
+  }
+}
