@@ -1616,13 +1616,14 @@ a {
 
 .market-brief-card {
   display: grid;
-  gap: 14px;
+  gap: 16px;
+  padding: 20px;
 }
 
 .market-summary-head {
   display: grid;
-  gap: 12px;
-  padding-bottom: 14px;
+  gap: 10px;
+  padding-bottom: 16px;
   border-bottom: 1px solid var(--panel-divider);
 }
 
@@ -1648,9 +1649,32 @@ a {
 }
 
 .market-brief-stat {
+  /* Flat within padded outer card — no nested card chrome */
+  background: transparent;
+  border: none;
+  border-top: 1px solid var(--panel-divider);
+  border-radius: 0;
+  box-shadow: none;
+  padding: 12px 0;
   min-height: 0;
   align-self: start;
-  padding: 13px 14px;
+}
+
+/* Top row of the 2×2 grid — no divider above */
+.market-brief-grid .market-brief-stat:nth-child(-n+2) {
+  border-top: none;
+  padding-top: 4px;
+}
+
+/* Left column gets a subtle right border to split the 2 columns */
+.market-brief-grid .market-brief-stat:nth-child(odd) {
+  padding-right: 16px;
+  border-right: 1px solid var(--panel-divider);
+}
+
+/* Right column gets corresponding left padding */
+.market-brief-grid .market-brief-stat:nth-child(even) {
+  padding-left: 16px;
 }
 
 .market-brief-stat strong {
