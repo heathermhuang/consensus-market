@@ -753,6 +753,14 @@ a {
   padding: 18px 20px;
 }
 
+.admin-portal-hero h1 {
+  max-width: 48ch;
+}
+
+.admin-portal-hero .panel-copy {
+  max-width: 64ch;
+}
+
 .board-overview,
 .filter-bar {
   display: grid;
@@ -1348,6 +1356,7 @@ a {
 .admin-portal-hero .account-summary-grid,
 .admin-market-card .account-summary-grid {
   align-items: start;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .connect-fallback {
@@ -1602,7 +1611,7 @@ a {
 .notes-grid,
 .rail-card-grid,
 .admin-intro-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .market-brief-card {
