@@ -1407,6 +1407,7 @@ a {
 
 .market-main {
   min-width: 0;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .market-admin-layout {
