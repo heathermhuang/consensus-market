@@ -850,7 +850,7 @@ a {
 }
 
 .controls-grid-board {
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .board-stack {
@@ -1250,7 +1250,7 @@ a {
 }
 
 .wallet-choice-grid-single {
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .connect-option-primary,
@@ -1336,7 +1336,7 @@ a {
 }
 
 .wallet-assist-grid-single {
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .wallet-qr-shell,
@@ -1403,6 +1403,10 @@ a {
 .market-layout {
   grid-template-columns: minmax(0, 1.15fr) 380px;
   align-items: start;
+}
+
+.market-main {
+  min-width: 0;
 }
 
 .market-admin-layout {
@@ -1857,11 +1861,11 @@ a {
 }
 
 .market-sidebar .rail-card-grid {
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .market-sidebar .notes-grid {
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .account-sidebar {
@@ -1928,7 +1932,7 @@ a {
 }
 
 .loading-state-grid-single {
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .loading-card {
@@ -2461,12 +2465,12 @@ a {
   .operator-form-grid,
   .code-panels,
   .history-row-summary {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .scanner-grid,
   .market-brief-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .scanner-header {
@@ -2474,30 +2478,30 @@ a {
   }
 
   .wallet-choice-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .wallet-path-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .wallet-assist-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .loading-state-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .market-story-top,
   .account-position-head,
   .admin-market-toolbar,
   .admin-code-blocks {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .operator-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .market-story-top,
@@ -2526,7 +2530,7 @@ a {
 
   .market-profile-meta {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -2640,11 +2644,11 @@ a {
   }
 
   .topbar-actions {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .topbar-nav {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .brand-lockup-premium {
@@ -2701,11 +2705,11 @@ a {
   }
 
   .action-row-trade {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .mobile-toolbar-actions {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
