@@ -1830,6 +1830,20 @@ a {
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .loading-block::after {
+    animation: none;
+  }
+
+  button,
+  input,
+  select,
+  textarea,
+  a {
+    transition: none;
+  }
+}
+
 .activity-card {
   padding: 16px 18px;
 }
