@@ -967,12 +967,18 @@ a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 32px;
-  padding: 0 12px;
+  min-height: 34px;
+  padding: 0 13px;
   border-radius: 999px;
   font-size: 0.78rem;
   font-weight: 700;
   white-space: nowrap;
+}
+
+/* Interactive chips get a taller tap target via padding expansion */
+.chip {
+  min-height: 38px;
+  padding: 0 14px;
 }
 
 .chip,
