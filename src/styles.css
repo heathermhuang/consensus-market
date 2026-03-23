@@ -704,7 +704,26 @@ a {
   display: grid;
   gap: 18px;
   position: sticky;
-  top: 92px;
+  top: 18px;
+}
+
+/* Compact chips in narrow sidebar — 2-column grid, shorter tap target is fine on desktop */
+.filter-bar .chip-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.filter-bar .chip {
+  min-height: 36px;
+  padding: 0 10px;
+  font-size: 0.76rem;
+  justify-content: flex-start;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: block;
+  line-height: 36px;
 }
 
 .board-overview,
