@@ -1632,12 +1632,8 @@ a {
 }
 
 .market-summary-title {
-  color: var(--navy);
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 1.15rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  font-variant-numeric: tabular-nums;
+  /* Company name — h2 inherits Fraunces naturally */
+  line-height: 1.12;
 }
 
 .market-brief-grid {
@@ -2290,6 +2286,12 @@ a {
   border-radius: 999px;
 }
 
+.legend-band {
+  background: rgba(96, 136, 178, 0.18);
+  border: 1px dashed rgba(96, 136, 178, 0.5);
+  border-radius: 2px;
+}
+
 .legend-consensus {
   background: #7c91a7;
 }
@@ -2320,6 +2322,32 @@ a {
   color: var(--muted);
   stroke: rgba(71, 85, 102, 0.26);
   fill: var(--muted);
+}
+
+/* Consensus estimate range band (historical + analyst range) */
+.chart-band {
+  fill: rgba(96, 136, 178, 0.08);
+  stroke: none;
+}
+
+.chart-band-analyst {
+  fill: rgba(96, 136, 178, 0.07);
+  stroke: none;
+}
+
+/* High/low reference lines in ConsensusPanel */
+.chart-ref-line {
+  fill: none;
+  stroke-width: 1;
+  stroke-dasharray: 4 3;
+}
+
+.chart-ref-high {
+  stroke: rgba(15, 139, 99, 0.45);
+}
+
+.chart-ref-low {
+  stroke: rgba(194, 90, 70, 0.45);
 }
 
 .chart-line {
@@ -2443,6 +2471,15 @@ a {
   font-variant-numeric: tabular-nums;
   font-size: 0.86rem;
   color: var(--navy);
+}
+
+.history-range {
+  font-family: "IBM Plex Mono", monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: -0.01em;
+  margin-top: 1px;
 }
 
 .history-outcome {

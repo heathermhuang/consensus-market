@@ -253,7 +253,7 @@ export default function MarketView({
               <div className="market-summary-head">
                 <div className="market-summary-copy">
                   <p className="section-label">Company and market setup</p>
-                  <strong className="market-summary-title">{selectedCompanyProfile.primaryListing}</strong>
+                  <h2 className="market-summary-title">{selectedMarket.company}</h2>
                   <p className="panel-copy">{selectedCompanyProfile.profile}</p>
                 </div>
                 <div className="market-profile-meta" aria-label="Company profile details">
