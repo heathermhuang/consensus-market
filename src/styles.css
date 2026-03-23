@@ -1633,7 +1633,11 @@ a {
 
 .market-summary-title {
   color: var(--navy);
-  font-size: 1.04rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
 }
 
 .market-brief-grid {
@@ -2374,9 +2378,9 @@ a {
 
 .history-row-summary {
   display: grid;
-  grid-template-columns: 120px repeat(4, minmax(0, 1fr)) auto;
+  grid-template-columns: 100px minmax(0, 1fr) minmax(0, 1fr) 80px minmax(0, 1.4fr) auto;
   gap: 12px;
-  align-items: stretch;
+  align-items: start;
 }
 
 .history-row-beat {
@@ -2394,7 +2398,7 @@ a {
 }
 
 .history-row-head {
-  grid-template-columns: 120px repeat(4, minmax(0, 1fr)) auto;
+  grid-template-columns: 100px minmax(0, 1fr) minmax(0, 1fr) 80px minmax(0, 1.4fr) auto;
   gap: 12px;
   align-items: center;
   color: var(--muted);
@@ -2442,9 +2446,10 @@ a {
 }
 
 .history-outcome {
-  align-content: center;
+  align-content: start;
   font-weight: 700;
   font-size: 0.86rem;
+  padding-top: 2px;
 }
 
 .history-outcome-beat {
