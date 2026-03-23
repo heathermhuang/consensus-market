@@ -127,6 +127,7 @@ export default function App({ runtimeConfig }) {
   });
   const [marketSurface, setMarketSurface] = useState("overview");
   const [pendingSectionId, setPendingSectionId] = useState("");
+  const [activeMarketSection, setActiveMarketSection] = useState("market-overview");
 
   // ── Oracle / admin forms ──
   const [signature, setSignature] = useState("");
@@ -1133,6 +1134,7 @@ export default function App({ runtimeConfig }) {
       return;
     }
     if (surface !== marketSurface) startTransition(() => setMarketSurface(surface));
+    if (sectionId) setActiveMarketSection(sectionId);
     setPendingSectionId(sectionId);
     if (surface === marketSurface && sectionId) {
       const section = document.getElementById(sectionId);
@@ -1329,6 +1331,7 @@ export default function App({ runtimeConfig }) {
           activityFeed={activityFeed}
           companyNews={companyNews}
           marketSurface={marketSurface}
+          activeMarketSection={activeMarketSection}
           openMarketSurface={openMarketSurface}
           clearSelectedMarket={clearSelectedMarket}
           wallet={wallet}

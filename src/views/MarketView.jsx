@@ -63,6 +63,7 @@ export default function MarketView({
   companyNews,
   // Surface routing
   marketSurface,
+  activeMarketSection,
   openMarketSurface,
   clearSelectedMarket,
   // Wallet
@@ -166,26 +167,31 @@ export default function MarketView({
           </div>
 
           <nav className="market-section-nav" aria-label="Market sections">
-            <button type="button" className="section-tab" onClick={() => openMarketSurface("overview", "market-overview")}>
-              Overview
-            </button>
-            <button type="button" className="section-tab" onClick={() => openMarketSurface("overview", "market-consensus")}>
-              Consensus
-            </button>
-            <button type="button" className="section-tab" onClick={() => openMarketSurface("overview", "market-news")}>
-              Latest news
-            </button>
-            <button type="button" className="section-tab" onClick={() => openMarketSurface("overview", "market-history")}>
-              History
-            </button>
-            <button type="button" className="section-tab" onClick={() => openMarketSurface("overview", "market-activity")}>
-              Activity
-            </button>
-            <button type="button" className="section-tab" onClick={() => openMarketSurface("overview", "market-ticket")}>
-              Trade ticket
-            </button>
+            {[
+              { label: "Overview",     id: "market-overview",      surface: "overview" },
+              { label: "Consensus",    id: "market-consensus",     surface: "overview" },
+              { label: "Latest news",  id: "market-news",          surface: "overview" },
+              { label: "History",      id: "market-history",       surface: "overview" },
+              { label: "Activity",     id: "market-activity",      surface: "overview" },
+              { label: "Trade ticket", id: "market-ticket",        surface: "overview" },
+            ].map(({ label, id, surface }) => (
+              <button
+                key={id}
+                type="button"
+                className={`section-tab${activeMarketSection === id ? " active" : ""}`}
+                aria-current={activeMarketSection === id ? "true" : undefined}
+                onClick={() => openMarketSurface(surface, id)}
+              >
+                {label}
+              </button>
+            ))}
             {canAccessAdmin && (
-              <button type="button" className="section-tab" onClick={() => openMarketSurface("admin", "market-admin-status")}>
+              <button
+                type="button"
+                className={`section-tab${marketSurface === "admin" ? " active" : ""}`}
+                aria-current={marketSurface === "admin" ? "true" : undefined}
+                onClick={() => openMarketSurface("admin", "market-admin-status")}
+              >
                 Admin
               </button>
             )}
