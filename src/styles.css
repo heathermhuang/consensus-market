@@ -668,7 +668,7 @@ a {
 }
 
 .board-layout {
-  grid-template-columns: 248px minmax(0, 1fr);
+  grid-template-columns: 276px minmax(0, 1fr);
   align-items: start;
 }
 
