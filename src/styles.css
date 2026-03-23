@@ -197,6 +197,7 @@ h4 {
   font-weight: 600;
   line-height: 1.08;
   letter-spacing: -0.03em;
+  text-wrap: balance;
 }
 
 h1 {
