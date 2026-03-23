@@ -2426,7 +2426,7 @@ a {
   .admin-portal-layout,
   .market-layout,
   .market-admin-layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .sticky-panel {
