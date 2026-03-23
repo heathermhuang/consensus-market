@@ -217,6 +217,10 @@ h3 {
   font-size: 1.14rem;
 }
 
+h4 {
+  font-size: 0.96rem;
+}
+
 p {
   margin: 0;
 }
@@ -552,6 +556,11 @@ a {
   font-size: 0.86rem;
   font-weight: 700;
   white-space: nowrap;
+  transition:
+    color var(--transition),
+    background var(--transition),
+    border-color var(--transition),
+    box-shadow var(--transition);
 }
 
 .section-tab:hover,
@@ -564,8 +573,10 @@ a {
 .section-tab.active {
   color: var(--navy);
   background: rgba(255, 255, 255, 0.9);
-  border-color: rgba(47, 104, 154, 0.18);
-  box-shadow: 0 8px 18px rgba(26, 46, 68, 0.07);
+  border-color: rgba(47, 104, 154, 0.22);
+  box-shadow:
+    0 8px 18px rgba(26, 46, 68, 0.08),
+    inset 0 -2px 0 var(--blue);
 }
 
 .topbar-wallet {
@@ -896,7 +907,8 @@ a {
 
 .scanner-cell strong {
   color: var(--navy);
-  font-size: 1rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.96rem;
   font-variant-numeric: tabular-nums;
 }
 
@@ -977,6 +989,7 @@ a {
   display: block;
   margin-top: 6px;
   margin-bottom: 4px;
+  font-family: "IBM Plex Mono", monospace;
   font-size: 1rem;
   font-variant-numeric: tabular-nums;
   color: var(--navy);
@@ -1472,7 +1485,8 @@ a {
   display: block;
   margin-top: 7px;
   margin-bottom: 5px;
-  font-size: 1.08rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 1rem;
   color: var(--navy);
   font-variant-numeric: tabular-nums;
 }
@@ -1741,8 +1755,18 @@ a {
 }
 
 .action-buy-beat {
+  color: #fff;
   background: linear-gradient(145deg, #157f5c, #0f6a4d);
   box-shadow: 0 16px 32px rgba(15, 106, 77, 0.2);
+}
+
+.action-buy-beat:hover:not(:disabled) {
+  background: linear-gradient(145deg, #1a9470, #137557);
+  box-shadow: 0 22px 44px rgba(15, 106, 77, 0.32);
+}
+
+.action-buy-beat:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
 }
 
 .action-buy-miss {
@@ -1750,6 +1774,15 @@ a {
   background: linear-gradient(145deg, #c56849, #a64f39);
   border-color: transparent;
   box-shadow: 0 16px 32px rgba(166, 79, 57, 0.18);
+}
+
+.action-buy-miss:hover:not(:disabled) {
+  background: linear-gradient(145deg, #d97757, #b85a44);
+  box-shadow: 0 22px 44px rgba(166, 79, 57, 0.3);
+}
+
+.action-buy-miss:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
 }
 
 .market-sidebar {
@@ -2028,6 +2061,12 @@ a {
   gap: 2px;
   text-align: right;
   justify-items: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.analyst-estimate strong {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.9rem;
 }
 
 .consensus-card .panel-copy {
