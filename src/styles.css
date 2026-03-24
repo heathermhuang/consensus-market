@@ -848,8 +848,8 @@ a {
   font-variant-numeric: tabular-nums;
 }
 
-/* Numeric-heavy cards get mono for sharper data presentation */
-.snapshot-card strong,
+/* Mono only for numeric/data contexts — not prose status text */
+.consensus-summary-grid .snapshot-card strong,
 .story-stat strong {
   font-family: "IBM Plex Mono", monospace;
   font-size: 0.96rem;
