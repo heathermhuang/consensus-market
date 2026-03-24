@@ -557,7 +557,7 @@ a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 34px;
+  min-height: 40px;
   padding: 0 12px;
   border-radius: 999px;
   border: 1px solid transparent;
@@ -2527,7 +2527,7 @@ a {
 
 .history-expand {
   align-self: start;
-  min-height: 38px;
+  min-height: 40px;
   white-space: nowrap;
 }
 
@@ -2568,7 +2568,7 @@ a {
 .history-source-link {
   display: inline-flex;
   align-items: center;
-  min-height: 30px;
+  min-height: 36px;
   padding: 0 10px;
   border-radius: 999px;
   color: var(--blue);
