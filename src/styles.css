@@ -35,7 +35,8 @@
   --radius-sm: 14px;
   --surface-pad: 22px;
   --surface-pad-compact: 14px;
-  --stack-gap: 16px;
+  --stack-gap: var(--stack-gap);
+  --stack-gap-dense: 12px;
   --stack-gap-tight: 10px;
   --card-radius: 16px;
   --row-radius: 18px;
@@ -311,7 +312,7 @@ a {
   position: relative;
   top: 0;
   display: grid;
-  gap: 10px;
+  gap: var(--stack-gap-tight);
   padding: 14px 22px 12px;
   border-radius: var(--radius-lg);
   margin-bottom: 14px;
@@ -339,7 +340,7 @@ a {
 .history-chart-legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: var(--stack-gap-tight);
   align-items: center;
 }
 
@@ -516,7 +517,7 @@ a {
 
 .topbar-nav {
   justify-content: flex-start;
-  gap: 10px;
+  gap: var(--stack-gap-tight);
 }
 
 .topbar-nav-band {
@@ -788,12 +789,12 @@ a {
 .mobile-toolbar-actions,
 .market-signal-strip {
   display: grid;
-  gap: 10px;
+  gap: var(--stack-gap-tight);
 }
 
 .wallet-choice-grid {
   display: grid;
-  gap: 12px;
+  gap: var(--stack-gap-dense);
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
@@ -867,7 +868,7 @@ a {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 16px;
+  gap: var(--stack-gap);
 }
 
 .panel-heading h2 {
@@ -907,7 +908,7 @@ a {
 
 .board-stack {
   display: grid;
-  gap: 12px;
+  gap: var(--stack-gap-dense);
 }
 
 .scanner-header {
@@ -1010,14 +1011,14 @@ a {
 
 .admin-market-stats {
   display: grid;
-  gap: 12px;
+  gap: var(--stack-gap-dense);
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .account-position-head {
   display: flex;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--stack-gap-dense);
   align-items: flex-start;
 }
 
@@ -1042,7 +1043,7 @@ a {
 .board-metrics {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
+  gap: var(--stack-gap-dense);
 }
 
 .board-metric {
@@ -1256,7 +1257,7 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: var(--stack-gap);
   width: 100%;
   min-height: 84px;
   padding: 18px 20px;
@@ -1274,7 +1275,7 @@ a {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 16px;
+  gap: var(--stack-gap);
   min-height: 132px;
   width: 100%;
   padding: 20px;
@@ -1298,7 +1299,7 @@ a {
 .wallet-step-header {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--stack-gap-dense);
   margin-bottom: 6px;
 }
 
@@ -1387,7 +1388,7 @@ a {
 
 .connect-fallback-body {
   display: grid;
-  gap: 12px;
+  gap: var(--stack-gap-dense);
   padding: 0 18px 18px;
 }
 
@@ -1404,7 +1405,7 @@ a {
 .wallet-qr-shell,
 .wallet-config-note {
   display: grid;
-  gap: 12px;
+  gap: var(--stack-gap-dense);
 }
 
 .wallet-qr-canvas {
@@ -1445,7 +1446,7 @@ a {
 
 .wallet-mobile-start {
   display: grid;
-  gap: 10px;
+  gap: var(--stack-gap-tight);
   padding: 18px;
   border-radius: var(--radius-md);
   border: 1px solid var(--card-border);
@@ -1481,7 +1482,7 @@ a {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 12px;
+  gap: var(--stack-gap-dense);
   flex-wrap: wrap;
   padding-bottom: 12px;
   margin-bottom: 4px;
@@ -1623,13 +1624,13 @@ a {
 
 .market-brief-card {
   display: grid;
-  gap: 16px;
+  gap: var(--stack-gap);
   padding: 20px;
 }
 
 .market-summary-head {
   display: grid;
-  gap: 10px;
+  gap: var(--stack-gap-tight);
   padding-bottom: 16px;
   border-bottom: 1px solid var(--panel-divider);
 }
@@ -1646,13 +1647,13 @@ a {
 
 .market-brief-grid {
   display: grid;
-  gap: 12px;
+  gap: var(--stack-gap-dense);
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: start;
 }
 
 .market-brief-grid-compact {
-  gap: 10px;
+  gap: var(--stack-gap-tight);
 }
 
 .market-brief-stat {
@@ -1726,7 +1727,7 @@ a {
 }
 
 .operator-stack {
-  gap: 16px;
+  gap: var(--stack-gap);
 }
 
 .operator-stack > label + .action-row,
@@ -1741,7 +1742,7 @@ a {
 
 .trade-panel {
   display: grid;
-  gap: 12px;
+  gap: var(--stack-gap-dense);
   align-self: start;
 }
 
@@ -1766,7 +1767,7 @@ a {
 
 .compliance-list {
   display: grid;
-  gap: 12px;
+  gap: var(--stack-gap-dense);
   margin-top: 16px;
   color: var(--text-soft);
   line-height: 1.6;
@@ -1800,7 +1801,7 @@ a {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  gap: var(--stack-gap);
   padding: 22px 24px;
   cursor: pointer;
   list-style: none;
@@ -1848,7 +1849,7 @@ a {
 .operator-row {
   display: grid;
   grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) auto;
-  gap: 10px;
+  gap: var(--stack-gap-tight);
 }
 
 .trade-quote {
@@ -1934,7 +1935,7 @@ a {
 }
 
 .market-sidebar {
-  gap: 16px;
+  gap: var(--stack-gap);
 }
 
 /* Operator actions (Settle / Claim) sit below a hairline divider to distinguish
@@ -1954,7 +1955,7 @@ a {
 
 .account-sidebar {
   display: grid;
-  gap: 16px;
+  gap: var(--stack-gap);
   align-content: start;
 }
 
@@ -2103,7 +2104,7 @@ a {
 
 .news-card-item {
   display: grid;
-  gap: 10px;
+  gap: var(--stack-gap-tight);
 }
 
 .news-card-item strong {
@@ -2127,7 +2128,7 @@ a {
 }
 
 .consensus-shell {
-  gap: 16px;
+  gap: var(--stack-gap);
 }
 
 .consensus-summary-grid {
@@ -2140,7 +2141,7 @@ a {
 
 .consensus-chart-card,
 .consensus-analyst-card {
-  gap: 16px;
+  gap: var(--stack-gap);
   min-height: 100%;
 }
 
@@ -2175,7 +2176,7 @@ a {
 .analyst-identity {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--stack-gap-dense);
   min-width: 0;
 }
 
@@ -2265,13 +2266,13 @@ a {
 
 .history-chart-shell {
   display: grid;
-  gap: 16px;
+  gap: var(--stack-gap);
 }
 
 .history-revisions,
 .revision-list {
   display: grid;
-  gap: 12px;
+  gap: var(--stack-gap-dense);
 }
 
 .revision-list {
@@ -2420,12 +2421,12 @@ a {
 
 .history-table {
   display: grid;
-  gap: 10px;
+  gap: var(--stack-gap-tight);
 }
 
 .history-row {
   display: grid;
-  gap: 12px;
+  gap: var(--stack-gap-dense);
   padding: 12px 14px;
   border-radius: var(--card-radius);
   border: 1px solid var(--card-border);
@@ -2438,7 +2439,7 @@ a {
 .history-row-summary {
   display: grid;
   grid-template-columns: 100px minmax(0, 1fr) minmax(0, 1fr) 80px minmax(0, 1.4fr) auto;
-  gap: 12px;
+  gap: var(--stack-gap-dense);
   align-items: start;
 }
 
@@ -2458,7 +2459,7 @@ a {
 
 .history-row-head {
   grid-template-columns: 100px minmax(0, 1fr) minmax(0, 1fr) 80px minmax(0, 1.4fr) auto;
-  gap: 12px;
+  gap: var(--stack-gap-dense);
   align-items: center;
   color: var(--muted);
   font-size: 0.76rem;
@@ -2540,7 +2541,7 @@ a {
 
 .history-revisions {
   display: grid;
-  gap: 12px;
+  gap: var(--stack-gap-dense);
   padding-top: 14px;
   border-top: 1px solid rgba(63, 50, 35, 0.1);
 }
@@ -2713,7 +2714,7 @@ a {
   }
 
   .topbar {
-    gap: 12px;
+    gap: var(--stack-gap-dense);
     padding: 16px;
   }
 
@@ -2838,7 +2839,7 @@ a {
 
   .board-company,
   .market-title-lockup {
-    gap: 12px;
+    gap: var(--stack-gap-dense);
   }
 
   .brand-avatar {
