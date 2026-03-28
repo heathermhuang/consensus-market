@@ -64,8 +64,8 @@ If you prefer the API path, this repo now includes [attach-custom-domain.mjs](/U
 
 ```bash
 CF_API_TOKEN=... \
-CF_ACCOUNT_ID=63a7fe52c985c63bb9e69ce47efdc569 \
-CF_ZONE_ID=2cab46632caf8de81f503c792075bd92 \
+CF_ACCOUNT_ID=<your-cloudflare-account-id> \
+CF_ZONE_ID=<your-cloudflare-zone-id> \
 CF_PAGES_PROJECT=capital-markets \
 CF_DOMAIN=capital.markets \
 npm run cf:domain:attach
