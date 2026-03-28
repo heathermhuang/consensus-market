@@ -20,7 +20,7 @@ contract Owned {
         _;
     }
 
-    function transferOwnership(address newOwner) external onlyOwner {
+    function transferOwnership(address newOwner) public virtual onlyOwner {
         if (newOwner == address(0)) revert ZeroAddress();
 
         address previousOwner = owner;

@@ -3,15 +3,27 @@ import { ethers } from "ethers";
 export const marketAbi = [
   "function owner() view returns (address)",
   "function demoCredits(address) view returns (uint256)",
-  "function getMarket(bytes32 marketId) view returns ((bool exists,bool cancelled,bool settled,bool outcomeHit,bytes32 marketId,string companyTicker,string metricName,string consensusSource,string resolutionPolicy,int256 consensusValue,uint64 opensAt,uint64 locksAt,uint64 expectedAnnouncementAt,uint256 hitPool,uint256 missPool))",
+  "function balanceOf(address) view returns (uint256)",
+  "function demoMode() view returns (bool)",
+  "function stakingToken() view returns (address)",
+  "function marketMode() view returns (string)",
+  "function protocolFeeBps() view returns (uint16)",
+  "function accumulatedFees() view returns (uint256)",
+  "function minPositionSize() view returns (uint256)",
+  "function getMarket(bytes32 marketId) view returns ((bool exists,bool cancelled,bool settled,bool outcomeHit,bytes32 marketId,string companyTicker,string metricName,string consensusSource,string resolutionPolicy,int256 consensusValue,uint64 opensAt,uint64 locksAt,uint64 expectedAnnouncementAt,uint256 hitPool,uint256 missPool,uint16 feeBpsSnapshot))",
   "function positions(bytes32 marketId, address trader) view returns (uint8)",
   "function stakes(bytes32 marketId, address trader) view returns (uint256)",
   "function grantDemoCredits(address trader, uint256 amount)",
+  "function deposit(uint256 amount)",
+  "function withdraw(uint256 amount)",
   "function createMarket(bytes32 marketId, string companyTicker, string metricName, int256 consensusValue, string consensusSource, string resolutionPolicy, uint64 opensAt, uint64 locksAt, uint64 expectedAnnouncementAt)",
   "function cancelMarket(bytes32 marketId)",
   "function takePosition(bytes32 marketId, uint8 side, uint256 amount)",
   "function settleMarket(bytes32 marketId)",
-  "function claim(bytes32 marketId) returns (uint256 payout)"
+  "function claim(bytes32 marketId) returns (uint256 payout)",
+  "function withdrawFees(address recipient)",
+  "function setProtocolFeeBps(uint16 newFeeBps)",
+  "function setMinPositionSize(uint256 newMin)",
 ];
 
 export const oracleAbi = [
@@ -29,7 +41,21 @@ export const oracleAbi = [
 export const registryAbi = [
   "function owner() view returns (address)",
   "function isEligible(address account) view returns (bool)",
-  "function setEligible(address account, bool eligible)"
+  "function pendingRequests(address account) view returns (bool)",
+  "function autoApprove() view returns (bool)",
+  "function setEligible(address account, bool eligible)",
+  "function requestAccess()",
+  "function approveRequest(address account)",
+  "function batchApprove(address[] accounts)",
+  "function setAutoApprove(bool enabled)",
+];
+
+export const erc20Abi = [
+  "function approve(address spender, uint256 amount) returns (bool)",
+  "function allowance(address owner, address spender) view returns (uint256)",
+  "function balanceOf(address) view returns (uint256)",
+  "function decimals() view returns (uint8)",
+  "function symbol() view returns (string)",
 ];
 
 export const resolutionTypes = {

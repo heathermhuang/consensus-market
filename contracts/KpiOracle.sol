@@ -75,6 +75,8 @@ contract KpiOracle is Owned {
         _;
     }
 
+    error CommitAlreadyExists();
+
     /// @notice Commit an EIP-712 payload digest before market lock so the actual resolution
     ///         value remains hidden on-chain until reveal. Optional but auditable: if a commit
     ///         exists for a marketId, publishSignedResolution will revert unless the payload
@@ -83,6 +85,8 @@ contract KpiOracle is Owned {
     /// @param payloadDigest  EIP-712 digest of the ResolutionPayload (from hashResolutionPayload).
     function commitResolution(bytes32 marketId, bytes32 payloadDigest) external {
         if (msg.sender != owner && !authorizedSigners[msg.sender]) revert NotAuthorizedSigner();
+        // F-007: prevent commit overwrite once set
+        if (resolutionCommits[marketId] != bytes32(0)) revert CommitAlreadyExists();
         resolutionCommits[marketId] = payloadDigest;
         emit ResolutionCommitted(marketId, payloadDigest, msg.sender);
     }

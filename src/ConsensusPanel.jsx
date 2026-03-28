@@ -1,6 +1,7 @@
+import { useState } from "react";
 import BrandAvatar from "./BrandAvatar";
 import { getFirmBrand } from "./brandSystem";
-import { formatNumber, formatPercent } from "./contracts";
+import { formatNumber, formatCompactNumber, formatPercent } from "./contracts";
 import { formatTimestampDateOnly as formatTimestampWithYear } from "./lib/format-utils";
 import { buildPath as _buildPath, buildDots as _buildDots } from "./lib/chart-utils";
 
@@ -9,6 +10,7 @@ const buildPath = (points, w, h, min, max) => _buildPath(points, w, h, min, max,
 const buildDots = (points, w, h, min, max) => _buildDots(points, w, h, min, max, CHART_OPTS);
 
 export default function ConsensusPanel({ market }) {
+  const [hovered, setHovered] = useState(null);
   const timeline = market?.consensusTimeline || [];
   const analysts = market?.analystEstimates || [];
 
@@ -89,16 +91,34 @@ export default function ConsensusPanel({ market }) {
             <line x1="20" y1={height - 20} x2={width - 20} y2={height - 20} className="chart-axis" />
             <path d={bandPath} className="chart-band chart-band-analyst" />
             <line x1="20" y1={bandHighY} x2={width - 20} y2={bandHighY} className="chart-ref-line chart-ref-high" />
+            <text x={width - 18} y={Number(bandHighY) - 4} textAnchor="end" className="chart-ref-label chart-ref-label-high">High {formatCompactNumber(highEstimate)}</text>
             <line x1="20" y1={bandLowY}  x2={width - 20} y2={bandLowY}  className="chart-ref-line chart-ref-low" />
+            <text x={width - 18} y={Number(bandLowY) + 12} textAnchor="end" className="chart-ref-label chart-ref-label-low">Low {formatCompactNumber(lowEstimate)}</text>
             <path d={path} className="chart-line chart-line-consensus-live" />
-            {dots.map((point) => (
-              <g key={`${point.label}-${point.observedAt}`}>
+            {dots.map((point, index) => (
+              <g key={`${point.label}-${point.observedAt}`}
+                onMouseEnter={() => setHovered({ index, x: point.x, y: point.y, label: point.label, value: point.value })}
+                onMouseLeave={() => setHovered(null)}
+              >
+                <circle cx={point.x} cy={point.y} r="12" className="chart-hit-area" />
                 <circle cx={point.x} cy={point.y} r="5" className="chart-dot chart-dot-consensus-live" />
                 <text x={point.x} y={height - 4} textAnchor="middle" className="chart-label">
                   {point.label.replace(" street read", "").replace(" refresh", "")}
                 </text>
               </g>
             ))}
+            {hovered && (() => {
+              const tipValue = formatCompactNumber(hovered.value);
+              const tipW = 100;
+              const tx = Math.max(tipW / 2, Math.min(width - tipW / 2, hovered.x));
+              const ty = hovered.y - 34;
+              return (
+                <g className="chart-tooltip-group" pointerEvents="none">
+                  <rect x={tx - tipW / 2} y={ty} width={tipW} height={24} rx="4" className="chart-tooltip-bg" />
+                  <text x={tx} y={ty + 16} textAnchor="middle" className="chart-tooltip-text">{tipValue}</text>
+                </g>
+              );
+            })()}
           </svg>
         </div>
 

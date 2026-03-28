@@ -2,6 +2,7 @@ import { useState, useDeferredValue } from "react";
 import marketSeeds from "../data/markets.json";
 import AccountPage from "./AccountPage";
 import AdminPortal from "./AdminPortal";
+import LegalPage from "./views/LegalPage";
 import ConnectModal from "./ConnectModal";
 import { WalletProvider } from "./contexts/WalletContext";
 import { RuntimeProvider } from "./contexts/RuntimeContext";
@@ -435,7 +436,9 @@ export default function App({ runtimeConfig }) {
         {banner}
       </section>
 
-      {appView === "account" ? (
+      {appView === "terms" || appView === "privacy" ? (
+        <LegalPage page={appView} />
+      ) : appView === "account" ? (
         <AccountPage
           credits={credits}
           canAccessAdmin={canAccessAdmin}
@@ -572,7 +575,11 @@ export default function App({ runtimeConfig }) {
           v{__APP_VERSION__} · {__GIT_HASH__}
         </span>
         <span className="app-footer-sep" aria-hidden="true">·</span>
-        <span className="app-footer-legal">Demo credits only — no real money</span>
+        <span className="app-footer-legal">Prediction markets carry risk of total loss</span>
+        <span className="app-footer-sep" aria-hidden="true">·</span>
+        <a className="app-footer-link" href="#page=terms">Terms</a>
+        <span className="app-footer-sep" aria-hidden="true">·</span>
+        <a className="app-footer-link" href="#page=privacy">Privacy</a>
         <span className="app-footer-sep" aria-hidden="true">·</span>
         <a
           className="app-footer-link"

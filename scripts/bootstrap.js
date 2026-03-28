@@ -18,7 +18,9 @@ async function main() {
   const market = await KpiPredictionMarket.deploy(
     owner.address,
     await registry.getAddress(),
-    await oracle.getAddress()
+    await oracle.getAddress(),
+    ethers.ZeroAddress,  // demo mode — no staking token
+    0                     // no protocol fee in demo
   );
   await market.waitForDeployment();
 

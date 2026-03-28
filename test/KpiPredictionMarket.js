@@ -5,7 +5,7 @@ const { ethers } = await network.connect();
 const SECP256K1N = BigInt("0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141");
 
 describe("KpiPredictionMarket", function () {
-  async function deployFixture() {
+  async function deployFixture({ usdt = false, feeBps = 0 } = {}) {
     const [owner, reporter, alice, bob, charlie] = await ethers.getSigners();
 
     const EligibilityRegistry = await ethers.getContractFactory("EligibilityRegistry");
@@ -19,8 +19,24 @@ describe("KpiPredictionMarket", function () {
     await oracle.connect(owner).setReporter(reporter.address, true);
     await oracle.connect(owner).setSigner(reporter.address, true);
 
+    let mockToken = null;
+    let tokenAddress = ethers.ZeroAddress;
+
+    if (usdt) {
+      const MockUSDT = await ethers.getContractFactory("MockUSDT");
+      mockToken = await MockUSDT.deploy();
+      await mockToken.waitForDeployment();
+      tokenAddress = await mockToken.getAddress();
+    }
+
     const KpiPredictionMarket = await ethers.getContractFactory("KpiPredictionMarket");
-    const market = await KpiPredictionMarket.deploy(owner.address, await registry.getAddress(), await oracle.getAddress());
+    const market = await KpiPredictionMarket.deploy(
+      owner.address,
+      await registry.getAddress(),
+      await oracle.getAddress(),
+      tokenAddress,
+      feeBps
+    );
     await market.waitForDeployment();
 
     const now = await ethers.provider.getBlock("latest");
@@ -32,8 +48,21 @@ describe("KpiPredictionMarket", function () {
     await registry.connect(owner).setEligible(alice.address, true);
     await registry.connect(owner).setEligible(bob.address, true);
 
-    await market.connect(owner).grantDemoCredits(alice.address, 1_000);
-    await market.connect(owner).grantDemoCredits(bob.address, 1_000);
+    if (usdt) {
+      // Mint USDT to traders and approve
+      await mockToken.mint(alice.address, 10_000);
+      await mockToken.mint(bob.address, 10_000);
+      await mockToken.connect(alice).approve(await market.getAddress(), ethers.MaxUint256);
+      await mockToken.connect(bob).approve(await market.getAddress(), ethers.MaxUint256);
+      // Deposit into market contract
+      await market.connect(alice).deposit(1_000);
+      await market.connect(bob).deposit(1_000);
+      // Disable min position for unit tests (tested separately)
+      await market.connect(owner).setMinPositionSize(0);
+    } else {
+      await market.connect(owner).grantDemoCredits(alice.address, 1_000);
+      await market.connect(owner).grantDemoCredits(bob.address, 1_000);
+    }
 
     await market.connect(owner).createMarket(
       marketId,
@@ -47,36 +76,27 @@ describe("KpiPredictionMarket", function () {
       expectedAnnouncementAt
     );
 
-    return { owner, reporter, alice, bob, charlie, registry, oracle, market, marketId };
+    return { owner, reporter, alice, bob, charlie, registry, oracle, market, marketId, mockToken };
   }
 
-  it("settles a hit market and redistributes losing stakes to winners", async function () {
-    const { reporter, alice, bob, market, oracle, marketId } = await deployFixture();
-
-    await market.connect(alice).takePosition(marketId, 1, 600);
-    await market.connect(bob).takePosition(marketId, 2, 400);
-
+  // Helper: sign and publish oracle resolution
+  async function resolveOracle(reporter, oracle, marketId, actualValue = 425_000, nonce = 1) {
     const networkData = await ethers.provider.getNetwork();
     const oracleAddress = await oracle.getAddress();
 
     const payload = {
       marketId,
-      actualValue: 425_000,
+      actualValue,
       sourceHash: ethers.id("tesla-q2-2026-release"),
       sourceUri: "https://ir.tesla.com",
       observedAt: 1_720_000_000,
       validAfter: 0,
       validBefore: 0,
-      nonce: 1,
+      nonce,
     };
 
     const signature = await reporter.signTypedData(
-      {
-        name: "PRED KPI Oracle",
-        version: "1",
-        chainId: networkData.chainId,
-        verifyingContract: oracleAddress,
-      },
+      { name: "PRED KPI Oracle", version: "1", chainId: networkData.chainId, verifyingContract: oracleAddress },
       {
         ResolutionPayload: [
           { name: "marketId", type: "bytes32" },
@@ -92,6 +112,18 @@ describe("KpiPredictionMarket", function () {
       payload
     );
 
+    return { payload, signature };
+  }
+
+  // ── Demo mode tests (backward compatible) ──
+
+  it("settles a hit market and redistributes losing stakes to winners", async function () {
+    const { reporter, alice, bob, market, oracle, marketId } = await deployFixture();
+
+    await market.connect(alice).takePosition(marketId, 1, 600);
+    await market.connect(bob).takePosition(marketId, 2, 400);
+
+    const { payload, signature } = await resolveOracle(reporter, oracle, marketId);
     await oracle.connect(alice).publishSignedResolution(payload, signature);
 
     await ethers.provider.send("evm_increaseTime", [3605]);
@@ -140,12 +172,7 @@ describe("KpiPredictionMarket", function () {
     };
 
     const signature = await charlie.signTypedData(
-      {
-        name: "PRED KPI Oracle",
-        version: "1",
-        chainId: networkData.chainId,
-        verifyingContract: await oracle.getAddress(),
-      },
+      { name: "PRED KPI Oracle", version: "1", chainId: networkData.chainId, verifyingContract: await oracle.getAddress() },
       {
         ResolutionPayload: [
           { name: "marketId", type: "bytes32" },
@@ -172,40 +199,7 @@ describe("KpiPredictionMarket", function () {
 
     await market.connect(alice).takePosition(marketId, 1, 100);
 
-    const networkData = await ethers.provider.getNetwork();
-    const payload = {
-      marketId,
-      actualValue: 425_000,
-      sourceHash: ethers.id("tesla-q2-2026-release"),
-      sourceUri: "https://ir.tesla.com/q2-2026",
-      observedAt: 1_720_000_000,
-      validAfter: 0,
-      validBefore: 0,
-      nonce: 7,
-    };
-
-    const signature = await reporter.signTypedData(
-      {
-        name: "PRED KPI Oracle",
-        version: "1",
-        chainId: networkData.chainId,
-        verifyingContract: await oracle.getAddress(),
-      },
-      {
-        ResolutionPayload: [
-          { name: "marketId", type: "bytes32" },
-          { name: "actualValue", type: "int256" },
-          { name: "sourceHash", type: "bytes32" },
-          { name: "sourceUri", type: "string" },
-          { name: "observedAt", type: "uint64" },
-          { name: "validAfter", type: "uint64" },
-          { name: "validBefore", type: "uint64" },
-          { name: "nonce", type: "uint256" },
-        ],
-      },
-      payload
-    );
-
+    const { payload, signature } = await resolveOracle(reporter, oracle, marketId, 425_000, 7);
     await oracle.connect(alice).publishSignedResolution(payload, signature);
 
     await expect(market.connect(alice).settleMarket(marketId)).to.be.revertedWithCustomError(
@@ -224,8 +218,53 @@ describe("KpiPredictionMarket", function () {
     );
   });
 
+  it("rejects malleable high-s oracle signatures", async function () {
+    const { alice, reporter, oracle, marketId } = await deployFixture();
+
+    const networkData = await ethers.provider.getNetwork();
+    const payload = {
+      marketId,
+      actualValue: 425_000,
+      sourceHash: ethers.id("tesla-q2-2026-release"),
+      sourceUri: "https://ir.tesla.com/q2-2026",
+      observedAt: 1_720_000_000,
+      validAfter: 0,
+      validBefore: 0,
+      nonce: 9,
+    };
+
+    const signature = await reporter.signTypedData(
+      { name: "PRED KPI Oracle", version: "1", chainId: networkData.chainId, verifyingContract: await oracle.getAddress() },
+      {
+        ResolutionPayload: [
+          { name: "marketId", type: "bytes32" },
+          { name: "actualValue", type: "int256" },
+          { name: "sourceHash", type: "bytes32" },
+          { name: "sourceUri", type: "string" },
+          { name: "observedAt", type: "uint64" },
+          { name: "validAfter", type: "uint64" },
+          { name: "validBefore", type: "uint64" },
+          { name: "nonce", type: "uint256" },
+        ],
+      },
+      payload
+    );
+
+    const parsed = ethers.Signature.from(signature);
+    const flippedV = parsed.v === 27 ? 28 : 27;
+    const malleableSignature = ethers.concat([
+      parsed.r,
+      ethers.toBeHex(SECP256K1N - BigInt(parsed.s), 32),
+      ethers.toBeArray(flippedV),
+    ]);
+
+    await expect(oracle.connect(alice).publishSignedResolution(payload, malleableSignature)).to.be.revertedWithCustomError(
+      oracle,
+      "InvalidSignature"
+    );
+  });
+
   describe("commit-reveal", function () {
-    // Shared EIP-712 domain + type helpers
     async function makePayload(marketId, nonce = 42) {
       return {
         marketId,
@@ -262,11 +301,9 @@ describe("KpiPredictionMarket", function () {
       const payload = await makePayload(marketId, 50);
       const digest = await oracle.hashResolutionPayload(payload);
 
-      // Signer pre-commits the digest before lock
       await oracle.connect(reporter).commitResolution(marketId, digest);
       expect(await oracle.resolutionCommits(marketId)).to.equal(digest);
 
-      // Reveal: signed payload whose digest matches the commit
       const signature = await reporter.signTypedData(domain, TYPES, payload);
       await oracle.connect(alice).publishSignedResolution(payload, signature);
 
@@ -282,12 +319,10 @@ describe("KpiPredictionMarket", function () {
       const oracleAddress = await oracle.getAddress();
       const domain = { name: "PRED KPI Oracle", version: "1", chainId: networkData.chainId, verifyingContract: oracleAddress };
 
-      // Commit a digest for one payload
       const committedPayload = await makePayload(marketId, 60);
       const committedDigest = await oracle.hashResolutionPayload(committedPayload);
       await oracle.connect(reporter).commitResolution(marketId, committedDigest);
 
-      // Attempt to reveal a *different* payload (different actualValue)
       const differentPayload = { ...committedPayload, actualValue: 300_000, nonce: 61 };
       const signature = await reporter.signTypedData(domain, TYPES, differentPayload);
 
@@ -302,13 +337,11 @@ describe("KpiPredictionMarket", function () {
       const oracleAddress = await oracle.getAddress();
       const domain = { name: "PRED KPI Oracle", version: "1", chainId: networkData.chainId, verifyingContract: oracleAddress };
 
-      // No commitResolution call — commit slot is zero
       expect(await oracle.resolutionCommits(marketId)).to.equal(ethers.ZeroHash);
 
       const payload = await makePayload(marketId, 70);
       const signature = await reporter.signTypedData(domain, TYPES, payload);
 
-      // Should resolve normally without a prior commit
       await oracle.connect(alice).publishSignedResolution(payload, signature);
       const [resolved] = await oracle.getResolution(marketId);
       expect(resolved).to.be.true;
@@ -323,54 +356,184 @@ describe("KpiPredictionMarket", function () {
     });
   });
 
-  it("rejects malleable high-s oracle signatures", async function () {
-    const { alice, reporter, oracle, marketId } = await deployFixture();
+  // ── USDT mode tests ──
 
-    const networkData = await ethers.provider.getNetwork();
-    const payload = {
-      marketId,
-      actualValue: 425_000,
-      sourceHash: ethers.id("tesla-q2-2026-release"),
-      sourceUri: "https://ir.tesla.com/q2-2026",
-      observedAt: 1_720_000_000,
-      validAfter: 0,
-      validBefore: 0,
-      nonce: 9,
-    };
+  describe("USDT mode", function () {
+    it("settles a hit market with USDT and applies protocol fee", async function () {
+      const { reporter, alice, bob, market, oracle, marketId, mockToken } =
+        await deployFixture({ usdt: true, feeBps: 100 });
 
-    const signature = await reporter.signTypedData(
-      {
-        name: "PRED KPI Oracle",
-        version: "1",
-        chainId: networkData.chainId,
-        verifyingContract: await oracle.getAddress(),
-      },
-      {
-        ResolutionPayload: [
-          { name: "marketId", type: "bytes32" },
-          { name: "actualValue", type: "int256" },
-          { name: "sourceHash", type: "bytes32" },
-          { name: "sourceUri", type: "string" },
-          { name: "observedAt", type: "uint64" },
-          { name: "validAfter", type: "uint64" },
-          { name: "validBefore", type: "uint64" },
-          { name: "nonce", type: "uint256" },
-        ],
-      },
-      payload
-    );
+      await market.connect(alice).takePosition(marketId, 1, 600);
+      await market.connect(bob).takePosition(marketId, 2, 400);
 
-    const parsed = ethers.Signature.from(signature);
-    const flippedV = parsed.v === 27 ? 28 : 27;
-    const malleableSignature = ethers.concat([
-      parsed.r,
-      ethers.toBeHex(SECP256K1N - BigInt(parsed.s), 32),
-      ethers.toBeArray(flippedV),
-    ]);
+      const { payload, signature } = await resolveOracle(reporter, oracle, marketId, 425_000, 20);
+      await oracle.connect(alice).publishSignedResolution(payload, signature);
 
-    await expect(oracle.connect(alice).publishSignedResolution(payload, malleableSignature)).to.be.revertedWithCustomError(
-      oracle,
-      "InvalidSignature"
-    );
+      await ethers.provider.send("evm_increaseTime", [3605]);
+      await ethers.provider.send("evm_mine", []);
+
+      await market.connect(alice).settleMarket(marketId);
+
+      // Alice claims: gross = 600 + 400 = 1000, winnings = 400, fee = 4 (1%), net = 996
+      await market.connect(alice).claim(marketId);
+      // Bob claims: loser, payout = 0
+      await market.connect(bob).claim(marketId);
+
+      // Alice: 9000 remaining in wallet + 996 claimed
+      const aliceWallet = await mockToken.balanceOf(alice.address);
+      expect(aliceWallet).to.equal(9_000 + 996);
+
+      // Bob: 9000 remaining in wallet + 0 claimed
+      const bobWallet = await mockToken.balanceOf(bob.address);
+      expect(bobWallet).to.equal(9_000);
+
+      // Protocol fees: 4
+      expect(await market.accumulatedFees()).to.equal(4);
+    });
+
+    it("deposit and withdraw work correctly", async function () {
+      const { alice, market, mockToken } = await deployFixture({ usdt: true });
+
+      // Alice started with 10000, deposited 1000 in fixture
+      expect(await market.balanceOf(alice.address)).to.equal(1_000);
+      expect(await mockToken.balanceOf(alice.address)).to.equal(9_000);
+
+      // Deposit more
+      await market.connect(alice).deposit(500);
+      expect(await market.balanceOf(alice.address)).to.equal(1_500);
+      expect(await mockToken.balanceOf(alice.address)).to.equal(8_500);
+
+      // Withdraw
+      await market.connect(alice).withdraw(300);
+      expect(await market.balanceOf(alice.address)).to.equal(1_200);
+      expect(await mockToken.balanceOf(alice.address)).to.equal(8_800);
+    });
+
+    it("grantDemoCredits reverts in USDT mode", async function () {
+      const { owner, alice, market } = await deployFixture({ usdt: true });
+
+      await expect(market.connect(owner).grantDemoCredits(alice.address, 100))
+        .to.be.revertedWithCustomError(market, "LiveModeOnly");
+    });
+
+    it("deposit reverts for ineligible trader", async function () {
+      const { charlie, market, mockToken } = await deployFixture({ usdt: true });
+
+      await mockToken.mint(charlie.address, 1_000);
+      await mockToken.connect(charlie).approve(await market.getAddress(), ethers.MaxUint256);
+
+      await expect(market.connect(charlie).deposit(100))
+        .to.be.revertedWithCustomError(market, "IneligibleTrader");
+    });
+
+    it("withdrawFees transfers accumulated fees", async function () {
+      const { owner, reporter, alice, bob, market, oracle, marketId, mockToken } =
+        await deployFixture({ usdt: true, feeBps: 200 });
+
+      await market.connect(alice).takePosition(marketId, 1, 600);
+      await market.connect(bob).takePosition(marketId, 2, 400);
+
+      const { payload, signature } = await resolveOracle(reporter, oracle, marketId, 425_000, 30);
+      await oracle.connect(alice).publishSignedResolution(payload, signature);
+
+      await ethers.provider.send("evm_increaseTime", [3605]);
+      await ethers.provider.send("evm_mine", []);
+
+      await market.connect(alice).settleMarket(marketId);
+      await market.connect(alice).claim(marketId);
+
+      // Fee = 2% of 400 winnings = 8
+      const fees = await market.accumulatedFees();
+      expect(fees).to.equal(8);
+
+      const ownerBalBefore = await mockToken.balanceOf(owner.address);
+      await market.connect(owner).withdrawFees(owner.address);
+      const ownerBalAfter = await mockToken.balanceOf(owner.address);
+
+      expect(ownerBalAfter - ownerBalBefore).to.equal(8);
+      expect(await market.accumulatedFees()).to.equal(0);
+    });
+
+    it("fee cap at 5% is enforced", async function () {
+      const { owner, market } = await deployFixture({ usdt: true });
+
+      await expect(market.connect(owner).setProtocolFeeBps(501))
+        .to.be.revertedWithCustomError(market, "FeeTooHigh");
+
+      await market.connect(owner).setProtocolFeeBps(500);
+      expect(await market.protocolFeeBps()).to.equal(500);
+    });
+
+    it("enforces minimum position size", async function () {
+      const { owner, alice, market, marketId } = await deployFixture({ usdt: true });
+
+      // Set minimum to 500
+      await market.connect(owner).setMinPositionSize(500);
+
+      // Below minimum should revert
+      await expect(market.connect(alice).takePosition(marketId, 1, 100))
+        .to.be.revertedWithCustomError(market, "BelowMinPosition");
+
+      // At minimum should succeed
+      await market.connect(alice).takePosition(marketId, 1, 500);
+
+      // Adding more above existing position is fine (total = 600 > 500)
+      await market.connect(alice).takePosition(marketId, 1, 100);
+    });
+
+    it("cancelled market refunds USDT", async function () {
+      const { owner, alice, market, marketId, mockToken } = await deployFixture({ usdt: true });
+
+      await market.connect(alice).takePosition(marketId, 1, 500);
+      expect(await mockToken.balanceOf(alice.address)).to.equal(9_000); // unchanged, funds in contract
+
+      await market.connect(owner).cancelMarket(marketId);
+      await market.connect(alice).claim(marketId);
+
+      // Refund goes directly to wallet in USDT mode
+      expect(await mockToken.balanceOf(alice.address)).to.equal(9_000 + 500);
+    });
+  });
+
+  // ── Self-service allowlist tests ──
+
+  describe("EligibilityRegistry self-service", function () {
+    it("requestAccess with autoApprove grants immediate eligibility", async function () {
+      const { owner, charlie, registry } = await deployFixture();
+
+      await registry.connect(owner).setAutoApprove(true);
+      expect(await registry.isEligible(charlie.address)).to.be.false;
+
+      await registry.connect(charlie).requestAccess();
+      expect(await registry.isEligible(charlie.address)).to.be.true;
+    });
+
+    it("requestAccess without autoApprove creates pending request", async function () {
+      const { owner, charlie, registry } = await deployFixture();
+
+      expect(await registry.autoApprove()).to.be.false;
+      await registry.connect(charlie).requestAccess();
+      expect(await registry.isEligible(charlie.address)).to.be.false;
+      expect(await registry.pendingRequests(charlie.address)).to.be.true;
+
+      await registry.connect(owner).approveRequest(charlie.address);
+      expect(await registry.isEligible(charlie.address)).to.be.true;
+      expect(await registry.pendingRequests(charlie.address)).to.be.false;
+    });
+
+    it("batchApprove approves multiple pending requests", async function () {
+      const { owner, alice, charlie, registry } = await deployFixture();
+
+      // Remove alice's existing eligibility for this test
+      await registry.connect(owner).setEligible(alice.address, false);
+
+      await registry.connect(alice).requestAccess();
+      await registry.connect(charlie).requestAccess();
+
+      await registry.connect(owner).batchApprove([alice.address, charlie.address]);
+
+      expect(await registry.isEligible(alice.address)).to.be.true;
+      expect(await registry.isEligible(charlie.address)).to.be.true;
+    });
   });
 });

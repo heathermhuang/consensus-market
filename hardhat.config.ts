@@ -15,6 +15,20 @@ export default defineConfig({
       },
     },
   },
+  networks: {
+    mainnet: {
+      type: "http",
+      url: process.env.MAINNET_RPC_URL || "https://eth.llamarpc.com",
+      accounts: process.env.DEPLOYER_PRIVATE_KEY ? [process.env.DEPLOYER_PRIVATE_KEY] : [],
+      chainId: 1,
+    },
+    sepolia: {
+      type: "http",
+      url: process.env.SEPOLIA_RPC_URL || "https://rpc.sepolia.org",
+      accounts: process.env.DEPLOYER_PRIVATE_KEY ? [process.env.DEPLOYER_PRIVATE_KEY] : [],
+      chainId: 11155111,
+    },
+  },
   paths: {
     sources: "./contracts",
     tests: "./test",

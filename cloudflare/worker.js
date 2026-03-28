@@ -4,6 +4,9 @@ import { getRuntime } from "./lib/runtime.js";
 import { handleNewsRequest } from "./handlers/news.js";
 import { handleActivityRequest } from "./handlers/activity.js";
 import { handleRpcProxy } from "./handlers/rpc-proxy.js";
+import { handleWaitlistSubmit, handleWaitlistCount, handleWaitlistExport } from "./handlers/waitlist.js";
+import { handleTermsRequest, handlePrivacyRequest, handleGeoRequest } from "./handlers/legal.js";
+import { handleBbgRequest } from "./handlers/bbg.js";
 
 // ---------------------------------------------------------------------------
 // Worker entry
@@ -23,6 +26,20 @@ export default {
     if (rpcMatch) {
       const index = Number(rpcMatch[1] || 0);
       return handleRpcProxy(request, env, Number.isFinite(index) ? index : 0);
+    }
+
+    // Legal pages
+    if (url.pathname === "/terms.json") {
+      return handleTermsRequest();
+    }
+
+    if (url.pathname === "/privacy.json") {
+      return handlePrivacyRequest();
+    }
+
+    // Geo-blocking
+    if (url.pathname === "/geo.json") {
+      return handleGeoRequest(request);
     }
 
     if (url.pathname === "/runtime-config.json") {
@@ -74,12 +91,37 @@ export default {
       ));
     }
 
+    // Bloomberg live data endpoints
+    if (url.pathname.startsWith("/bbg/")) {
+      const bbgResponse = await handleBbgRequest(url, env);
+      if (bbgResponse) return bbgResponse;
+    }
+
     if (url.pathname === "/news.json") {
       return handleNewsRequest(url, env);
     }
 
     if (url.pathname === "/activity.json") {
       return handleActivityRequest(env);
+    }
+
+    // Waitlist — early access demand experiment
+    if (url.pathname === "/waitlist" && request.method === "POST") {
+      return handleWaitlistSubmit(request, env);
+    }
+
+    if (url.pathname === "/waitlist-count") {
+      return handleWaitlistCount(env);
+    }
+
+    // Admin: export waitlist (protected by secret header)
+    if (url.pathname === "/waitlist-export") {
+      const secret = env.ADMIN_SECRET || "";
+      const provided = request.headers.get("x-admin-secret") || url.searchParams.get("secret") || "";
+      if (!secret || provided !== secret) {
+        return withSecurityHeaders(Response.json({ error: "Unauthorized" }, { status: 401 }));
+      }
+      return handleWaitlistExport(request, env);
     }
 
     if (request.method !== "GET" && request.method !== "HEAD") {

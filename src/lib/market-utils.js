@@ -74,6 +74,8 @@ export function parseRouteFromHash() {
   const slug = parseSlugFromHash();
   if (page === "account") return { view: "account", slug };
   if (page === "admin") return { view: "admin", slug };
+  if (page === "terms") return { view: "terms", slug: null };
+  if (page === "privacy") return { view: "privacy", slug: null };
   if (slug) return { view: "market", slug };
   return { view: "board", slug: null };
 }
@@ -256,6 +258,11 @@ export function getStatusKey(market) {
 }
 
 export function compareMarkets(a, b, sortMode) {
+  // Active markets (with positions) always sort above inactive
+  const aActive = (a.hitPool + a.missPool) > 0 ? 1 : 0;
+  const bActive = (b.hitPool + b.missPool) > 0 ? 1 : 0;
+  if (bActive !== aActive) return bActive - aActive;
+
   if (sortMode === "liquidity") return Number(b.hitPool + b.missPool - (a.hitPool + a.missPool));
   if (sortMode === "lock") return a.locksAt - b.locksAt;
   if (sortMode === "odds") {
@@ -264,6 +271,7 @@ export function compareMarkets(a, b, sortMode) {
     return bP - aP;
   }
   if (sortMode === "company") return a.company.localeCompare(b.company);
+  if (sortMode === "industry") return (a.focus || "").localeCompare(b.focus || "");
   return a.ticker.localeCompare(b.ticker);
 }
 

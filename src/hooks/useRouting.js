@@ -73,6 +73,8 @@ export default function useRouting({ canAccessAccount, canAccessAdmin, wallet, s
     else if (appView === "account") nextHash = "#page=account";
     else if (appView === "admin")
       nextHash = selectedSlug ? `#page=admin&market=${selectedSlug}` : "#page=admin";
+    else if (appView === "terms") nextHash = "#page=terms";
+    else if (appView === "privacy") nextHash = "#page=privacy";
     if (!nextHash) return;
     if (window.location.hash !== nextHash) {
       window.history.replaceState(

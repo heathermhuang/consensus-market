@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { formatNumber } from "./contracts";
+import { formatNumber, formatCompactNumber } from "./contracts";
 import { buildPath, buildDots, buildAreaPath } from "./lib/chart-utils";
 
 function getMobileHistoryView() {
@@ -17,6 +17,7 @@ export default function HistoricalChart({ history, reportingPeriod }) {
   const [mobileView, setMobileView] = useState(getMobileHistoryView);
   const [expanded, setExpanded] = useState(false);
   const [expandedPeriods, setExpandedPeriods] = useState({});
+  const [hovered, setHovered] = useState(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return undefined;
@@ -56,15 +57,12 @@ export default function HistoricalChart({ history, reportingPeriod }) {
   );
   const canToggleArchive = mobileView && descendingHistory.length > 6;
 
-  // Derive Street estimate range (high/low) from the revision trail
-  const historyWithBand = visibleChronologicalHistory.map((point) => {
-    const revVals = (point.revisions || []).map((r) => r.value).filter(Number.isFinite);
-    return {
-      ...point,
-      consensusHigh: revVals.length ? Math.max(...revVals) : point.consensus,
-      consensusLow:  revVals.length ? Math.min(...revVals) : point.consensus,
-    };
-  });
+  // Use pre-computed Street range (analyst spread around consensus)
+  const historyWithBand = visibleChronologicalHistory.map((point) => ({
+    ...point,
+    consensusHigh: point.streetHigh ?? point.consensus,
+    consensusLow:  point.streetLow  ?? point.consensus,
+  }));
 
   const allValues = historyWithBand.flatMap((p) => [p.consensus, p.actual, p.consensusHigh, p.consensusLow]);
   const minValue = allValues.length ? Math.min(...allValues) * 0.96 : 0;
@@ -110,19 +108,25 @@ export default function HistoricalChart({ history, reportingPeriod }) {
             <path d={consensusBandPath} className="chart-band" />
             <path d={consensusPath} className="chart-line chart-line-consensus" />
             <path d={actualPath} className="chart-line chart-line-actual" />
-            {consensusDots.map((point) => (
-              <circle key={`consensus-${point.label}`} cx={point.x} cy={point.y} r="4" className="chart-dot chart-dot-consensus" />
+            {consensusDots.map((point, index) => (
+              <g key={`consensus-${point.label}`}
+                onMouseEnter={() => setHovered({ index, type: "consensus", x: point.x, y: point.y, label: point.label, value: point.value, high: historyWithBand[index].consensusHigh, low: historyWithBand[index].consensusLow })}
+                onMouseLeave={() => setHovered(null)}
+              >
+                <circle cx={point.x} cy={point.y} r="12" className="chart-hit-area" />
+                <circle cx={point.x} cy={point.y} r="4" className="chart-dot chart-dot-consensus" />
+              </g>
             ))}
             {actualDots.map((point, index) => {
               const hit = visibleChronologicalHistory[index].actual >= visibleChronologicalHistory[index].consensus;
               return (
-                <circle
-                  key={`actual-${point.label}`}
-                  cx={point.x}
-                  cy={point.y}
-                  r="4"
-                  className={`chart-dot ${hit ? "chart-dot-beat" : "chart-dot-miss"}`}
-                />
+                <g key={`actual-${point.label}`}
+                  onMouseEnter={() => setHovered({ index, type: "actual", x: point.x, y: point.y, label: point.label, value: point.value })}
+                  onMouseLeave={() => setHovered(null)}
+                >
+                  <circle cx={point.x} cy={point.y} r="12" className="chart-hit-area" />
+                  <circle cx={point.x} cy={point.y} r="4" className={`chart-dot ${hit ? "chart-dot-beat" : "chart-dot-miss"}`} />
+                </g>
               );
             })}
             {visibleChronologicalHistory.map((point, index) => (
@@ -136,6 +140,32 @@ export default function HistoricalChart({ history, reportingPeriod }) {
                 {point.period}
               </text>
             ))}
+            {hovered && (() => {
+              const tipLabel = hovered.type === "consensus" ? "Consensus" : "Actual";
+              const tipValue = formatNumber(hovered.value);
+              const tipRange = hovered.type === "consensus" && hovered.low !== hovered.high
+                ? `${formatNumber(hovered.low)} – ${formatNumber(hovered.high)}`
+                : null;
+              const labelLine = `${tipLabel}: ${tipValue}`;
+              const rangeLine = tipRange ? `Street range: ${tipRange}` : null;
+              const tipW = Math.max(labelLine.length * 7.5, rangeLine ? rangeLine.length * 6.5 : 0, 140);
+              const tipH = rangeLine ? 44 : 26;
+              const tx = Math.max(tipW / 2 + 4, Math.min(width - tipW / 2 - 4, hovered.x));
+              const ty = Math.max(2, hovered.y - tipH - 12);
+              return (
+                <g className="chart-tooltip-group" pointerEvents="none">
+                  <rect x={tx - tipW / 2} y={ty} width={tipW} height={tipH} rx="5" className="chart-tooltip-bg" />
+                  <text x={tx} y={ty + 16} textAnchor="middle" className="chart-tooltip-text">
+                    {labelLine}
+                  </text>
+                  {rangeLine && (
+                    <text x={tx} y={ty + 34} textAnchor="middle" className="chart-tooltip-text chart-tooltip-sub">
+                      {rangeLine}
+                    </text>
+                  )}
+                </g>
+              );
+            })()}
           </svg>
 
           <div className="history-table">
@@ -150,9 +180,8 @@ export default function HistoricalChart({ history, reportingPeriod }) {
             {visibleDescendingHistory.map((point) => {
               const hit = point.actual >= point.consensus;
               const isExpanded = Boolean(expandedPeriods[point.period]);
-              const revVals = (point.revisions || []).map((r) => r.value).filter(Number.isFinite);
-              const streetHigh = revVals.length ? Math.max(...revVals) : null;
-              const streetLow  = revVals.length ? Math.min(...revVals) : null;
+              const streetHigh = point.streetHigh ?? null;
+              const streetLow  = point.streetLow  ?? null;
               return (
                 <article key={point.period} className={`history-row ${hit ? "history-row-beat" : "history-row-miss"} ${isExpanded ? "history-row-open" : ""}`}>
                   <div className="history-row-summary">
@@ -162,7 +191,7 @@ export default function HistoricalChart({ history, reportingPeriod }) {
                       {formatNumber(point.consensus)}
                       {streetHigh !== null && (
                         <span className="history-range">
-                          {formatNumber(streetLow)}–{formatNumber(streetHigh)}
+                          {formatNumber(streetLow)}{"\u2013"}{formatNumber(streetHigh)}
                         </span>
                       )}
                     </span>
@@ -206,26 +235,45 @@ export default function HistoricalChart({ history, reportingPeriod }) {
                     </button>
                   </div>
 
-                  {isExpanded && (
-                    <div id={`history-revisions-${point.period}`} className="history-revisions">
-                      <div className="meta-row history-revisions-head">
-                        <span className="field-label">{point.period} Street consensus path</span>
-                        <span className="field-label">{(point.revisions || []).length} snapshots</span>
+                  {isExpanded && (() => {
+                    const revs = point.revisions || [];
+                    if (revs.length === 0) return null;
+                    const revValues = revs.map((r) => r.value);
+                    const revMin = Math.min(...revValues) * 0.998;
+                    const revMax = Math.max(...revValues) * 1.002;
+                    const sparkW = 320;
+                    const sparkH = 80;
+                    const sparkPad = 24;
+                    const revRange = Math.max(revMax - revMin, 1);
+                    const revPoints = revs.map((r, ri) => ({
+                      x: sparkPad + (ri / Math.max(revs.length - 1, 1)) * (sparkW - sparkPad * 2),
+                      y: 12 + (sparkH - 24) - ((r.value - revMin) / revRange) * (sparkH - 24),
+                      ...r,
+                    }));
+                    const revPath = revPoints.map((p, i) => `${i === 0 ? "M" : "L"} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(" ");
+                    return (
+                      <div id={`history-revisions-${point.period}`} className="history-revisions">
+                        <div className="meta-row history-revisions-head">
+                          <span className="field-label">{point.period} Street consensus path</span>
+                          <span className="field-label">{revs.length} snapshots</span>
+                        </div>
+                        <svg className="revision-sparkline" viewBox={`0 0 ${sparkW} ${sparkH}`} role="img" aria-label={`${point.period} revision path`}>
+                          <path d={revPath} className="chart-line chart-line-consensus" />
+                          {revPoints.map((rp) => (
+                            <g key={rp.label}>
+                              <circle cx={rp.x} cy={rp.y} r="3.5" className="chart-dot chart-dot-consensus" />
+                              <text x={rp.x} y={rp.y - 8} textAnchor="middle" className="chart-tooltip-text" style={{ fontSize: 9, fill: "var(--text-soft)" }}>
+                                {formatCompactNumber(rp.value)}
+                              </text>
+                              <text x={rp.x} y={sparkH - 2} textAnchor="middle" className="chart-label" style={{ fontSize: 8 }}>
+                                {rp.label.replace(" weeks out", "w").replace("Locked street read", "Lock")}
+                              </text>
+                            </g>
+                          ))}
+                        </svg>
                       </div>
-                      <div className="revision-list">
-                        {(point.revisions || []).map((revision) => (
-                          <article key={`${point.period}-${revision.label}`} className="revision-card">
-                            <span className="field-label">{revision.label}</span>
-                            <strong>{formatNumber(revision.value)}</strong>
-                            <p className={`revision-change ${revision.changeRatio >= 0 ? "tone-beat" : "tone-miss"}`}>
-                              {revision.changeLabel}
-                            </p>
-                            <p>{revision.isLocked ? "This was the archived lock reference for the period." : "Visible sell-side read ahead of the report."}</p>
-                          </article>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                    );
+                  })()}
                 </article>
               );
             })}
@@ -239,11 +287,6 @@ export default function HistoricalChart({ history, reportingPeriod }) {
         </>
       )}
 
-      <p className="history-note">
-        Archive rows are shown newest first. On mobile, the chart and archive default to the latest six periods. Source links are
-        period-specific issuer material lookups for fact-checking the seeded archive, and each row can expand to show the prior
-        Street consensus path for that quarter.
-      </p>
     </div>
   );
 }

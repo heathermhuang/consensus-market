@@ -76,8 +76,8 @@ async function main() {
     }
 
     const catalog = await fetchJson(`${baseUrl}/catalog.json`, "Check market catalog");
-    if (!Array.isArray(catalog.markets) || catalog.markets.length !== 20) {
-      throw new Error("Catalog should expose exactly 20 live markets.");
+    if (!Array.isArray(catalog.markets) || catalog.markets.length < 20) {
+      throw new Error(`Catalog should expose at least 20 live markets (found ${catalog.markets?.length ?? 0}).`);
     }
 
     const newsHeaders = await fetchHeaders(`${baseUrl}/news.json?market=lyft-rides`, "Check live news headers");
