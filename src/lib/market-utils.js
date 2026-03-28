@@ -118,16 +118,7 @@ export function formatNewsTimestamp(value) {
   });
 }
 
-export function formatTimestampWithYear(timestamp) {
-  if (!timestamp) return "Not scheduled";
-  return new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-  }).format(new Date(Number(timestamp) * 1000));
-}
+export { formatTimestampWithYear } from "./format-utils.js";
 
 export function getMediaLogoUrl(article) {
   const domain = article?.sourceDomain || "";

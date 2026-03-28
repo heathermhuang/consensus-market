@@ -1,17 +1,7 @@
 import BrandAvatar from "./BrandAvatar";
 import { getCompanyBrand } from "./brandSystem";
 import { formatCompactNumber, formatNumber, shortAddress } from "./contracts";
-
-function formatTimestampWithYear(timestamp) {
-  if (!timestamp) return "Not scheduled";
-  return new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-  }).format(new Date(Number(timestamp) * 1000));
-}
+import { formatTimestampWithYear } from "./lib/format-utils";
 
 export default function AccountPage({
   wallet,

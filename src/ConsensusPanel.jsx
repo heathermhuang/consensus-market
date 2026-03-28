@@ -1,15 +1,7 @@
 import BrandAvatar from "./BrandAvatar";
 import { getFirmBrand } from "./brandSystem";
 import { formatNumber, formatPercent } from "./contracts";
-
-function formatTimestampWithYear(timestamp) {
-  if (!timestamp) return "Unknown";
-  return new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  }).format(new Date(Number(timestamp) * 1000));
-}
+import { formatTimestampDateOnly as formatTimestampWithYear } from "./lib/format-utils";
 
 function buildPath(points, width, height, minValue, maxValue) {
   const innerWidth = width - 40;
