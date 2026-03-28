@@ -110,7 +110,7 @@ export default function HistoricalChart({ history, reportingPeriod }) {
             <path d={actualPath} className="chart-line chart-line-actual" />
             {consensusDots.map((point, index) => (
               <g key={`consensus-${point.label}`}
-                onMouseEnter={() => setHovered({ index, type: "consensus", x: point.x, y: point.y, label: point.label, value: point.value, high: historyWithBand[index].consensusHigh, low: historyWithBand[index].consensusLow })}
+                onMouseEnter={() => setHovered({ index, type: "consensus", x: point.x, y: point.y, label: point.label, value: point.consensus, high: historyWithBand[index].consensusHigh, low: historyWithBand[index].consensusLow })}
                 onMouseLeave={() => setHovered(null)}
               >
                 <circle cx={point.x} cy={point.y} r="12" className="chart-hit-area" />
@@ -121,7 +121,7 @@ export default function HistoricalChart({ history, reportingPeriod }) {
               const hit = visibleChronologicalHistory[index].actual >= visibleChronologicalHistory[index].consensus;
               return (
                 <g key={`actual-${point.label}`}
-                  onMouseEnter={() => setHovered({ index, type: "actual", x: point.x, y: point.y, label: point.label, value: point.value })}
+                  onMouseEnter={() => setHovered({ index, type: "actual", x: point.x, y: point.y, label: point.label, value: point.actual })}
                   onMouseLeave={() => setHovered(null)}
                 >
                   <circle cx={point.x} cy={point.y} r="12" className="chart-hit-area" />
