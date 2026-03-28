@@ -80,3 +80,17 @@ export function withSecurityHeaders(response, extraHeaders = {}) {
     headers,
   });
 }
+
+/** Constant-time string comparison to prevent timing side-channels. */
+export function timingSafeEqual(a, b) {
+  if (typeof a !== "string" || typeof b !== "string") return false;
+  const encoder = new TextEncoder();
+  const bufA = encoder.encode(a);
+  const bufB = encoder.encode(b);
+  if (bufA.byteLength !== bufB.byteLength) return false;
+  let mismatch = 0;
+  for (let i = 0; i < bufA.byteLength; i++) {
+    mismatch |= bufA[i] ^ bufB[i];
+  }
+  return mismatch === 0;
+}

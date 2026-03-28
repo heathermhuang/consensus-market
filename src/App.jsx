@@ -36,10 +36,8 @@ import useWallet from "./hooks/useWallet";
 import useOnChainSync from "./hooks/useOnChainSync";
 import useMarketActions from "./hooks/useMarketActions";
 
-const adminAllowlist = [
-  "0xdd01283e8c4e87dd2c3aafa5dcf762903479f156",
-  "0x41242bf2d454fd68391eeefd7a43c42439db5d8e",
-];
+// Admin allowlist loaded from runtime config (Worker env var ADMIN_ALLOWLIST)
+// Falls back to empty — no admin access unless the Worker provides the list
 
 export default function App({ runtimeConfig }) {
   // ── Shared UI state ──
@@ -93,6 +91,7 @@ export default function App({ runtimeConfig }) {
   const isWalletBlacklisted =
     Boolean(wallet.account) && blacklist.includes(normalizeAddress(wallet.account));
   const canAccessAccount = Boolean(wallet.account);
+  const adminAllowlist = runtimeConfig.adminAllowlist || [];
   const canAccessAdmin =
     Boolean(wallet.account) && adminAllowlist.includes(normalizeAddress(wallet.account));
   const walletOnExpectedChain = wallet.chainId === runtimeConfig.chainId;

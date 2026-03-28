@@ -1,5 +1,5 @@
 import marketSeeds from "../data/markets.json";
-import { withSecurityHeaders } from "./lib/helpers.js";
+import { withSecurityHeaders, timingSafeEqual } from "./lib/helpers.js";
 import { getRuntime } from "./lib/runtime.js";
 import { handleNewsRequest } from "./handlers/news.js";
 import { handleActivityRequest } from "./handlers/activity.js";
@@ -114,11 +114,11 @@ export default {
       return handleWaitlistCount(env);
     }
 
-    // Admin: export waitlist (protected by secret header)
+    // Admin: export waitlist (protected by secret header, constant-time compare)
     if (url.pathname === "/waitlist-export") {
       const secret = env.ADMIN_SECRET || "";
-      const provided = request.headers.get("x-admin-secret") || url.searchParams.get("secret") || "";
-      if (!secret || provided !== secret) {
+      const provided = request.headers.get("x-admin-secret") || "";
+      if (!secret || !provided || !timingSafeEqual(secret, provided)) {
         return withSecurityHeaders(Response.json({ error: "Unauthorized" }, { status: 401 }));
       }
       return handleWaitlistExport(request, env);

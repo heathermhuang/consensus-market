@@ -81,5 +81,12 @@ export async function getRuntime(requestUrl, env) {
     rpcAvailable: rpcUrls.length > 0,
     rpcUrl: rpcUrls[0] || "",
     rpcUrls,
+    adminAllowlist: parseAdminAllowlist(env),
   };
+}
+
+function parseAdminAllowlist(env) {
+  const raw = env.ADMIN_ALLOWLIST || "";
+  if (!raw) return [];
+  return raw.split(",").map((a) => a.trim().toLowerCase()).filter(Boolean);
 }
