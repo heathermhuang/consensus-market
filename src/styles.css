@@ -30,7 +30,6 @@
   --shadow-sm: 0 12px 28px rgba(26, 19, 13, 0.05);
   --shadow-md: 0 24px 60px rgba(26, 19, 13, 0.08);
   --shadow-lg: 0 40px 90px rgba(26, 19, 13, 0.12);
-  --radius-xl: 30px;
   --radius-lg: 22px;
   --radius-md: 18px;
   --radius-sm: 14px;
@@ -403,7 +402,7 @@ a {
   width: 60px;
   height: 60px;
   padding: 3px;
-  border-radius: 18px;
+  border-radius: var(--radius-md);
 }
 
 .brand-avatar-large .brand-avatar-frame {
@@ -1261,7 +1260,7 @@ a {
   width: 100%;
   min-height: 84px;
   padding: 18px 20px;
-  border-radius: 18px;
+  border-radius: var(--radius-md);
   text-align: left;
 }
 
@@ -1369,7 +1368,7 @@ a {
 
 .connect-fallback {
   border: 1px solid var(--line);
-  border-radius: 18px;
+  border-radius: var(--radius-md);
   background: rgba(255, 255, 255, 0.58);
   overflow: hidden;
 }
@@ -1448,7 +1447,7 @@ a {
   display: grid;
   gap: 10px;
   padding: 18px;
-  border-radius: 18px;
+  border-radius: var(--radius-md);
   border: 1px solid var(--card-border);
   background: rgba(255, 255, 255, 0.72);
 }
@@ -2022,7 +2021,7 @@ a {
 
 .loading-card {
   padding: 18px;
-  border-radius: 18px;
+  border-radius: var(--radius-md);
   border: 1px solid rgba(63, 50, 35, 0.1);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.76), rgba(247, 241, 233, 0.98));
@@ -2721,7 +2720,7 @@ a {
   .brand-mark {
     width: 56px;
     height: 56px;
-    border-radius: 18px;
+    border-radius: var(--radius-md);
   }
 
   .topbar-actions {
@@ -2857,7 +2856,7 @@ a {
     width: 54px;
     height: 54px;
     padding: 2px;
-    border-radius: 18px;
+    border-radius: var(--radius-md);
   }
 
   .brand-avatar-large .brand-avatar-frame {
