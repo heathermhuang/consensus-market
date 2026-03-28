@@ -526,7 +526,7 @@ a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 36px;
+  min-height: 44px;
   padding: 0 16px;
   border-radius: 999px;
   color: var(--text-soft);
