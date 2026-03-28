@@ -370,12 +370,11 @@ export default function App({ runtimeConfig }) {
         <div className="topbar-main">
           <div className="brand-lockup brand-lockup-premium">
             <div className="brand-mark" aria-hidden="true">
-              <span className="brand-mark-frame">
-                <span className="brand-mark-column brand-mark-column-left" />
-                <span className="brand-mark-column brand-mark-column-mid" />
-                <span className="brand-mark-column brand-mark-column-right" />
-                <span className="brand-mark-spark" />
-              </span>
+              <svg className="brand-mark-svg" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="3" y="14" width="4" height="9" rx="1.5" fill="rgba(255,255,255,0.5)" />
+                <rect x="11" y="8" width="4" height="15" rx="1.5" fill="rgba(255,255,255,0.7)" />
+                <rect x="19" y="3" width="4" height="20" rx="1.5" fill="rgba(255,255,255,0.9)" />
+              </svg>
             </div>
             <div className="brand-copy">
               <p className="brand-title">Consensus Market</p>
