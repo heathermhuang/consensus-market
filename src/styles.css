@@ -41,6 +41,14 @@
   --card-radius: 16px;
   --row-radius: 18px;
   --button-height: 44px;
+  --beat: #157f5c;
+  --beat-deep: #0f6a4d;
+  --beat-hover: #1a9470;
+  --beat-hover-deep: #137557;
+  --miss: #c56849;
+  --miss-deep: #a64f39;
+  --miss-hover: #d97757;
+  --miss-hover-deep: #b85a44;
   --transition: 180ms ease;
 }
 
@@ -1890,13 +1898,13 @@ a {
 
 .action-buy-beat {
   color: #fff;
-  background: linear-gradient(145deg, #157f5c, #0f6a4d);
+  background: linear-gradient(145deg, var(--beat), var(--beat-deep));
   box-shadow: 0 16px 32px rgba(15, 106, 77, 0.2);
   transition: background var(--transition), box-shadow var(--transition), transform var(--transition);
 }
 
 .action-buy-beat:hover:not(:disabled) {
-  background: linear-gradient(145deg, #1a9470, #137557);
+  background: linear-gradient(145deg, var(--beat-hover), var(--beat-hover-deep));
   box-shadow: 0 22px 44px rgba(15, 106, 77, 0.32);
 }
 
@@ -1906,14 +1914,14 @@ a {
 
 .action-buy-miss {
   color: #fff;
-  background: linear-gradient(145deg, #c56849, #a64f39);
+  background: linear-gradient(145deg, var(--miss), var(--miss-deep));
   border-color: transparent;
   box-shadow: 0 16px 32px rgba(166, 79, 57, 0.18);
   transition: background var(--transition), box-shadow var(--transition), transform var(--transition);
 }
 
 .action-buy-miss:hover:not(:disabled) {
-  background: linear-gradient(145deg, #d97757, #b85a44);
+  background: linear-gradient(145deg, var(--miss-hover), var(--miss-hover-deep));
   box-shadow: 0 22px 44px rgba(166, 79, 57, 0.3);
 }
 
