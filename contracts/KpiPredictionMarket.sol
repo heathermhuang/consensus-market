@@ -44,8 +44,6 @@ contract KpiPredictionMarket is Owned, ReentrancyGuard {
     uint16 public protocolFeeBps;
     uint256 public accumulatedFees;
     uint256 public minPositionSize;
-    address public pendingOwner; // F-009: two-step ownership transfer
-
     mapping(address => uint256) public demoCredits;
     mapping(bytes32 => Market) private markets;
     mapping(bytes32 => mapping(address => Position)) public positions;
@@ -93,7 +91,7 @@ contract KpiPredictionMarket is Owned, ReentrancyGuard {
     error LiveModeOnly();
     error FeeTooHigh();
     error BelowMinPosition();
-    error NotPendingOwner();
+
 
     constructor(
         address initialOwner,
@@ -110,23 +108,7 @@ contract KpiPredictionMarket is Owned, ReentrancyGuard {
         minPositionSize = address(_stakingToken) == address(0) ? 0 : 10_000_000;
     }
 
-    // ── F-009: Two-step ownership transfer ──
-
-    function transferOwnership(address newOwner) public override onlyOwner {
-        pendingOwner = newOwner;
-    }
-
-    function acceptOwnership() external {
-        if (msg.sender != pendingOwner) revert NotPendingOwner();
-        pendingOwner = address(0);
-        _transferOwnership(msg.sender);
-    }
-
-    function _transferOwnership(address newOwner) internal {
-        address oldOwner = owner;
-        owner = newOwner;
-        emit OwnershipTransferred(oldOwner, newOwner);
-    }
+    // Two-step ownership transfer inherited from Owned.sol
 
     // ── View helpers ──
 

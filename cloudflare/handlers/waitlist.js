@@ -1,9 +1,22 @@
 import { withSecurityHeaders } from "../lib/helpers.js";
 
 const WAITLIST_PREFIX = "waitlist:";
+const RATE_LIMIT_TTL = 60; // 1 minute per IP
 
 export async function handleWaitlistSubmit(request, env) {
   try {
+    // Per-IP rate limiting via KV
+    const ip = request.headers.get("cf-connecting-ip") || "unknown";
+    const rateKey = `ratelimit:waitlist:${ip}`;
+    const existing = await env.CACHE.get(rateKey);
+    if (existing) {
+      return withSecurityHeaders(Response.json(
+        { ok: false, error: "Too many requests. Try again in a minute." },
+        { status: 429 }
+      ));
+    }
+    await env.CACHE.put(rateKey, "1", { expirationTtl: RATE_LIMIT_TTL });
+
     const body = await request.json();
     const email = String(body.email || "").trim().toLowerCase();
 
@@ -25,15 +38,14 @@ export async function handleWaitlistSubmit(request, env) {
       markets,
       submittedAt: new Date().toISOString(),
       country: request.cf?.country || "XX",
-      userAgent: (request.headers.get("user-agent") || "").slice(0, 200),
     };
 
     await env.CACHE.put(`${WAITLIST_PREFIX}${email}`, JSON.stringify(entry));
 
     // Update count
     const countRaw = await env.CACHE.get("waitlist:_count");
-    const existing = await env.CACHE.get(`${WAITLIST_PREFIX}${email}:seen`);
-    if (!existing) {
+    const alreadySeen = await env.CACHE.get(`${WAITLIST_PREFIX}${email}:seen`);
+    if (!alreadySeen) {
       const count = Number(countRaw || 0) + 1;
       await env.CACHE.put("waitlist:_count", String(count));
       await env.CACHE.put(`${WAITLIST_PREFIX}${email}:seen`, "1");

@@ -160,9 +160,8 @@ export async function handleRpcProxy(request, env, index = 0) {
 
   const contentType = upstreamResponse.headers.get("content-type") || "";
   if (!contentType.toLowerCase().includes("application/json")) {
-    const detail = (await upstreamResponse.text()).slice(0, 200);
     return withSecurityHeaders(Response.json(
-      { ok: false, error: "RPC upstream is unavailable.", detail },
+      { ok: false, error: "RPC upstream is unavailable." },
       { status: 502, headers: { ...corsHeaders, "Cache-Control": "no-store" } }
     ), corsHeaders);
   }
