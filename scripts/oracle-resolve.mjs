@@ -32,26 +32,7 @@ import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
 import { ethers } from "ethers";
-
-const oracleAbi = [
-  "function authorizedSigners(address) view returns (bool)",
-  "function getResolution(bytes32 marketId) view returns (bool resolved, int256 actualValue, uint64 resolvedAt, uint64 observedAt, bytes32 sourceHash, bytes32 attestationDigest, address signer, string sourceUri)",
-  "function hashResolutionPayload((bytes32 marketId,int256 actualValue,bytes32 sourceHash,string sourceUri,uint64 observedAt,uint64 validAfter,uint64 validBefore,uint256 nonce) payload) view returns (bytes32)",
-  "function publishSignedResolution((bytes32 marketId,int256 actualValue,bytes32 sourceHash,string sourceUri,uint64 observedAt,uint64 validAfter,uint64 validBefore,uint256 nonce) payload, bytes signature) returns (address signer, bytes32 digest)",
-];
-
-const resolutionTypes = {
-  ResolutionPayload: [
-    { name: "marketId", type: "bytes32" },
-    { name: "actualValue", type: "int256" },
-    { name: "sourceHash", type: "bytes32" },
-    { name: "sourceUri", type: "string" },
-    { name: "observedAt", type: "uint64" },
-    { name: "validAfter", type: "uint64" },
-    { name: "validBefore", type: "uint64" },
-    { name: "nonce", type: "uint256" },
-  ],
-};
+import { oracleAbi, resolutionTypes } from "./lib/abis.js";
 
 function parseArgs(argv) {
   const args = {};

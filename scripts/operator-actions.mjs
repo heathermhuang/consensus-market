@@ -2,35 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
 import { ethers } from "ethers";
-
-const marketAbi = [
-  "function owner() view returns (address)",
-  "function demoCredits(address) view returns (uint256)",
-  "function createMarket(bytes32 marketId, string companyTicker, string metricName, int256 consensusValue, string consensusSource, string resolutionPolicy, uint64 opensAt, uint64 locksAt, uint64 expectedAnnouncementAt)",
-  "function cancelMarket(bytes32 marketId)",
-  "function grantDemoCredits(address trader, uint256 amount)",
-  "function getMarket(bytes32 marketId) view returns ((bool exists,bool cancelled,bool settled,bool outcomeHit,bytes32 marketId,string companyTicker,string metricName,string consensusSource,string resolutionPolicy,int256 consensusValue,uint64 opensAt,uint64 locksAt,uint64 expectedAnnouncementAt,uint256 hitPool,uint256 missPool))",
-  "function positions(bytes32 marketId, address trader) view returns (uint8)",
-  "function stakes(bytes32 marketId, address trader) view returns (uint256)",
-  "function takePosition(bytes32 marketId, uint8 side, uint256 amount)",
-  "function settleMarket(bytes32 marketId)",
-  "function claim(bytes32 marketId) returns (uint256 payout)",
-];
-
-const oracleAbi = [
-  "function owner() view returns (address)",
-  "function authorizedReporters(address) view returns (bool)",
-  "function authorizedSigners(address) view returns (bool)",
-  "function setReporter(address reporter, bool authorized)",
-  "function setSigner(address signer, bool authorized)",
-  "function publishResolution(bytes32 marketId, int256 actualValue, bytes32 sourceHash, string sourceUri)",
-];
-
-const registryAbi = [
-  "function owner() view returns (address)",
-  "function isEligible(address account) view returns (bool)",
-  "function setEligible(address account, bool eligible)",
-];
+import { marketAbi, oracleAbi, registryAbi } from "./lib/abis.js";
+import { getRequiredEnv } from "./lib/env.js";
 
 function usage() {
   console.log(`capital.markets operator CLI
@@ -80,14 +53,6 @@ function parseArgs(argv) {
   }
 
   return { command, options };
-}
-
-function getRequiredEnv(name) {
-  const value = process.env[name];
-  if (!value) {
-    throw new Error(`Missing environment variable: ${name}`);
-  }
-  return value;
 }
 
 function parseBoolean(value, label) {

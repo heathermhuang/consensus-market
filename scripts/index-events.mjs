@@ -2,34 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
 import { ethers } from "ethers";
-
-const marketEvents = [
-  "event DemoCreditsGranted(address indexed trader, uint256 amount)",
-  "event MarketCreated(bytes32 indexed marketId, string companyTicker, string metricName, int256 consensusValue, string consensusSource, uint64 opensAt, uint64 locksAt, uint64 expectedAnnouncementAt)",
-  "event MarketCancelled(bytes32 indexed marketId)",
-  "event PositionTaken(bytes32 indexed marketId, address indexed trader, uint8 side, uint256 amount)",
-  "event MarketSettled(bytes32 indexed marketId, bool outcomeHit, int256 actualValue)",
-  "event Claimed(bytes32 indexed marketId, address indexed trader, uint256 payout)",
-];
-
-const oracleEvents = [
-  "event ReporterUpdated(address indexed reporter, bool authorized)",
-  "event SignerUpdated(address indexed signer, bool authorized)",
-  "event MarketResolved(bytes32 indexed marketId, int256 actualValue, bytes32 indexed sourceHash, string sourceUri, uint64 resolvedAt)",
-  "event SignedResolutionAccepted(bytes32 indexed marketId, address indexed signer, bytes32 indexed attestationDigest)",
-];
-
-const registryEvents = [
-  "event EligibilityUpdated(address indexed account, bool isEligibleForMarkets)",
-];
-
-function getRequiredEnv(name) {
-  const value = process.env[name];
-  if (!value) {
-    throw new Error(`Missing environment variable: ${name}`);
-  }
-  return value;
-}
+import { marketEvents, oracleEvents, registryEvents } from "./lib/abis.js";
+import { getRequiredEnv } from "./lib/env.js";
 
 function summarizeEvent(eventName, args) {
   if (eventName === "PositionTaken") {
