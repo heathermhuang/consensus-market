@@ -33,6 +33,7 @@ import path from "node:path";
 import process from "node:process";
 import { ethers } from "ethers";
 import { oracleAbi, resolutionTypes } from "./lib/abis.js";
+import { loadSeeds, computeMarketId } from "./lib/markets.js";
 
 function parseArgs(argv) {
   const args = {};
@@ -70,15 +71,6 @@ async function fetchAndHashSource(sourceUrl) {
   console.log(`  keccak256: ${hash}`);
 
   return { body, hash };
-}
-
-function loadMarketSeeds() {
-  const seedPath = path.resolve(process.cwd(), "data/markets.json");
-  return JSON.parse(fs.readFileSync(seedPath, "utf8"));
-}
-
-function buildMarketId(idSeed) {
-  return ethers.id(idSeed);
 }
 
 async function main() {
@@ -124,12 +116,12 @@ Options:
   // Resolve market id
   let marketId;
   if (args.idSeed) {
-    marketId = buildMarketId(args.idSeed);
+    marketId = computeMarketId(args.idSeed);
   } else {
-    const seeds = loadMarketSeeds();
+    const seeds = loadSeeds();
     const seed = seeds.find((s) => s.slug === args.seed);
     if (!seed) throw new Error(`Market seed not found: ${args.seed}`);
-    marketId = buildMarketId(seed.idSeed);
+    marketId = computeMarketId(seed.idSeed);
     console.log(`Market: ${seed.ticker} · ${seed.metricName} (${seed.idSeed})`);
   }
 

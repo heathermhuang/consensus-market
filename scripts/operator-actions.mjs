@@ -1,9 +1,8 @@
-import fs from "node:fs";
-import path from "node:path";
 import process from "node:process";
 import { ethers } from "ethers";
 import { marketAbi, oracleAbi, registryAbi } from "./lib/abis.js";
 import { getRequiredEnv } from "./lib/env.js";
+import { loadSeeds, findSeedBySlug, computeMarketId } from "./lib/markets.js";
 
 function usage() {
   console.log(`capital.markets operator CLI
@@ -68,16 +67,6 @@ function parseBigInt(value, label) {
   return BigInt(value);
 }
 
-function loadSeeds() {
-  const file = path.resolve(process.cwd(), "data", "markets.json");
-  return JSON.parse(fs.readFileSync(file, "utf8"));
-}
-
-function resolveSeed(seedOrSlug) {
-  if (!seedOrSlug) return null;
-  return loadSeeds().find((seed) => seed.slug === seedOrSlug || seed.idSeed === seedOrSlug) || null;
-}
-
 function deriveWindow(seed) {
   const now = Math.floor(Date.now() / 1000);
   return {
@@ -88,7 +77,7 @@ function deriveWindow(seed) {
 }
 
 function resolveMarketArgs(options) {
-  const seed = resolveSeed(options.seed);
+  const seed = findSeedBySlug(options.seed);
 
   if (seed) {
     const window = deriveWindow(seed);
@@ -119,8 +108,8 @@ function resolveMarketArgs(options) {
 }
 
 function resolveMarketId(options) {
-  const seed = resolveSeed(options.seed);
-  return seed ? ethers.id(seed.idSeed) : options["market-id"];
+  const seed = findSeedBySlug(options.seed);
+  return seed ? computeMarketId(seed.idSeed) : options["market-id"];
 }
 
 function parseSide(value) {
@@ -187,7 +176,7 @@ async function main() {
     const results = [];
 
     for (const seed of seeds) {
-      const marketId = ethers.id(seed.idSeed);
+      const marketId = computeMarketId(seed.idSeed);
       try {
         const [marketData, position, stake] = await Promise.all([
           market.getMarket(marketId),
@@ -252,7 +241,7 @@ async function main() {
   if (command === "create-market") {
     const args = resolveMarketArgs(options);
     const tx = await market.createMarket(
-      ethers.id(args.idSeed),
+      computeMarketId(args.idSeed),
       args.ticker,
       args.metricName,
       args.consensusValue,
@@ -264,7 +253,7 @@ async function main() {
     );
     await tx.wait();
     console.log(`Created market ${args.ticker} · ${args.metricName}`);
-    console.log(`marketId=${ethers.id(args.idSeed)}`);
+    console.log(`marketId=${computeMarketId(args.idSeed)}`);
     return;
   }
 
