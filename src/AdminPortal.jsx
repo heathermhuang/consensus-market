@@ -1,21 +1,15 @@
 import BrandAvatar from "./BrandAvatar";
 import { getCompanyBrand } from "./brandSystem";
 import { formatCompactNumber, formatTimestamp, shortAddress } from "./contracts";
+import { useWalletContext } from "./contexts/WalletContext";
+import { useRuntimeContext } from "./contexts/RuntimeContext";
 import { formatTimestampWithYear } from "./lib/format-utils";
 
 export default function AdminPortal({
-  wallet,
-  canOperate,
-  runtimeModeLabel,
-  runtimeConfig,
-  configuredRpcUrls,
-  activeRpcUrl,
-  lastSyncAt,
   selectedMarket,
   allMarkets,
   onSelectMarket,
   onOpenMarket,
-  onOpenConnectModal,
   onRefreshNow,
   copyRuntimeSummary,
   applyDemoPreset,
@@ -43,9 +37,10 @@ export default function AdminPortal({
   busyAction,
   signature,
   digest,
-  systemStatus,
-  isBlacklisted,
 }) {
+  const { wallet, isWalletBlacklisted: isBlacklisted, setConnectModalOpen } = useWalletContext();
+  const { runtimeConfig, systemStatus, activeRpcUrl, lastSyncAt, canOperate, configuredRpcUrls, runtimeModeLabel } = useRuntimeContext();
+
   const operatorAddress =
     runtimeConfig.operatorAddress || systemStatus.marketOwner || systemStatus.oracleOwner || systemStatus.registryOwner || "";
 
@@ -94,7 +89,7 @@ export default function AdminPortal({
           </div>
 
           <div className="hero-actions">
-            <button type="button" className="primary" onClick={onOpenConnectModal}>
+            <button type="button" className="primary" onClick={() => setConnectModalOpen(true)}>
               {wallet.account ? "Manage wallet" : "Connect operator wallet"}
             </button>
             <button type="button" className="ghost" onClick={onRefreshNow} disabled={busyAction !== ""}>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import QRCode from "qrcode";
 import { shortAddress } from "./contracts";
+import { useWalletContext } from "./contexts/WalletContext";
 
 const walletChoices = [
   {
@@ -36,16 +37,12 @@ function isProbablyMobile() {
 
 export default function ConnectModal({
   open,
-  wallet,
-  walletOnExpectedChain,
-  isBlacklisted,
   onClose,
   onConnectWalletConnect,
   onConnectInjected,
-  onSwitchNetwork,
-  onDisconnect,
   onOpenAccount,
 }) {
+  const { wallet, walletOnExpectedChain, isWalletBlacklisted: isBlacklisted, connectDemoChain: onSwitchNetwork, disconnectWallet: onDisconnect } = useWalletContext();
   const [selectedChoice, setSelectedChoice] = useState("");
   const [selectedPath, setSelectedPath] = useState("");
   const [feedback, setFeedback] = useState("");

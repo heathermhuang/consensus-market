@@ -1,15 +1,12 @@
 import BrandAvatar from "./BrandAvatar";
 import { getCompanyBrand } from "./brandSystem";
 import { formatCompactNumber, formatNumber, shortAddress } from "./contracts";
+import { useWalletContext } from "./contexts/WalletContext";
+import { useRuntimeContext } from "./contexts/RuntimeContext";
 import { formatTimestampWithYear } from "./lib/format-utils";
 
 export default function AccountPage({
-  wallet,
   credits,
-  systemStatus,
-  runtimeModeLabel,
-  walletOnExpectedChain,
-  isBlacklisted,
   canAccessAdmin,
   positions,
   totalStaked,
@@ -19,9 +16,9 @@ export default function AccountPage({
   onSaveProfile,
   onOpenMarket,
   onOpenAdmin,
-  onOpenConnectModal,
-  onDisconnectWallet,
 }) {
+  const { wallet, walletOnExpectedChain, isWalletBlacklisted: isBlacklisted, setConnectModalOpen, disconnectWallet } = useWalletContext();
+  const { systemStatus, runtimeModeLabel } = useRuntimeContext();
   return (
     <main id="main-content" className="account-layout" aria-labelledby="account-page-title">
       <section className="account-main">
@@ -63,11 +60,11 @@ export default function AccountPage({
           </div>
 
           <div className="hero-actions">
-            <button type="button" className="primary" onClick={onOpenConnectModal}>
+            <button type="button" className="primary" onClick={() => setConnectModalOpen(true)}>
               {wallet.account ? "Manage wallet" : "Connect wallet"}
             </button>
             {wallet.account && (
-              <button type="button" className="ghost" onClick={onDisconnectWallet}>
+              <button type="button" className="ghost" onClick={disconnectWallet}>
                 Disconnect
               </button>
             )}

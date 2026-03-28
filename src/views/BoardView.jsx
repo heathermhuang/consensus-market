@@ -7,6 +7,8 @@ import {
   formatTimestamp,
   shortAddress,
 } from "../contracts";
+import { useWalletContext } from "../contexts/WalletContext";
+import { useRuntimeContext } from "../contexts/RuntimeContext";
 import {
   calculateProbability,
   formatCountdown,
@@ -26,15 +28,13 @@ export default function BoardView({
   sortMode,
   setSortMode,
   focusFilters,
-  autoRefresh,
   setAutoRefresh,
   busyAction,
   refreshNow,
-  wallet,
-  systemStatus,
   handleSelectMarket,
-  setConnectModalOpen,
 }) {
+  const { wallet, setConnectModalOpen } = useWalletContext();
+  const { systemStatus, autoRefresh } = useRuntimeContext();
   return (
     <main id="main-content" className="board-layout" aria-labelledby="board-page-title">
       <h1 id="board-page-title" className="sr-only">Market scanner</h1>

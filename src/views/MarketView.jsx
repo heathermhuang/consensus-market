@@ -9,6 +9,8 @@ import {
   shortAddress,
   buildResolutionPayload,
 } from "../contracts";
+import { useWalletContext } from "../contexts/WalletContext";
+import { useRuntimeContext } from "../contexts/RuntimeContext";
 import {
   buildOutcomeQuestion,
   formatConsensusDisplay,
@@ -66,17 +68,7 @@ export default function MarketView({
   activeMarketSection,
   openMarketSurface,
   clearSelectedMarket,
-  // Wallet
-  wallet,
-  walletOnExpectedChain,
-  // Config / system
-  runtimeConfig,
-  systemStatus,
-  activeRpcUrl,
-  lastSyncAt,
-  autoRefresh,
-  expectedOperator,
-  canOperate,
+  // Access
   canAccessAdmin,
   // Trade actions
   stakeAmount,
@@ -85,8 +77,6 @@ export default function MarketView({
   takePosition,
   settleMarket,
   claimPayout,
-  connectDemoChain,
-  setConnectModalOpen,
   refreshNow,
   copySelectedMarketLink,
   // Attestation
@@ -118,6 +108,8 @@ export default function MarketView({
   addBlacklistedAddress,
   removeBlacklistedAddress,
 }) {
+  const { wallet, walletOnExpectedChain, setConnectModalOpen, connectDemoChain } = useWalletContext();
+  const { runtimeConfig, systemStatus, activeRpcUrl, lastSyncAt, autoRefresh, canOperate, expectedOperator } = useRuntimeContext();
   return (
     <main
       id="main-content"

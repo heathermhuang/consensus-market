@@ -3,6 +3,8 @@ import marketSeeds from "../data/markets.json";
 import AccountPage from "./AccountPage";
 import AdminPortal from "./AdminPortal";
 import ConnectModal from "./ConnectModal";
+import { WalletProvider } from "./contexts/WalletContext";
+import { RuntimeProvider } from "./contexts/RuntimeContext";
 import marketHistory from "./market-history";
 import { getMarketProfile } from "./market-profiles";
 import {
@@ -330,9 +332,35 @@ export default function App({ runtimeConfig }) {
     }
   }
 
+  // ── Context values ──
+  const walletCtx = {
+    wallet,
+    connectModalOpen,
+    setConnectModalOpen,
+    walletOnExpectedChain,
+    isWalletBlacklisted,
+    disconnectWallet,
+    connectDemoChain,
+  };
+
+  const runtimeCtx = {
+    runtimeConfig,
+    systemStatus,
+    activeRpcUrl,
+    lastSyncAt,
+    autoRefresh,
+    hasLiveContracts,
+    canOperate,
+    configuredRpcUrls,
+    runtimeModeLabel,
+    expectedOperator,
+  };
+
   // ── Render ──
 
   return (
+    <WalletProvider value={walletCtx}>
+    <RuntimeProvider value={runtimeCtx}>
     <div className="app-shell">
       <div className="ambient ambient-left" aria-hidden="true" />
       <div className="ambient ambient-right" aria-hidden="true" />
@@ -409,12 +437,7 @@ export default function App({ runtimeConfig }) {
 
       {appView === "account" ? (
         <AccountPage
-          wallet={wallet}
           credits={credits}
-          systemStatus={systemStatus}
-          runtimeModeLabel={runtimeModeLabel}
-          walletOnExpectedChain={walletOnExpectedChain}
-          isBlacklisted={isWalletBlacklisted}
           canAccessAdmin={canAccessAdmin}
           positions={positions}
           totalStaked={totalStaked}
@@ -424,23 +447,13 @@ export default function App({ runtimeConfig }) {
           onSaveProfile={saveAccountProfile}
           onOpenMarket={(slug) => handleSelectMarket(allMarkets.find((market) => market.slug === slug))}
           onOpenAdmin={openAdminPortal}
-          onOpenConnectModal={() => setConnectModalOpen(true)}
-          onDisconnectWallet={disconnectWallet}
         />
       ) : appView === "admin" ? (
         <AdminPortal
-          wallet={wallet}
-          canOperate={canOperate}
-          runtimeModeLabel={runtimeModeLabel}
-          runtimeConfig={runtimeConfig}
-          configuredRpcUrls={configuredRpcUrls}
-          activeRpcUrl={activeRpcUrl}
-          lastSyncAt={lastSyncAt}
           selectedMarket={adminMarket}
           allMarkets={allMarkets}
           onSelectMarket={(slug) => setSelectedSlug(slug)}
           onOpenMarket={(slug) => handleSelectMarket(allMarkets.find((market) => market.slug === slug))}
-          onOpenConnectModal={() => setConnectModalOpen(true)}
           onRefreshNow={refreshNow}
           copyRuntimeSummary={copyRuntimeSummary}
           applyDemoPreset={applyDemoPreset}
@@ -468,8 +481,6 @@ export default function App({ runtimeConfig }) {
           busyAction={busyAction}
           signature={signature}
           digest={digest}
-          systemStatus={systemStatus}
-          isBlacklisted={isWalletBlacklisted}
         />
       ) : appView !== "market" || !selectedMarket ? (
         <BoardView
@@ -484,14 +495,10 @@ export default function App({ runtimeConfig }) {
           sortMode={sortMode}
           setSortMode={setSortMode}
           focusFilters={focusFilters}
-          autoRefresh={autoRefresh}
           setAutoRefresh={setAutoRefresh}
           busyAction={busyAction}
           refreshNow={refreshNow}
-          wallet={wallet}
-          systemStatus={systemStatus}
           handleSelectMarket={handleSelectMarket}
-          setConnectModalOpen={setConnectModalOpen}
         />
       ) : (
         <MarketView
@@ -515,15 +522,6 @@ export default function App({ runtimeConfig }) {
           activeMarketSection={activeMarketSection}
           openMarketSurface={openMarketSurface}
           clearSelectedMarket={clearSelectedMarket}
-          wallet={wallet}
-          walletOnExpectedChain={walletOnExpectedChain}
-          runtimeConfig={runtimeConfig}
-          systemStatus={systemStatus}
-          activeRpcUrl={activeRpcUrl}
-          lastSyncAt={lastSyncAt}
-          autoRefresh={autoRefresh}
-          expectedOperator={expectedOperator}
-          canOperate={canOperate}
           canAccessAdmin={canAccessAdmin}
           stakeAmount={stakeAmount}
           setStakeAmount={setStakeAmount}
@@ -531,8 +529,6 @@ export default function App({ runtimeConfig }) {
           takePosition={takePosition}
           settleMarket={settleMarket}
           claimPayout={claimPayout}
-          connectDemoChain={connectDemoChain}
-          setConnectModalOpen={setConnectModalOpen}
           refreshNow={refreshNow}
           copySelectedMarketLink={copySelectedMarketLink}
           attestationForm={attestationForm}
@@ -565,14 +561,9 @@ export default function App({ runtimeConfig }) {
 
       <ConnectModal
         open={connectModalOpen}
-        wallet={wallet}
-        walletOnExpectedChain={walletOnExpectedChain}
-        isBlacklisted={isWalletBlacklisted}
         onClose={() => setConnectModalOpen(false)}
         onConnectWalletConnect={connectWalletConnect}
         onConnectInjected={connectInjectedWallet}
-        onSwitchNetwork={connectDemoChain}
-        onDisconnect={disconnectWallet}
         onOpenAccount={openAccountView}
       />
 
@@ -593,5 +584,7 @@ export default function App({ runtimeConfig }) {
         </a>
       </footer>
     </div>
+    </RuntimeProvider>
+    </WalletProvider>
   );
 }
