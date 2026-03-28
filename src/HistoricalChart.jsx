@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { formatNumber } from "./contracts";
+import { buildPath, buildDots, buildAreaPath } from "./lib/chart-utils";
 
 function getMobileHistoryView() {
   if (typeof window === "undefined") return false;
@@ -10,56 +11,6 @@ function parsePeriodKey(period) {
   const match = String(period || "").match(/^Q([1-4])'(\d{2})$/);
   if (!match) return 0;
   return Number(`20${match[2]}`) * 4 + Number(match[1]);
-}
-
-function buildPath(points, width, height, minValue, maxValue, valueKey) {
-  const innerWidth = width - 48;
-  const innerHeight = height - 42;
-  const xStep = points.length > 1 ? innerWidth / (points.length - 1) : innerWidth;
-  const range = Math.max(maxValue - minValue, 1);
-
-  return points
-    .map((point, index) => {
-      const x = 24 + index * xStep;
-      const y = 18 + innerHeight - ((point[valueKey] - minValue) / range) * innerHeight;
-      return `${index === 0 ? "M" : "L"} ${x} ${y}`;
-    })
-    .join(" ");
-}
-
-function buildAreaPath(points, width, height, minValue, maxValue, highKey, lowKey) {
-  const innerWidth = width - 48;
-  const innerHeight = height - 42;
-  const xStep = points.length > 1 ? innerWidth / (points.length - 1) : innerWidth;
-  const range = Math.max(maxValue - minValue, 1);
-
-  const topEdge = points.map((point, index) => {
-    const x = 24 + index * xStep;
-    const y = 18 + innerHeight - ((point[highKey] - minValue) / range) * innerHeight;
-    return `${index === 0 ? "M" : "L"} ${x.toFixed(1)} ${y.toFixed(1)}`;
-  });
-
-  const bottomEdge = [...points].reverse().map((point, index) => {
-    const originalIndex = points.length - 1 - index;
-    const x = 24 + originalIndex * xStep;
-    const y = 18 + innerHeight - ((point[lowKey] - minValue) / range) * innerHeight;
-    return `L ${x.toFixed(1)} ${y.toFixed(1)}`;
-  });
-
-  return [...topEdge, ...bottomEdge, "Z"].join(" ");
-}
-
-function buildDots(points, width, height, minValue, maxValue, valueKey) {
-  const innerWidth = width - 48;
-  const innerHeight = height - 42;
-  const xStep = points.length > 1 ? innerWidth / (points.length - 1) : innerWidth;
-  const range = Math.max(maxValue - minValue, 1);
-
-  return points.map((point, index) => {
-    const x = 24 + index * xStep;
-    const y = 18 + innerHeight - ((point[valueKey] - minValue) / range) * innerHeight;
-    return { x, y, label: point.period, value: point[valueKey] };
-  });
 }
 
 export default function HistoricalChart({ history, reportingPeriod }) {
@@ -120,11 +71,11 @@ export default function HistoricalChart({ history, reportingPeriod }) {
   const maxValue = allValues.length ? Math.max(...allValues) * 1.04 : 1;
   const width = 640;
   const height = 260;
-  const consensusBandPath = buildAreaPath(historyWithBand, width, height, minValue, maxValue, "consensusHigh", "consensusLow");
-  const consensusPath = buildPath(historyWithBand, width, height, minValue, maxValue, "consensus");
-  const actualPath = buildPath(historyWithBand, width, height, minValue, maxValue, "actual");
-  const consensusDots = buildDots(historyWithBand, width, height, minValue, maxValue, "consensus");
-  const actualDots = buildDots(historyWithBand, width, height, minValue, maxValue, "actual");
+  const consensusBandPath = buildAreaPath(historyWithBand, width, height, minValue, maxValue, { highKey: "consensusHigh", lowKey: "consensusLow" });
+  const consensusPath = buildPath(historyWithBand, width, height, minValue, maxValue, { valueKey: "consensus" });
+  const actualPath = buildPath(historyWithBand, width, height, minValue, maxValue, { valueKey: "actual" });
+  const consensusDots = buildDots(historyWithBand, width, height, minValue, maxValue, { valueKey: "consensus" }).map((d) => ({ ...d, label: d.period }));
+  const actualDots = buildDots(historyWithBand, width, height, minValue, maxValue, { valueKey: "actual" }).map((d) => ({ ...d, label: d.period }));
   const beatCount = visibleChronologicalHistory.filter((point) => point.actual >= point.consensus).length;
   const archiveTone =
     beatCount >= Math.ceil(Math.max(visibleChronologicalHistory.length, 1) / 2)

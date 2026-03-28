@@ -2,34 +2,11 @@ import BrandAvatar from "./BrandAvatar";
 import { getFirmBrand } from "./brandSystem";
 import { formatNumber, formatPercent } from "./contracts";
 import { formatTimestampDateOnly as formatTimestampWithYear } from "./lib/format-utils";
+import { buildPath as _buildPath, buildDots as _buildDots } from "./lib/chart-utils";
 
-function buildPath(points, width, height, minValue, maxValue) {
-  const innerWidth = width - 40;
-  const innerHeight = height - 36;
-  const xStep = points.length > 1 ? innerWidth / (points.length - 1) : innerWidth;
-  const range = Math.max(maxValue - minValue, 1);
-
-  return points
-    .map((point, index) => {
-      const x = 20 + index * xStep;
-      const y = 16 + innerHeight - ((point.value - minValue) / range) * innerHeight;
-      return `${index === 0 ? "M" : "L"} ${x} ${y}`;
-    })
-    .join(" ");
-}
-
-function buildDots(points, width, height, minValue, maxValue) {
-  const innerWidth = width - 40;
-  const innerHeight = height - 36;
-  const xStep = points.length > 1 ? innerWidth / (points.length - 1) : innerWidth;
-  const range = Math.max(maxValue - minValue, 1);
-
-  return points.map((point, index) => ({
-    ...point,
-    x: 20 + index * xStep,
-    y: 16 + innerHeight - ((point.value - minValue) / range) * innerHeight,
-  }));
-}
+const CHART_OPTS = { marginH: 40, marginV: 36, topInset: 16 };
+const buildPath = (points, w, h, min, max) => _buildPath(points, w, h, min, max, CHART_OPTS);
+const buildDots = (points, w, h, min, max) => _buildDots(points, w, h, min, max, CHART_OPTS);
 
 export default function ConsensusPanel({ market }) {
   const timeline = market?.consensusTimeline || [];
