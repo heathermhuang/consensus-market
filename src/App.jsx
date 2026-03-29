@@ -370,10 +370,11 @@ export default function App({ runtimeConfig }) {
         <div className="topbar-main">
           <div className="brand-lockup brand-lockup-premium">
             <div className="brand-mark" aria-hidden="true">
-              <svg className="brand-mark-svg" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="3" y="14" width="4" height="9" rx="1.5" fill="rgba(255,255,255,0.5)" />
-                <rect x="11" y="8" width="4" height="15" rx="1.5" fill="rgba(255,255,255,0.7)" />
-                <rect x="19" y="3" width="4" height="20" rx="1.5" fill="rgba(255,255,255,0.9)" />
+              <svg viewBox="0 0 32 32" className="brand-mark-svg">
+                <path d="M5 7 L16 16" stroke="#b48749" strokeWidth="3.5" strokeLinecap="round" />
+                <path d="M5 25 L16 16" stroke="#8dabc4" strokeWidth="3.5" strokeLinecap="round" />
+                <path d="M16 16 L27 16" stroke="#dcc49a" strokeWidth="3.5" strokeLinecap="round" />
+                <circle cx="16" cy="16" r="4" fill="#dcc49a" />
               </svg>
             </div>
             <div className="brand-copy">
