@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consensus Market — Bloomberg Pipeline Dashboard</title>
+<style>
+  :root {
+    --bg: #0d1117; --card: #161b22; --border: #30363d;
+    --text: #e6edf3; --muted: #8b949e; --accent: #58a6ff;
+    --green: #3fb950; --yellow: #d29922; --red: #f85149;
+    --orange: #db6d28;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); padding: 24px; }
+  h1 { font-size: 24px; margin-bottom: 4px; }
+  .subtitle { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+
+  /* Pipeline Steps */
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 32px; }
+  .step { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+  .step-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .step-value { font-size: 20px; font-weight: 600; }
+  .step-status { font-size: 12px; margin-top: 6px; }
+  .done { color: var(--green); }
+  .partial { color: var(--yellow); }
+  .blocked { color: var(--red); }
+  .pending { color: var(--orange); }
+
+  /* Summary Cards */
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 32px; }
+  .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
+  .stat-number { font-size: 32px; font-weight: 700; color: var(--accent); }
+  .stat-label { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  /* Progress bar */
+  .progress-section { margin-bottom: 32px; }
+  .progress-bar-outer { background: var(--card); border: 1px solid var(--border); border-radius: 8px; height: 32px; overflow: hidden; display: flex; }
+  .progress-bar-fill { height: 100%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; transition: width 0.3s; }
+  .progress-label { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+
+  /* Filters */
+  .filters { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
+  .filter-input { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 8px 12px; border-radius: 6px; font-size: 14px; }
+  .filter-input:focus { outline: none; border-color: var(--accent); }
+  .filter-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+  .filter-btn:hover, .filter-btn.active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+
+  /* Table */
+  .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { background: var(--card); padding: 10px 12px; text-align: left; font-weight: 600; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; position: sticky; top: 0; cursor: pointer; user-select: none; white-space: nowrap; }
+  th:hover { color: var(--text); }
+  th .sort-arrow { margin-left: 4px; font-size: 10px; }
+  td { padding: 8px 12px; border-top: 1px solid var(--border); white-space: nowrap; }
+  tr:hover td { background: rgba(88,166,255,0.05); }
+
+  /* Status badges */
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+  .badge-green { background: rgba(63,185,80,0.15); color: var(--green); }
+  .badge-yellow { background: rgba(210,153,34,0.15); color: var(--yellow); }
+  .badge-red { background: rgba(248,81,73,0.15); color: var(--red); }
+  .badge-gray { background: rgba(139,148,158,0.15); color: var(--muted); }
+
+  /* Period pills */
+  .period-pill { display: inline-block; padding: 1px 6px; border-radius: 4px; font-size: 10px; margin: 1px; }
+  .period-present { background: rgba(63,185,80,0.2); color: var(--green); }
+  .period-missing { background: rgba(248,81,73,0.1); color: var(--red); border: 1px dashed rgba(248,81,73,0.3); }
+
+  /* Ticker link */
+  .ticker-cell { font-weight: 600; color: var(--accent); }
+  .company-name { color: var(--muted); font-weight: 400; }
+
+  /* Data bar */
+  .data-bar { display: flex; align-items: center; gap: 6px; }
+  .data-bar-track { flex: 1; height: 6px; background: var(--border); border-radius: 3px; min-width: 40px; }
+  .data-bar-fill { height: 100%; border-radius: 3px; }
+
+  /* Footer */
+  .footer { margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--border); color: var(--muted); font-size: 12px; text-align: center; }
+
+  /* Category headers */
+  .cat-header { background: rgba(88,166,255,0.08) !important; }
+  .cat-header td { font-weight: 600; color: var(--accent); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; padding: 6px 12px; }
+</style>
+</head>
+<body>
+
+<h1>Bloomberg Pipeline Dashboard</h1>
+<p class="subtitle">Consensus Market &mdash; Data collection status for 86 companies &bull; Generated <span id="gen-date"></span></p>
+
+<!-- Pipeline Steps -->
+<div class="steps" id="steps"></div>
+
+<!-- Summary Stats -->
+<div class="summary-grid" id="summary-grid"></div>
+
+<!-- Progress Bars -->
+<div class="progress-section" id="progress-section"></div>
+
+<!-- Filters -->
+<div class="filters">
+  <input class="filter-input" type="text" id="search" placeholder="Search ticker or company..." style="width:220px">
+  <div id="category-filters"></div>
+  <button class="filter-btn" id="btn-all" onclick="filterCategory('all')">All (86)</button>
+  <span style="color:var(--muted); font-size:12px; margin-left:auto" id="showing-count"></span>
+</div>
+
+<!-- Company Table -->
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th onclick="sortTable('ticker')">Ticker <span class="sort-arrow"></span></th>
+        <th onclick="sortTable('name')">Company <span class="sort-arrow"></span></th>
+        <th onclick="sortTable('sector')">Category</th>
+        <th onclick="sortTable('sales_snapshots')" title="BEST_SALES snapshots">Sales</th>
+        <th onclick="sortTable('ebitda_snapshots')" title="BEST_EBITDA snapshots">EBITDA</th>
+        <th>Periods</th>
+        <th onclick="sortTable('actuals_count')">Actuals</th>
+        <th>Earnings</th>
+        <th onclick="sortTable('latest_snapshot')">Last Sync</th>
+        <th>Coverage</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<div class="footer">
+  Consensus Market Bloomberg Pipeline &bull; Auto-refreshes from <code>data/consensus-db/universe.db</code> &bull;
+  Run <code>python scripts/bbg-dashboard-refresh.py</code> to update
+</div>
+
+<script src="/dashboard.js"></script>
+</body>
+</html>

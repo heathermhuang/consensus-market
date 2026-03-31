@@ -1,0 +1,948 @@
+{
+  "TSLA US Equity": {
+    "name": "Tesla",
+    "ticker": "TSLA",
+    "financials": {
+      "BEST_SALES": 22907.848484848484,
+      "BEST_EBITDA": 3378.909090909091
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T06:58:28.494253Z"
+  },
+  "UBER US Equity": {
+    "name": "Uber",
+    "ticker": "UBER",
+    "financials": {
+      "BEST_SALES": 13341.244444444445,
+      "BEST_EBITDA": 2438.0975609756097
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T06:59:16.852543Z"
+  },
+  "DASH US Equity": {
+    "name": "DoorDash",
+    "ticker": "DASH",
+    "financials": {
+      "BEST_SALES": 4155.609756097561,
+      "BEST_EBITDA": 746.6923076923077
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:00:04.216093Z"
+  },
+  "ABNB US Equity": {
+    "name": "Airbnb",
+    "ticker": "ABNB",
+    "financials": {
+      "BEST_SALES": 2618.3611111111113,
+      "BEST_EBITDA": 483.1714285714286
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:00:52.061721Z"
+  },
+  "SPOT US Equity": {
+    "name": "Spotify",
+    "ticker": "SPOT",
+    "financials": {
+      "BEST_SALES": 4524.241379310345,
+      "BEST_EBITDA": 711.0454545454545
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:01:40.587460Z"
+  },
+  "NFLX US Equity": {
+    "name": "Netflix",
+    "ticker": "NFLX",
+    "financials": {
+      "BEST_SALES": 12168.658536585366,
+      "BEST_EBITDA": 4097.5
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:02:29.250485Z"
+  },
+  "META US Equity": {
+    "name": "Meta",
+    "ticker": "META",
+    "financials": {
+      "BEST_SALES": 55272.92727272727,
+      "BEST_EBITDA": 25863.0625
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:03:17.143125Z"
+  },
+  "SNAP US Equity": {
+    "name": "Snap",
+    "ticker": "SNAP",
+    "financials": {
+      "BEST_SALES": 1525.0952380952383,
+      "BEST_EBITDA": 184.6578947368421
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:04:04.987043Z"
+  },
+  "PINS US Equity": {
+    "name": "Pinterest",
+    "ticker": "PINS",
+    "financials": {
+      "BEST_SALES": 964.5,
+      "BEST_EBITDA": 176.58823529411765
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:04:53.688489Z"
+  },
+  "RBLX US Equity": {
+    "name": "Roblox",
+    "ticker": "RBLX",
+    "financials": {
+      "BEST_SALES": 1429.24,
+      "BEST_EBITDA": 321.48148148148147
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:05:41.943565Z"
+  },
+  "RDDT US Equity": {
+    "name": "Reddit",
+    "ticker": "RDDT",
+    "financials": {
+      "BEST_SALES": 608.8076923076923,
+      "BEST_EBITDA": 221.36
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:06:30.349233Z"
+  },
+  "AAPL US Equity": {
+    "name": "Apple",
+    "ticker": "AAPL",
+    "financials": {
+      "BEST_SALES": 109568.65714285715,
+      "BEST_EBITDA": 38441.80952380953
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:07:18.261215Z"
+  },
+  "LYFT US Equity": {
+    "name": "Lyft",
+    "ticker": "LYFT",
+    "financials": {
+      "BEST_SALES": 1647.675,
+      "BEST_EBITDA": 132.73684210526315
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:08:06.412442Z"
+  },
+  "BKNG US Equity": {
+    "name": "Booking Holdings",
+    "ticker": "BKNG",
+    "financials": {
+      "BEST_SALES": 5522.322580645162,
+      "BEST_EBITDA": 1237.0
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:08:54.672039Z"
+  },
+  "DIS US Equity": {
+    "name": "Disney",
+    "ticker": "DIS",
+    "financials": {
+      "BEST_SALES": 24860.958333333332,
+      "BEST_EBITDA": 5220.133333333333
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:09:42.338737Z"
+  },
+  "1810 HK Equity": {
+    "name": "Xiaomi",
+    "ticker": "1810.HK",
+    "financials": {
+      "BEST_SALES": 112487.38888888889,
+      "BEST_EBITDA": 8847.375
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:10:27.980259Z"
+  },
+  "700 HK Equity": {
+    "name": "Tencent",
+    "ticker": "0700.HK",
+    "financials": {
+      "BEST_SALES": 199994.66666666666,
+      "BEST_EBITDA": 79641.44444444444
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:11:14.730666Z"
+  },
+  "GRAB US Equity": {
+    "name": "Grab",
+    "ticker": "GRAB",
+    "financials": {
+      "BEST_SALES": 912.4166666666666,
+      "BEST_EBITDA": 144.2222222222222
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:12:03.104278Z"
+  },
+  "SE US Equity": {
+    "name": "Sea",
+    "ticker": "SE",
+    "financials": {
+      "BEST_SALES": 6564.615384615385,
+      "BEST_EBITDA": 919.625
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:12:51.708150Z"
+  },
+  "MELI US Equity": {
+    "name": "MercadoLibre",
+    "ticker": "MELI",
+    "financials": {
+      "BEST_SALES": 8154.5,
+      "BEST_EBITDA": 1006.2222222222222
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:13:40.152574Z"
+  },
+  "COIN US Equity": {
+    "name": "Coinbase",
+    "ticker": "COIN",
+    "financials": {
+      "BEST_SALES": 1584.6206896551723,
+      "BEST_EBITDA": 480.3703703703704
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:14:28.380904Z"
+  },
+  "SHOP US Equity": {
+    "name": "Shopify",
+    "ticker": "SHOP",
+    "financials": {
+      "BEST_SALES": 3084.159090909091,
+      "BEST_EBITDA": 480.4848484848485
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:15:16.579354Z"
+  },
+  "MTCH US Equity": {
+    "name": "Match Group",
+    "ticker": "MTCH",
+    "financials": {
+      "BEST_SALES": 854.3888888888888,
+      "BEST_EBITDA": 317.1875
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:16:04.673462Z"
+  },
+  "ROKU US Equity": {
+    "name": "Roku",
+    "ticker": "ROKU",
+    "financials": {
+      "BEST_SALES": 1203.3703703703704,
+      "BEST_EBITDA": 130.5
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:16:52.851867Z"
+  },
+  "AMZN US Equity": {
+    "name": "Amazon",
+    "ticker": "AMZN",
+    "financials": {
+      "BEST_SALES": 177092.7142857143,
+      "BEST_EBITDA": 44883.444444444445
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:17:40.714374Z"
+  },
+  "GOOGL US Equity": {
+    "name": "Alphabet",
+    "ticker": "GOOGL",
+    "financials": {
+      "BEST_SALES": 91488.5625,
+      "BEST_EBITDA": 49742.08823529412
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:18:29.390856Z"
+  },
+  "CRM US Equity": {
+    "name": "Salesforce",
+    "ticker": "CRM",
+    "financials": {
+      "BEST_SALES": 11053.977777777778,
+      "BEST_EBITDA": 4614.466666666667
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:19:17.914469Z"
+  },
+  "MSFT US Equity": {
+    "name": "Microsoft",
+    "ticker": "MSFT",
+    "financials": {
+      "BEST_SALES": 81430.48780487805,
+      "BEST_EBITDA": 48224.0625
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:20:11.177795Z"
+  },
+  "PYPL US Equity": {
+    "name": "PayPal",
+    "ticker": "PYPL",
+    "financials": {
+      "BEST_SALES": 8065.285714285714,
+      "BEST_EBITDA": 1607.8095238095239
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:21:02.202443Z"
+  },
+  "XYZ US Equity": {
+    "name": "Block",
+    "ticker": "SQ",
+    "financials": {
+      "BEST_SALES": 6162.25,
+      "BEST_EBITDA": 943.1379310344827
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:21:52.949700Z"
+  },
+  "DKNG US Equity": {
+    "name": "DraftKings",
+    "ticker": "DKNG",
+    "financials": {
+      "BEST_SALES": 1653.7586206896551,
+      "BEST_EBITDA": 170.56666666666666
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:22:45.173164Z"
+  },
+  "DUOL US Equity": {
+    "name": "Duolingo",
+    "ticker": "DUOL",
+    "financials": {
+      "BEST_SALES": 288.5714285714286,
+      "BEST_EBITDA": 73.48421052631579
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:23:34.547617Z"
+  },
+  "ETSY US Equity": {
+    "name": "Etsy",
+    "ticker": "ETSY",
+    "financials": {
+      "BEST_SALES": 620.7037037037038,
+      "BEST_EBITDA": 176.44444444444446
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:24:25.581289Z"
+  },
+  "FVRR US Equity": {
+    "name": "Fiverr",
+    "ticker": "FVRR",
+    "financials": {
+      "BEST_SALES": 104.44444444444444,
+      "BEST_EBITDA": 20.99
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:25:15.211189Z"
+  },
+  "UPWK US Equity": {
+    "name": "Upwork",
+    "ticker": "UPWK",
+    "financials": {
+      "BEST_SALES": 196.27272727272728,
+      "BEST_EBITDA": 46.53999999999999
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:26:06.653622Z"
+  },
+  "CPNG US Equity": {
+    "name": "Coupang",
+    "ticker": "CPNG",
+    "financials": {
+      "BEST_SALES": 8733.083333333334,
+      "BEST_EBITDA": 212.25
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:26:57.007037Z"
+  },
+  "GLBE US Equity": {
+    "name": "Global-e Online",
+    "ticker": "GLBE",
+    "financials": {
+      "BEST_SALES": 250.75,
+      "BEST_EBITDA": 48.61818181818181
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:27:47.215294Z"
+  },
+  "W US Equity": {
+    "name": "Wayfair",
+    "ticker": "W",
+    "financials": {
+      "BEST_SALES": 2889.1,
+      "BEST_EBITDA": 145.6551724137931
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:28:36.702900Z"
+  },
+  "CHWY US Equity": {
+    "name": "Chewy",
+    "ticker": "CHWY",
+    "financials": {
+      "BEST_SALES": 3265.56,
+      "BEST_EBITDA": 160.7826086956522
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:29:25.846407Z"
+  },
+  "PDD US Equity": {
+    "name": "PDD Holdings",
+    "ticker": "PDD",
+    "financials": {
+      "BEST_SALES": 123723.77777777777,
+      "BEST_EBITDA": 29781.75
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:30:16.954719Z"
+  },
+  "3690 HK Equity": {
+    "name": "Meituan",
+    "ticker": "3690.HK",
+    "financials": {
+      "BEST_SALES": 92076.03125,
+      "BEST_EBITDA": -12517.866666666667
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:31:03.065955Z"
+  },
+  "9618 HK Equity": {
+    "name": "JD.com",
+    "ticker": "9618.HK",
+    "financials": {
+      "BEST_SALES": 310659.7741935484,
+      "BEST_EBITDA": 3933.8333333333335
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:31:49.122893Z"
+  },
+  "9988 HK Equity": {
+    "name": "Alibaba",
+    "ticker": "9988.HK",
+    "financials": {
+      "BEST_SALES": 248215.75675675675,
+      "BEST_EBITDA": 29796.076923076922
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:32:36.169338Z"
+  },
+  "DHER GR Equity": {
+    "name": "Delivery Hero",
+    "ticker": "DHER.DE",
+    "financials": {
+      "BEST_SALES": 3865.6666666666665,
+      "BEST_EBITDA": 255.0
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:33:30.118125Z"
+  },
+  "WMT US Equity": {
+    "name": "Walmart",
+    "ticker": "WMT",
+    "financials": {
+      "BEST_SALES": 174529.3,
+      "BEST_EBITDA": 11400.619047619048
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:34:17.948100Z"
+  },
+  "TGT US Equity": {
+    "name": "Target",
+    "ticker": "TGT",
+    "financials": {
+      "BEST_SALES": 23750.9375,
+      "BEST_EBITDA": 1675.5
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:35:06.194269Z"
+  },
+  "COST US Equity": {
+    "name": "Costco",
+    "ticker": "COST",
+    "financials": {
+      "BEST_SALES": 68659.72413793104,
+      "BEST_EBITDA": 3453.35
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:35:54.311227Z"
+  },
+  "HD US Equity": {
+    "name": "Home Depot",
+    "ticker": "HD",
+    "financials": {
+      "BEST_SALES": 41600.58620689655,
+      "BEST_EBITDA": 5947.913043478261
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:36:43.140206Z"
+  },
+  "LOW US Equity": {
+    "name": "Lowe's",
+    "ticker": "LOW",
+    "financials": {
+      "BEST_SALES": 22957.068965517243,
+      "BEST_EBITDA": 3135.2631578947367
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:37:32.017291Z"
+  },
+  "MCD US Equity": {
+    "name": "McDonald's",
+    "ticker": "MCD",
+    "financials": {
+      "BEST_SALES": 6483.032258064516,
+      "BEST_EBITDA": 3462.6666666666665
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:38:21.565356Z"
+  },
+  "SBUX US Equity": {
+    "name": "Starbucks",
+    "ticker": "SBUX",
+    "financials": {
+      "BEST_SALES": 9080.46875,
+      "BEST_EBITDA": 1141.0740740740741
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:39:09.752935Z"
+  },
+  "CMG US Equity": {
+    "name": "Chipotle",
+    "ticker": "CMG",
+    "financials": {
+      "BEST_SALES": 3062.428571428571,
+      "BEST_EBITDA": 492.3333333333333
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:40:00.211629Z"
+  },
+  "NKE US Equity": {
+    "name": "Nike",
+    "ticker": "NKE",
+    "financials": {
+      "BEST_SALES": 11234.484848484848,
+      "BEST_EBITDA": 719.75
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:40:49.501675Z"
+  },
+  "LULU US Equity": {
+    "name": "Lululemon",
+    "ticker": "LULU",
+    "financials": {
+      "BEST_SALES": 2440.5833333333335,
+      "BEST_EBITDA": 419.72222222222223
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:41:41.719597Z"
+  },
+  "TJX US Equity": {
+    "name": "TJX Companies",
+    "ticker": "TJX",
+    "financials": {
+      "BEST_SALES": 13988.78947368421,
+      "BEST_EBITDA": 1761.0714285714284
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:42:30.486539Z"
+  },
+  "ROST US Equity": {
+    "name": "Ross Stores",
+    "ticker": "ROST",
+    "financials": {
+      "BEST_SALES": 5562.9375,
+      "BEST_EBITDA": 817.5
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:43:19.721369Z"
+  },
+  "GAP US Equity": {
+    "name": "Gap",
+    "ticker": "GPS",
+    "financials": {
+      "BEST_SALES": 3525.625,
+      "BEST_EBITDA": 300.5
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:44:09.900535Z"
+  },
+  "ANF US Equity": {
+    "name": "Abercrombie & Fitch",
+    "ticker": "ANF",
+    "financials": {
+      "BEST_SALES": 1127.4545454545455,
+      "BEST_EBITDA": 119.57142857142857
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:45:02.001261Z"
+  },
+  "WBD US Equity": {
+    "name": "Warner Bros Discovery",
+    "ticker": "WBD",
+    "financials": {
+      "BEST_SALES": 8892.3,
+      "BEST_EBITDA": 1966.6
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:45:51.550485Z"
+  },
+  "PARA US Equity": {
+    "name": "Paramount",
+    "ticker": "PARA",
+    "financials": {
+      "BEST_SALES": 6827.055555555556,
+      "BEST_EBITDA": 830.625
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:46:41.039024Z"
+  },
+  "CMCSA US Equity": {
+    "name": "Comcast",
+    "ticker": "CMCSA",
+    "financials": {
+      "BEST_SALES": 30080.529411764706,
+      "BEST_EBITDA": 8212.157894736842
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:47:29.445384Z"
+  },
+  "TTWO US Equity": {
+    "name": "Take-Two",
+    "ticker": "TTWO",
+    "financials": {
+      "BEST_SALES": 1564.952380952381,
+      "BEST_EBITDA": 186.58823529411765
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:48:18.331708Z"
+  },
+  "EA US Equity": {
+    "name": "EA",
+    "ticker": "EA",
+    "financials": {
+      "BEST_SALES": 1985.5833333333333,
+      "BEST_EBITDA": 983.8333333333334
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:49:06.240757Z"
+  },
+  "U US Equity": {
+    "name": "Unity",
+    "ticker": "U",
+    "financials": {
+      "BEST_SALES": 491.4583333333333,
+      "BEST_EBITDA": 110.8695652173913
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:49:57.749355Z"
+  },
+  "V US Equity": {
+    "name": "Visa",
+    "ticker": "V",
+    "financials": {
+      "BEST_SALES": 10739.294117647058,
+      "BEST_EBITDA": 7491.15
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:50:52.032714Z"
+  },
+  "MA US Equity": {
+    "name": "Mastercard",
+    "ticker": "MA",
+    "financials": {
+      "BEST_SALES": 8247.235294117647,
+      "BEST_EBITDA": 5259.545454545455
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:51:46.974819Z"
+  },
+  "AFRM US Equity": {
+    "name": "Affirm",
+    "ticker": "AFRM",
+    "financials": {
+      "BEST_SALES": 998.8571428571428,
+      "BEST_EBITDA": 257.33333333333337
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:52:43.053109Z"
+  },
+  "SOFI US Equity": {
+    "name": "SoFi",
+    "ticker": "SOFI",
+    "financials": {
+      "BEST_SALES": 1049.0666666666666,
+      "BEST_EBITDA": 316.89473684210526
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:53:35.878062Z"
+  },
+  "HOOD US Equity": {
+    "name": "Robinhood",
+    "ticker": "HOOD",
+    "financials": {
+      "BEST_SALES": 1243.2222222222224,
+      "BEST_EBITDA": 704.5882352941177
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:54:26.794409Z"
+  },
+  "NOW US Equity": {
+    "name": "ServiceNow",
+    "ticker": "NOW",
+    "financials": {
+      "BEST_SALES": 3745.3888888888887,
+      "BEST_EBITDA": 1394.769230769231
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:55:19.408408Z"
+  },
+  "SNOW US Equity": {
+    "name": "Snowflake",
+    "ticker": "SNOW",
+    "financials": {
+      "BEST_SALES": 1325.4883720930234,
+      "BEST_EBITDA": 178.23076923076923
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:56:11.056152Z"
+  },
+  "DDOG US Equity": {
+    "name": "Datadog",
+    "ticker": "DDOG",
+    "financials": {
+      "BEST_SALES": 957.921052631579,
+      "BEST_EBITDA": 225.35294117647058
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:57:05.111266Z"
+  },
+  "CRWD US Equity": {
+    "name": "CrowdStrike",
+    "ticker": "CRWD",
+    "financials": {
+      "BEST_SALES": 1363.6176470588236,
+      "BEST_EBITDA": 377.0
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:57:58.133467Z"
+  },
+  "NET US Equity": {
+    "name": "Cloudflare",
+    "ticker": "NET",
+    "financials": {
+      "BEST_SALES": 621.7142857142858,
+      "BEST_EBITDA": 122.92857142857143
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:58:52.526156Z"
+  },
+  "ZS US Equity": {
+    "name": "Zscaler",
+    "ticker": "ZS",
+    "financials": {
+      "BEST_SALES": 835.6923076923077,
+      "BEST_EBITDA": 220.88235294117646
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T07:59:49.478315Z"
+  },
+  "PLTR US Equity": {
+    "name": "Palantir",
+    "ticker": "PLTR",
+    "financials": {
+      "BEST_SALES": 1536.9545454545455,
+      "BEST_EBITDA": 885.5714285714286
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T08:00:42.796023Z"
+  },
+  "MDB US Equity": {
+    "name": "MongoDB",
+    "ticker": "MDB",
+    "financials": {
+      "BEST_SALES": 664.2941176470589,
+      "BEST_EBITDA": 112.63157894736842
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T08:01:35.184887Z"
+  },
+  "HUBS US Equity": {
+    "name": "HubSpot",
+    "ticker": "HUBS",
+    "financials": {
+      "BEST_SALES": 863.9333333333334,
+      "BEST_EBITDA": 177.33333333333334
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T08:02:29.602146Z"
+  },
+  "TWLO US Equity": {
+    "name": "Twilio",
+    "ticker": "TWLO",
+    "financials": {
+      "BEST_SALES": 1341.5652173913043,
+      "BEST_EBITDA": 277.8181818181818
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T08:03:24.566756Z"
+  },
+  "NVDA US Equity": {
+    "name": "NVIDIA",
+    "ticker": "NVDA",
+    "financials": {
+      "BEST_SALES": 78478.59090909091,
+      "BEST_EBITDA": 52765.952380952374
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T08:04:17.613377Z"
+  },
+  "AMD US Equity": {
+    "name": "AMD",
+    "ticker": "AMD",
+    "financials": {
+      "BEST_SALES": 9837.755555555555,
+      "BEST_EBITDA": 2520.3888888888887
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T08:05:10.954641Z"
+  },
+  "TSM US Equity": {
+    "name": "TSMC",
+    "ticker": "TSM",
+    "financials": {
+      "BEST_SALES": 1120694.4166666667,
+      "BEST_EBITDA": 791224.25
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T08:06:07.195716Z"
+  },
+  "INTC US Equity": {
+    "name": "Intel",
+    "ticker": "INTC",
+    "financials": {
+      "BEST_SALES": 12270.692307692309,
+      "BEST_EBITDA": 3260.928571428571
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T08:06:58.356380Z"
+  },
+  "QCOM US Equity": {
+    "name": "Qualcomm",
+    "ticker": "QCOM",
+    "financials": {
+      "BEST_SALES": 10577.888888888889,
+      "BEST_EBITDA": 3629.909090909091
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T08:07:51.240171Z"
+  },
+  "EXPE US Equity": {
+    "name": "Expedia",
+    "ticker": "EXPE",
+    "financials": {
+      "BEST_SALES": 3349.5,
+      "BEST_EBITDA": 449.1
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T08:08:47.806253Z"
+  },
+  "TCOM US Equity": {
+    "name": "Trip.com",
+    "ticker": "TCOM",
+    "financials": {
+      "BEST_SALES": 15865.5,
+      "BEST_EBITDA": 4727.555555555556
+    },
+    "kpis": {},
+    "margins": {},
+    "discoveredAt": "2026-03-25T08:09:41.908899Z"
+  }
+}

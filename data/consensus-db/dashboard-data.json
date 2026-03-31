@@ -1,0 +1,1574 @@
+{
+  "generated": "2026-03-26",
+  "summary": {
+    "total_companies": 86,
+    "total_snapshots": 688,
+    "total_actuals": 0,
+    "total_calendar": 0,
+    "fields_discovered": 2,
+    "kpi_fields": 0,
+    "periods_covered": [
+      "1Q2026",
+      "2Q2026"
+    ],
+    "periods_missing": [
+      "3Q2026",
+      "4Q2026",
+      "FY2026",
+      "FY2027"
+    ],
+    "historical_backfill": false,
+    "ingest_key_set": false,
+    "scheduler_active": true
+  },
+  "companies": [
+    {
+      "ticker": "0700.HK",
+      "name": "Tencent",
+      "bbg": "700 HK Equity",
+      "country": "HK",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "1810.HK",
+      "name": "Xiaomi",
+      "bbg": "1810 HK Equity",
+      "country": "HK",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "3690.HK",
+      "name": "Meituan",
+      "bbg": "3690 HK Equity",
+      "country": "HK",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "9618.HK",
+      "name": "JD.com",
+      "bbg": "9618 HK Equity",
+      "country": "HK",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "9988.HK",
+      "name": "Alibaba",
+      "bbg": "9988 HK Equity",
+      "country": "HK",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "AAPL",
+      "name": "Apple",
+      "bbg": "AAPL US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "ABNB",
+      "name": "Airbnb",
+      "bbg": "ABNB US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "AFRM",
+      "name": "Affirm",
+      "bbg": "AFRM US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "AMD",
+      "name": "AMD",
+      "bbg": "AMD US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "AMZN",
+      "name": "Amazon",
+      "bbg": "AMZN US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "ANF",
+      "name": "Abercrombie & Fitch",
+      "bbg": "ANF US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "BKNG",
+      "name": "Booking Holdings",
+      "bbg": "BKNG US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "CHWY",
+      "name": "Chewy",
+      "bbg": "CHWY US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "CMCSA",
+      "name": "Comcast",
+      "bbg": "CMCSA US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "CMG",
+      "name": "Chipotle",
+      "bbg": "CMG US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "COIN",
+      "name": "Coinbase",
+      "bbg": "COIN US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "COST",
+      "name": "Costco",
+      "bbg": "COST US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "CPNG",
+      "name": "Coupang",
+      "bbg": "CPNG US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "CRM",
+      "name": "Salesforce",
+      "bbg": "CRM US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "CRWD",
+      "name": "CrowdStrike",
+      "bbg": "CRWD US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "DASH",
+      "name": "DoorDash",
+      "bbg": "DASH US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "DDOG",
+      "name": "Datadog",
+      "bbg": "DDOG US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "DHER.DE",
+      "name": "Delivery Hero",
+      "bbg": "DHER GR Equity",
+      "country": "DE",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "DIS",
+      "name": "Disney",
+      "bbg": "DIS US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "DKNG",
+      "name": "DraftKings",
+      "bbg": "DKNG US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "DUOL",
+      "name": "Duolingo",
+      "bbg": "DUOL US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "EA",
+      "name": "EA",
+      "bbg": "EA US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "ETSY",
+      "name": "Etsy",
+      "bbg": "ETSY US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "EXPE",
+      "name": "Expedia",
+      "bbg": "EXPE US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "FVRR",
+      "name": "Fiverr",
+      "bbg": "FVRR US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "GLBE",
+      "name": "Global-e Online",
+      "bbg": "GLBE US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "GOOGL",
+      "name": "Alphabet",
+      "bbg": "GOOGL US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "GPS",
+      "name": "Gap",
+      "bbg": "GAP US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "GRAB",
+      "name": "Grab",
+      "bbg": "GRAB US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "HD",
+      "name": "Home Depot",
+      "bbg": "HD US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "HOOD",
+      "name": "Robinhood",
+      "bbg": "HOOD US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "HUBS",
+      "name": "HubSpot",
+      "bbg": "HUBS US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "INTC",
+      "name": "Intel",
+      "bbg": "INTC US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "LOW",
+      "name": "Lowe's",
+      "bbg": "LOW US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "LULU",
+      "name": "Lululemon",
+      "bbg": "LULU US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "LYFT",
+      "name": "Lyft",
+      "bbg": "LYFT US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "MA",
+      "name": "Mastercard",
+      "bbg": "MA US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "MCD",
+      "name": "McDonald's",
+      "bbg": "MCD US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "MDB",
+      "name": "MongoDB",
+      "bbg": "MDB US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "MELI",
+      "name": "MercadoLibre",
+      "bbg": "MELI US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "META",
+      "name": "Meta",
+      "bbg": "META US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "MSFT",
+      "name": "Microsoft",
+      "bbg": "MSFT US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "MTCH",
+      "name": "Match Group",
+      "bbg": "MTCH US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "NET",
+      "name": "Cloudflare",
+      "bbg": "NET US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "NFLX",
+      "name": "Netflix",
+      "bbg": "NFLX US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "NKE",
+      "name": "Nike",
+      "bbg": "NKE US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "NOW",
+      "name": "ServiceNow",
+      "bbg": "NOW US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "NVDA",
+      "name": "NVIDIA",
+      "bbg": "NVDA US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "PARA",
+      "name": "Paramount",
+      "bbg": "PARA US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "PDD",
+      "name": "PDD Holdings",
+      "bbg": "PDD US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "PINS",
+      "name": "Pinterest",
+      "bbg": "PINS US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "PLTR",
+      "name": "Palantir",
+      "bbg": "PLTR US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "PYPL",
+      "name": "PayPal",
+      "bbg": "PYPL US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "QCOM",
+      "name": "Qualcomm",
+      "bbg": "QCOM US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "RBLX",
+      "name": "Roblox",
+      "bbg": "RBLX US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "RDDT",
+      "name": "Reddit",
+      "bbg": "RDDT US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "ROKU",
+      "name": "Roku",
+      "bbg": "ROKU US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "ROST",
+      "name": "Ross Stores",
+      "bbg": "ROST US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "SBUX",
+      "name": "Starbucks",
+      "bbg": "SBUX US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "SE",
+      "name": "Sea",
+      "bbg": "SE US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "SHOP",
+      "name": "Shopify",
+      "bbg": "SHOP US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "SNAP",
+      "name": "Snap",
+      "bbg": "SNAP US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "SNOW",
+      "name": "Snowflake",
+      "bbg": "SNOW US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "SOFI",
+      "name": "SoFi",
+      "bbg": "SOFI US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "SPOT",
+      "name": "Spotify",
+      "bbg": "SPOT US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "SQ",
+      "name": "Block",
+      "bbg": "XYZ US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "TCOM",
+      "name": "Trip.com",
+      "bbg": "TCOM US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "TGT",
+      "name": "Target",
+      "bbg": "TGT US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "TJX",
+      "name": "TJX Companies",
+      "bbg": "TJX US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "TSLA",
+      "name": "Tesla",
+      "bbg": "TSLA US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "TSM",
+      "name": "TSMC",
+      "bbg": "TSM US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "TTWO",
+      "name": "Take-Two",
+      "bbg": "TTWO US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "TWLO",
+      "name": "Twilio",
+      "bbg": "TWLO US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "U",
+      "name": "Unity",
+      "bbg": "U US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "UBER",
+      "name": "Uber",
+      "bbg": "UBER US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "UPWK",
+      "name": "Upwork",
+      "bbg": "UPWK US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "V",
+      "name": "Visa",
+      "bbg": "V US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "W",
+      "name": "Wayfair",
+      "bbg": "W US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "WBD",
+      "name": "Warner Bros Discovery",
+      "bbg": "WBD US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "WMT",
+      "name": "Walmart",
+      "bbg": "WMT US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    },
+    {
+      "ticker": "ZS",
+      "name": "Zscaler",
+      "bbg": "ZS US Equity",
+      "country": "US",
+      "sector": "",
+      "mcap": 0,
+      "sales_snapshots": 4,
+      "ebitda_snapshots": 4,
+      "periods": [
+        "1Q2026",
+        "2Q2026"
+      ],
+      "latest_snapshot": "2026-03-26",
+      "actuals_count": 0,
+      "earnings_date": "",
+      "earnings_confirmed": ""
+    }
+  ]
+}
