@@ -1,0 +1,780 @@
+{
+  "version": "2026-03-25",
+  "description": "Priority universe for Bloomberg consensus sync. Phase 1: ~100 companies.",
+  "companies": [
+    {
+      "ticker": "TSLA",
+      "bbg": "TSLA US Equity",
+      "name": "Tesla",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "UBER",
+      "bbg": "UBER US Equity",
+      "name": "Uber",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "DASH",
+      "bbg": "DASH US Equity",
+      "name": "DoorDash",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "ABNB",
+      "bbg": "ABNB US Equity",
+      "name": "Airbnb",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "SPOT",
+      "bbg": "SPOT US Equity",
+      "name": "Spotify",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "NFLX",
+      "bbg": "NFLX US Equity",
+      "name": "Netflix",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "META",
+      "bbg": "META US Equity",
+      "name": "Meta",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "SNAP",
+      "bbg": "SNAP US Equity",
+      "name": "Snap",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "PINS",
+      "bbg": "PINS US Equity",
+      "name": "Pinterest",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "RBLX",
+      "bbg": "RBLX US Equity",
+      "name": "Roblox",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "RDDT",
+      "bbg": "RDDT US Equity",
+      "name": "Reddit",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "AAPL",
+      "bbg": "AAPL US Equity",
+      "name": "Apple",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "LYFT",
+      "bbg": "LYFT US Equity",
+      "name": "Lyft",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "BKNG",
+      "bbg": "BKNG US Equity",
+      "name": "Booking Holdings",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "DIS",
+      "bbg": "DIS US Equity",
+      "name": "Disney",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "1810.HK",
+      "bbg": "1810 HK Equity",
+      "name": "Xiaomi",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "0700.HK",
+      "bbg": "700 HK Equity",
+      "name": "Tencent",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "GRAB",
+      "bbg": "GRAB US Equity",
+      "name": "Grab",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "SE",
+      "bbg": "SE US Equity",
+      "name": "Sea",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "MELI",
+      "bbg": "MELI US Equity",
+      "name": "MercadoLibre",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "COIN",
+      "bbg": "COIN US Equity",
+      "name": "Coinbase",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "SHOP",
+      "bbg": "SHOP US Equity",
+      "name": "Shopify",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "MTCH",
+      "bbg": "MTCH US Equity",
+      "name": "Match Group",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "ROKU",
+      "bbg": "ROKU US Equity",
+      "name": "Roku",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "AMZN",
+      "bbg": "AMZN US Equity",
+      "name": "Amazon",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "GOOGL",
+      "bbg": "GOOGL US Equity",
+      "name": "Alphabet",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "CRM",
+      "bbg": "CRM US Equity",
+      "name": "Salesforce",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "MSFT",
+      "bbg": "MSFT US Equity",
+      "name": "Microsoft",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "PYPL",
+      "bbg": "PYPL US Equity",
+      "name": "PayPal",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "SQ",
+      "bbg": "XYZ US Equity",
+      "name": "Block",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "DKNG",
+      "bbg": "DKNG US Equity",
+      "name": "DraftKings",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "DUOL",
+      "bbg": "DUOL US Equity",
+      "name": "Duolingo",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "ETSY",
+      "bbg": "ETSY US Equity",
+      "name": "Etsy",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "FVRR",
+      "bbg": "FVRR US Equity",
+      "name": "Fiverr",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "UPWK",
+      "bbg": "UPWK US Equity",
+      "name": "Upwork",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "CPNG",
+      "bbg": "CPNG US Equity",
+      "name": "Coupang",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "GLBE",
+      "bbg": "GLBE US Equity",
+      "name": "Global-e Online",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "W",
+      "bbg": "W US Equity",
+      "name": "Wayfair",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "CHWY",
+      "bbg": "CHWY US Equity",
+      "name": "Chewy",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "PDD",
+      "bbg": "PDD US Equity",
+      "name": "PDD Holdings",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "3690.HK",
+      "bbg": "3690 HK Equity",
+      "name": "Meituan",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "9618.HK",
+      "bbg": "9618 HK Equity",
+      "name": "JD.com",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "9988.HK",
+      "bbg": "9988 HK Equity",
+      "name": "Alibaba",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "DHER.DE",
+      "bbg": "DHER GR Equity",
+      "name": "Delivery Hero",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "WMT",
+      "bbg": "WMT US Equity",
+      "name": "Walmart",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "TGT",
+      "bbg": "TGT US Equity",
+      "name": "Target",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "COST",
+      "bbg": "COST US Equity",
+      "name": "Costco",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "HD",
+      "bbg": "HD US Equity",
+      "name": "Home Depot",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "LOW",
+      "bbg": "LOW US Equity",
+      "name": "Lowe's",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "MCD",
+      "bbg": "MCD US Equity",
+      "name": "McDonald's",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "SBUX",
+      "bbg": "SBUX US Equity",
+      "name": "Starbucks",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "CMG",
+      "bbg": "CMG US Equity",
+      "name": "Chipotle",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "NKE",
+      "bbg": "NKE US Equity",
+      "name": "Nike",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "LULU",
+      "bbg": "LULU US Equity",
+      "name": "Lululemon",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "TJX",
+      "bbg": "TJX US Equity",
+      "name": "TJX Companies",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "ROST",
+      "bbg": "ROST US Equity",
+      "name": "Ross Stores",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "GPS",
+      "bbg": "GAP US Equity",
+      "name": "Gap",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "ANF",
+      "bbg": "ANF US Equity",
+      "name": "Abercrombie & Fitch",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "WBD",
+      "bbg": "WBD US Equity",
+      "name": "Warner Bros Discovery",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "PARA",
+      "bbg": "PARA US Equity",
+      "name": "Paramount",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "CMCSA",
+      "bbg": "CMCSA US Equity",
+      "name": "Comcast",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "TTWO",
+      "bbg": "TTWO US Equity",
+      "name": "Take-Two",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "EA",
+      "bbg": "EA US Equity",
+      "name": "EA",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "U",
+      "bbg": "U US Equity",
+      "name": "Unity",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "V",
+      "bbg": "V US Equity",
+      "name": "Visa",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "MA",
+      "bbg": "MA US Equity",
+      "name": "Mastercard",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "AFRM",
+      "bbg": "AFRM US Equity",
+      "name": "Affirm",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "SOFI",
+      "bbg": "SOFI US Equity",
+      "name": "SoFi",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "HOOD",
+      "bbg": "HOOD US Equity",
+      "name": "Robinhood",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "NOW",
+      "bbg": "NOW US Equity",
+      "name": "ServiceNow",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "SNOW",
+      "bbg": "SNOW US Equity",
+      "name": "Snowflake",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "DDOG",
+      "bbg": "DDOG US Equity",
+      "name": "Datadog",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "CRWD",
+      "bbg": "CRWD US Equity",
+      "name": "CrowdStrike",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "NET",
+      "bbg": "NET US Equity",
+      "name": "Cloudflare",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "ZS",
+      "bbg": "ZS US Equity",
+      "name": "Zscaler",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "PLTR",
+      "bbg": "PLTR US Equity",
+      "name": "Palantir",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "MDB",
+      "bbg": "MDB US Equity",
+      "name": "MongoDB",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "HUBS",
+      "bbg": "HUBS US Equity",
+      "name": "HubSpot",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "TWLO",
+      "bbg": "TWLO US Equity",
+      "name": "Twilio",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "NVDA",
+      "bbg": "NVDA US Equity",
+      "name": "NVIDIA",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "AMD",
+      "bbg": "AMD US Equity",
+      "name": "AMD",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "TSM",
+      "bbg": "TSM US Equity",
+      "name": "TSMC",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "INTC",
+      "bbg": "INTC US Equity",
+      "name": "Intel",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "QCOM",
+      "bbg": "QCOM US Equity",
+      "name": "Qualcomm",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "EXPE",
+      "bbg": "EXPE US Equity",
+      "name": "Expedia",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    },
+    {
+      "ticker": "TCOM",
+      "bbg": "TCOM US Equity",
+      "name": "Trip.com",
+      "metrics": [
+        "Revenue",
+        "EBITDA"
+      ]
+    }
+  ]
+}

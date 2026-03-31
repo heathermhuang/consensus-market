@@ -354,9 +354,9 @@ def main():
                 # Find closest match
                 close = [k for k in kpis if any(word in k for word in metric.upper().split())]
                 if close:
-                    print(f"    ⚠️  '{metric}' → guessed {guessed_field}, but found {close[0]}={format_value(found[close[0]])}")
+                    print(f"    WARN  '{metric}' -> guessed {guessed_field}, but found {close[0]}={format_value(found[close[0]])}")
                 else:
-                    print(f"    ❌  '{metric}' → {guessed_field} returned nothing")
+                    print(f"    MISS  '{metric}' -> {guessed_field} returned nothing")
 
         field_map[bbg] = {
             "name": name,

@@ -396,6 +396,13 @@ async function getRuntime(requestUrl, env) {
 }
 
 // ---------------------------------------------------------------------------
+// Add CORS header to read-only API responses (public data, no auth)
+function addCors(response) {
+  const headers = new Headers(response.headers);
+  headers.set("Access-Control-Allow-Origin", "*");
+  return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
+}
+
 // CORS helpers
 // ---------------------------------------------------------------------------
 
@@ -798,6 +805,275 @@ async function handleActivityRequest(env) {
 }
 
 // ---------------------------------------------------------------------------
+// Bloomberg Consensus Data Handlers
+// ---------------------------------------------------------------------------
+
+function verifyIngestKey(request, env) {
+  const authHeader = request.headers.get("Authorization") || "";
+  const apiKey = request.headers.get("X-API-Key") || "";
+  const bearerToken = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
+  const token = bearerToken || apiKey;
+  if (!token || !env.INGEST_API_KEY || token !== env.INGEST_API_KEY) {
+    return false;
+  }
+  return true;
+}
+
+async function handleIngest(request, env, type) {
+  if (!verifyIngestKey(request, env)) {
+    return withSecurityHeaders(Response.json({ error: "Unauthorized" }, { status: 401 }));
+  }
+  if (!env.DB) {
+    return withSecurityHeaders(Response.json({ error: "D1 not configured" }, { status: 503 }));
+  }
+
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return withSecurityHeaders(Response.json({ error: "Invalid JSON" }, { status: 400 }));
+  }
+
+  try {
+    if (type === "consensus") {
+      return await ingestConsensus(body, env);
+    } else if (type === "actuals") {
+      return await ingestActuals(body, env);
+    } else if (type === "analysts") {
+      return await ingestAnalysts(body, env);
+    } else if (type === "calendar") {
+      return await ingestCalendar(body, env);
+    }
+  } catch (err) {
+    return withSecurityHeaders(Response.json({ error: err.message }, { status: 500 }));
+  }
+}
+
+async function ingestConsensus(body, env) {
+  // Try to ensure unique index (may fail if existing duplicates — that's ok, we handle it below)
+  try {
+    await env.DB.prepare(
+      "CREATE UNIQUE INDEX IF NOT EXISTS idx_consensus_upsert ON consensus(ticker, field, period, snapshot_date)"
+    ).run();
+  } catch { /* index may already exist or duplicates prevent creation */ }
+
+  const rows = Array.isArray(body) ? body : [body];
+  let inserted = 0;
+  for (const row of rows) {
+    const { ticker, bbg_ticker, company, period, field, value, high, low, analyst_count, snapshot_date } = row;
+    if (!ticker || !period || !field) continue;
+    const sd = snapshot_date || new Date().toISOString().slice(0, 10);
+    // Delete-then-insert pattern: works whether or not unique index exists
+    await env.DB.prepare(
+      "DELETE FROM consensus WHERE ticker = ? AND field = ? AND period = ? AND snapshot_date = ?"
+    ).bind(ticker, field, period, sd).run();
+    await env.DB.prepare(
+      `INSERT INTO consensus (ticker, bbg_ticker, company, period, field, value, high, low, analyst_count, snapshot_date)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+    ).bind(ticker, bbg_ticker || "", company || "", period, field, value ?? null, high ?? null, low ?? null, analyst_count ?? null, sd).run();
+    inserted++;
+  }
+  return withSecurityHeaders(Response.json({ ok: true, inserted }));
+}
+
+async function ingestActuals(body, env) {
+  try {
+    await env.DB.prepare(
+      "CREATE UNIQUE INDEX IF NOT EXISTS idx_actuals_upsert ON actuals(ticker, field, period)"
+    ).run();
+  } catch { /* duplicates may prevent index creation */ }
+
+  const rows = Array.isArray(body) ? body : [body];
+  let inserted = 0;
+  for (const row of rows) {
+    const { ticker, bbg_ticker, company, period, field, value, source } = row;
+    if (!ticker || !period || !field) continue;
+    await env.DB.prepare(
+      "DELETE FROM actuals WHERE ticker = ? AND field = ? AND period = ?"
+    ).bind(ticker, field, period).run();
+    await env.DB.prepare(
+      `INSERT INTO actuals (ticker, bbg_ticker, company, period, field, value, source)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`
+    ).bind(ticker, bbg_ticker || "", company || "", period, field, value ?? null, source || "").run();
+    inserted++;
+  }
+  return withSecurityHeaders(Response.json({ ok: true, inserted }));
+}
+
+async function ingestAnalysts(body, env) {
+  // Create table if not exists
+  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS analysts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    ticker TEXT NOT NULL,
+    bbg_ticker TEXT NOT NULL,
+    firm TEXT NOT NULL,
+    analyst TEXT,
+    recommendation TEXT,
+    target_price REAL,
+    date TEXT,
+    snapshot_date TEXT NOT NULL,
+    created_at TEXT DEFAULT (datetime('now'))
+  )`).run();
+  await env.DB.prepare("CREATE INDEX IF NOT EXISTS idx_analysts_ticker ON analysts(ticker)").run();
+  try {
+    await env.DB.prepare(
+      "CREATE UNIQUE INDEX IF NOT EXISTS idx_analysts_upsert ON analysts(ticker, firm, snapshot_date)"
+    ).run();
+  } catch { /* duplicates may prevent index creation */ }
+
+  const rows = Array.isArray(body) ? body : [body];
+  let inserted = 0;
+  for (const row of rows) {
+    const { ticker, bbg_ticker, firm, analyst, recommendation, target_price, date, snapshot_date } = row;
+    if (!ticker || !firm) continue;
+    const sd = snapshot_date || new Date().toISOString().slice(0, 10);
+    await env.DB.prepare(
+      "DELETE FROM analysts WHERE ticker = ? AND firm = ? AND snapshot_date = ?"
+    ).bind(ticker, firm, sd).run();
+    await env.DB.prepare(
+      `INSERT INTO analysts (ticker, bbg_ticker, firm, analyst, recommendation, target_price, date, snapshot_date)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+    ).bind(ticker, bbg_ticker || "", firm, analyst || "", recommendation || "", target_price ?? null, date || "", sd).run();
+    inserted++;
+  }
+  return withSecurityHeaders(Response.json({ ok: true, inserted }));
+}
+
+async function handleReadAnalysts(ticker, env) {
+  if (!env.DB) {
+    return withSecurityHeaders(Response.json({ error: "D1 not configured" }, { status: 503 }));
+  }
+  // Check if table exists
+  try {
+    const { results } = await env.DB.prepare(
+      "SELECT * FROM analysts WHERE ticker = ? ORDER BY target_price DESC LIMIT 200"
+    ).bind(ticker).all();
+    return withSecurityHeaders(Response.json({ ticker, count: results.length, data: results }, {
+      headers: { "Cache-Control": "public, max-age=300" }
+    }));
+  } catch {
+    return withSecurityHeaders(Response.json({ ticker, count: 0, data: [] }));
+  }
+}
+
+async function handleReadAllAnalysts(env) {
+  if (!env.DB) {
+    return withSecurityHeaders(Response.json({ error: "D1 not configured" }, { status: 503 }));
+  }
+  try {
+    const { results } = await env.DB.prepare(
+      "SELECT ticker, COUNT(*) as cnt, GROUP_CONCAT(DISTINCT firm) as firms FROM analysts GROUP BY ticker ORDER BY ticker"
+    ).all();
+    return withSecurityHeaders(Response.json({ count: results.length, data: results }, {
+      headers: { "Cache-Control": "public, max-age=300" }
+    }));
+  } catch {
+    return withSecurityHeaders(Response.json({ count: 0, data: [] }));
+  }
+}
+
+async function ingestCalendar(body, env) {
+  const rows = Array.isArray(body) ? body : [body];
+  let upserted = 0;
+  for (const row of rows) {
+    const { ticker, bbg_ticker, company, next_earnings_date, earnings_time, confirmed } = row;
+    if (!ticker) continue;
+    await env.DB.prepare(
+      `INSERT OR REPLACE INTO earnings_calendar (ticker, bbg_ticker, company, next_earnings_date, earnings_time, confirmed, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, datetime('now'))`
+    ).bind(ticker, bbg_ticker || "", company || "", next_earnings_date || null, earnings_time || null, confirmed || null).run();
+    upserted++;
+  }
+  return withSecurityHeaders(Response.json({ ok: true, upserted }));
+}
+
+async function handleReadConsensus(ticker, url, env) {
+  if (!env.DB) {
+    return withSecurityHeaders(Response.json({ error: "D1 not configured" }, { status: 503 }));
+  }
+  const period = url.searchParams.get("period");
+  const field = url.searchParams.get("field");
+  let sql = "SELECT * FROM consensus WHERE ticker = ?";
+  const params = [ticker];
+  if (period) { sql += " AND period = ?"; params.push(period); }
+  if (field) { sql += " AND field = ?"; params.push(field); }
+  sql += " ORDER BY snapshot_date DESC, period LIMIT 500";
+  const { results } = await env.DB.prepare(sql).bind(...params).all();
+  return withSecurityHeaders(Response.json({ ticker, count: results.length, data: results }, {
+    headers: { "Cache-Control": "public, max-age=300" }
+  }));
+}
+
+async function handleReadActuals(ticker, url, env) {
+  if (!env.DB) {
+    return withSecurityHeaders(Response.json({ error: "D1 not configured" }, { status: 503 }));
+  }
+  const { results } = await env.DB.prepare(
+    "SELECT * FROM actuals WHERE ticker = ? ORDER BY period DESC LIMIT 200"
+  ).bind(ticker).all();
+  return withSecurityHeaders(Response.json({ ticker, count: results.length, data: results }, {
+    headers: { "Cache-Control": "public, max-age=300" }
+  }));
+}
+
+async function handleReadCalendar(env) {
+  if (!env.DB) {
+    return withSecurityHeaders(Response.json({ error: "D1 not configured" }, { status: 503 }));
+  }
+  const { results } = await env.DB.prepare(
+    "SELECT * FROM earnings_calendar ORDER BY next_earnings_date ASC"
+  ).all();
+  return withSecurityHeaders(Response.json({ count: results.length, data: results }, {
+    headers: { "Cache-Control": "public, max-age=600" }
+  }));
+}
+
+async function handleDashboard(env) {
+  if (!env.DB) {
+    return withSecurityHeaders(Response.json({ error: "D1 not configured" }, { status: 503 }));
+  }
+
+  // Gather all queries in parallel
+  const queries = [
+    // Coverage summary: snapshots per ticker x field
+    env.DB.prepare("SELECT ticker, field, COUNT(*) as cnt, MAX(snapshot_date) as latest FROM consensus GROUP BY ticker, field").all(),
+    // Actuals summary
+    env.DB.prepare("SELECT ticker, COUNT(*) as cnt FROM actuals GROUP BY ticker").all(),
+    // Calendar
+    env.DB.prepare("SELECT * FROM earnings_calendar ORDER BY next_earnings_date ASC").all(),
+    // Latest consensus values (most recent snapshot per ticker x field x period)
+    env.DB.prepare(`
+      SELECT c.ticker, c.bbg_ticker, c.company, c.period, c.field, c.value, c.high, c.low, c.analyst_count, c.snapshot_date
+      FROM consensus c
+      INNER JOIN (
+        SELECT ticker, field, period, MAX(snapshot_date) as max_date
+        FROM consensus GROUP BY ticker, field, period
+      ) latest ON c.ticker = latest.ticker AND c.field = latest.field AND c.period = latest.period AND c.snapshot_date = latest.max_date
+      ORDER BY c.ticker, c.field, c.period
+    `).all(),
+    // Analyst counts per ticker
+    env.DB.prepare("SELECT ticker, COUNT(*) as cnt, COUNT(DISTINCT firm) as firms FROM analysts GROUP BY ticker").all(),
+  ];
+
+  const [consensus, actuals, calendar, latestValues, analystCounts] = await Promise.all(queries);
+
+  return withSecurityHeaders(Response.json({
+    generated: new Date().toISOString(),
+    consensus_summary: consensus.results,
+    actuals_summary: actuals.results,
+    calendar: calendar.results,
+    latest_values: latestValues.results,
+    analyst_counts: analystCounts.results,
+    totals: {
+      consensus_rows: consensus.results.reduce((s, r) => s + r.cnt, 0),
+      actuals_rows: actuals.results.reduce((s, r) => s + r.cnt, 0),
+      calendar_rows: calendar.results.length,
+      analyst_rows: analystCounts.results.reduce((s, r) => s + r.cnt, 0),
+    }
+  }, { headers: { "Cache-Control": "no-store" } }));
+}
+
+// ---------------------------------------------------------------------------
 // Worker entry
 // ---------------------------------------------------------------------------
 
@@ -873,6 +1149,52 @@ export default {
     if (url.pathname === "/activity.json") {
       return handleActivityRequest(env);
     }
+
+    // ── Bloomberg Consensus Data API ──────────────────────────────
+    if (url.pathname === "/api/ingest" && request.method === "POST") {
+      return handleIngest(request, env, "consensus");
+    }
+    if (url.pathname === "/api/ingest/actuals" && request.method === "POST") {
+      return handleIngest(request, env, "actuals");
+    }
+    if (url.pathname === "/api/ingest/calendar" && request.method === "POST") {
+      return handleIngest(request, env, "calendar");
+    }
+    if (url.pathname === "/api/ingest/analysts" && request.method === "POST") {
+      return handleIngest(request, env, "analysts");
+    }
+    // CORS preflight for read API endpoints
+    if (url.pathname.startsWith("/api/") && request.method === "OPTIONS") {
+      return new Response(null, { status: 204, headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Max-Age": "86400",
+      }});
+    }
+
+    if (url.pathname.startsWith("/api/consensus/") && request.method === "GET") {
+      const ticker = decodeURIComponent(url.pathname.replace("/api/consensus/", ""));
+      return addCors(await handleReadConsensus(ticker, url, env));
+    }
+    if (url.pathname.startsWith("/api/actuals/") && request.method === "GET") {
+      const ticker = decodeURIComponent(url.pathname.replace("/api/actuals/", ""));
+      return addCors(await handleReadActuals(ticker, url, env));
+    }
+    if (url.pathname === "/api/calendar" && request.method === "GET") {
+      return addCors(await handleReadCalendar(env));
+    }
+    if (url.pathname.startsWith("/api/analysts/") && request.method === "GET") {
+      const ticker = decodeURIComponent(url.pathname.replace("/api/analysts/", ""));
+      return addCors(await handleReadAnalysts(ticker, env));
+    }
+    if (url.pathname === "/api/analysts" && request.method === "GET") {
+      return addCors(await handleReadAllAnalysts(env));
+    }
+    if (url.pathname === "/api/dashboard" && request.method === "GET") {
+      return addCors(await handleDashboard(env));
+    }
+    // ── End Bloomberg API ─────────────────────────────────────────
 
     if (request.method !== "GET" && request.method !== "HEAD") {
       return env.ASSETS.fetch(request);

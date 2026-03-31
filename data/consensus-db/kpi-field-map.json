@@ -1,0 +1,125 @@
+{
+  "version": "2026-03-28",
+  "description": "Bloomberg field names for operating KPI consensus estimates. API-discovered fields work via socket API; Excel-discovered fields require the Excel Add-in bridge.",
+  "found_via_api": {
+    "TSLA": {
+      "field": "NUMBER_OF_VEHICLES_SOLD",
+      "metric": "Vehicle Deliveries",
+      "unit": "units",
+      "source": "api"
+    },
+    "SPOT": {
+      "field": "MONTHLY_ACTIVE_USERS",
+      "metric": "Monthly Active Users",
+      "unit": "millions",
+      "source": "api"
+    },
+    "PINS": {
+      "field": "MONTHLY_ACTIVE_USERS",
+      "metric": "Monthly Active Users",
+      "unit": "millions",
+      "source": "api"
+    },
+    "META": {
+      "field": "DAILY_ACTIVE_USERS",
+      "metric": "Family Daily Active People",
+      "unit": "millions",
+      "source": "api"
+    },
+    "1810.HK": {
+      "field": "FS265",
+      "metric": "Smartphone Shipments",
+      "unit": "thousands",
+      "source": "api"
+    },
+    "0700.HK": {
+      "field": "MONTHLY_ACTIVE_USERS",
+      "metric": "Weixin/WeChat MAU",
+      "unit": "millions",
+      "source": "api"
+    },
+    "UBER": {
+      "field": "MONTHLY_ACTIVE_USERS",
+      "metric": "Monthly Active Platform Consumers",
+      "unit": "millions",
+      "source": "api"
+    },
+    "DIS": {
+      "field": "ROOM_NIGHTS",
+      "metric": "Room Nights (Parks)",
+      "unit": "units",
+      "source": "api"
+    },
+    "COIN": {
+      "field": "MONTHLY_ACTIVE_USERS",
+      "metric": "Monthly Transacting Users",
+      "unit": "millions",
+      "source": "api"
+    }
+  },
+  "found_via_excel": {
+    "SNAP": {
+      "field": "DAILY_ACTIVE_USERS",
+      "metric": "DAU",
+      "source": "excel"
+    }
+  },
+  "needs_manual_or_excel": {
+    "DASH": {
+      "metric": "Marketplace Orders",
+      "note": "Field name not discoverable via API. Probing via Excel bridge."
+    },
+    "ABNB": {
+      "metric": "Nights and Experiences Booked",
+      "note": "Field name not discoverable via API. Probing via Excel bridge."
+    },
+    "NFLX": {
+      "metric": "Paid Memberships",
+      "note": "Netflix stopped reporting quarterly subs in 2025. Probing via Excel bridge."
+    },
+    "RBLX": {
+      "metric": "Daily Active Users",
+      "note": "Field name not discoverable via API. Probing via Excel bridge."
+    },
+    "LYFT": {
+      "metric": "Rides",
+      "note": "Field name not discoverable via API. Probing via Excel bridge."
+    },
+    "BKNG": {
+      "metric": "Room Nights",
+      "note": "Field name not discoverable via API. Probing via Excel bridge."
+    },
+    "GRAB": {
+      "metric": "Monthly Transacting Users",
+      "note": "Field name not discoverable via API. Probing via Excel bridge."
+    },
+    "MELI": {
+      "metric": "Unique Active Buyers",
+      "note": "Field name not discoverable via API. Probing via Excel bridge."
+    },
+    "SE": {
+      "metric": "Gross Orders",
+      "note": "Field name not discoverable via API. Probing via Excel bridge."
+    },
+    "RDDT": {
+      "metric": "Daily Active Uniques",
+      "note": "Field name not discoverable via API. Probing via Excel bridge."
+    },
+    "AAPL": {
+      "metric": "iPhone Shipments",
+      "note": "Apple stopped reporting unit sales in 2018. Probing via Excel bridge."
+    },
+    "SHOP": {
+      "metric": "Gross Merchandise Volume",
+      "note": "Field name not discoverable via API. Probing via Excel bridge."
+    },
+    "MTCH": {
+      "metric": "Total Paying Users",
+      "note": "Field name not discoverable via API. Probing via Excel bridge."
+    },
+    "ROKU": {
+      "metric": "Active Accounts",
+      "note": "Field name not discoverable via API. Probing via Excel bridge."
+    }
+  }
+}

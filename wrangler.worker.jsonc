@@ -24,6 +24,13 @@
       "preview_id": "68591e87a0d3464bbbfde7c8d3cb9f4f"
     }
   ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "consensus-market-db",
+      "database_id": "fdff0025-7553-4304-b210-f7ac94a191a0"
+    }
+  ],
   "vars": {
     "VITE_CHAIN_ID": "1",
     "VITE_MARKET_ADDRESS": "",

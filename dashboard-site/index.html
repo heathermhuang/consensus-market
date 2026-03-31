@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consensus Market — Bloomberg Pipeline Dashboard</title>
+<style>
+  :root {
+    --bg: #0d1117; --card: #161b22; --border: #30363d;
+    --text: #e6edf3; --muted: #8b949e; --accent: #58a6ff;
+    --green: #3fb950; --yellow: #d29922; --red: #f85149;
+    --orange: #db6d28;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); }
+
+  .layout { display: flex; height: 100vh; }
+  .main { flex: 1; overflow-y: auto; padding: 24px; min-width: 0; }
+  .side-panel { width: 560px; min-width: 560px; border-left: 1px solid var(--border); background: var(--card); overflow-y: auto; display: none; }
+  .side-panel.open { display: block; }
+  .side-header { position: sticky; top: 0; background: var(--card); padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; z-index: 10; }
+  .side-header h2 { font-size: 18px; }
+  .side-close { background: none; border: 1px solid var(--border); color: var(--muted); padding: 4px 12px; border-radius: 4px; cursor: pointer; font-size: 18px; }
+  .side-close:hover { color: var(--text); border-color: var(--text); }
+  .side-body { padding: 20px; }
+  .side-section { margin-bottom: 24px; }
+  .side-section-title { font-size: 13px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+
+  h1 { font-size: 24px; margin-bottom: 4px; }
+  .subtitle { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 32px; }
+  .step { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+  .step-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .step-value { font-size: 24px; font-weight: 700; color: var(--accent); }
+  .step-detail { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+  .section-title { font-size: 16px; font-weight: 600; margin: 24px 0 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+
+  .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { background: var(--card); padding: 10px 12px; text-align: left; font-weight: 600; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; position: sticky; top: 0; user-select: none; white-space: nowrap; }
+  td { padding: 8px 12px; border-top: 1px solid var(--border); white-space: nowrap; }
+  tr:hover td { background: rgba(88,166,255,0.05); }
+  tr.clickable { cursor: pointer; }
+  tr.selected td { background: rgba(88,166,255,0.1); }
+
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+  .badge-green { background: rgba(63,185,80,0.15); color: var(--green); }
+  .badge-yellow { background: rgba(210,153,34,0.15); color: var(--yellow); }
+  .badge-red { background: rgba(248,81,73,0.15); color: var(--red); }
+  .badge-blue { background: rgba(88,166,255,0.15); color: var(--accent); }
+  .badge-gray { background: rgba(139,148,158,0.15); color: var(--muted); }
+  .badge-orange { background: rgba(219,109,40,0.15); color: var(--orange); }
+
+  .ticker-cell { font-weight: 600; color: var(--accent); cursor: pointer; }
+  .ticker-cell:hover { text-decoration: underline; }
+  .value-cell { text-align: right; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; }
+
+  .footer { margin-top: 32px; padding: 16px 0; border-top: 1px solid var(--border); color: var(--muted); font-size: 12px; text-align: center; }
+  .loading { text-align: center; padding: 32px; color: var(--muted); font-size: 14px; }
+  .error { text-align: center; padding: 32px; color: var(--red); }
+
+  .side-table { width: 100%; font-size: 12px; }
+  .side-table th { font-size: 10px; padding: 6px 8px; }
+  .side-table td { padding: 5px 8px; font-size: 12px; }
+
+  .metric-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .metric-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; text-align: center; }
+  .metric-card .mc-value { font-size: 22px; font-weight: 700; color: var(--accent); font-family: 'SF Mono', monospace; }
+  .metric-card .mc-label { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .metric-card .mc-sub { font-size: 10px; color: var(--muted); }
+
+  .gap-note { background: rgba(248,81,73,0.08); border: 1px solid rgba(248,81,73,0.2); border-radius: 6px; padding: 10px 14px; font-size: 12px; color: var(--muted); margin-bottom: 16px; }
+  .gap-note strong { color: var(--red); }
+</style>
+</head>
+<body>
+<div class="layout">
+<div class="main">
+
+<h1>Bloomberg Pipeline Dashboard</h1>
+<p class="subtitle">Oracle data source for <a href="https://consensusmarket.com" style="color:var(--accent)">consensusmarket.com</a> &bull; <span id="gen-date">Loading...</span></p>
+
+<div class="steps" id="summary"></div>
+
+<div class="section-title">Oracle Markets &mdash; KPI Consensus for Q2 2026</div>
+<div class="table-wrap">
+  <table>
+    <thead><tr>
+      <th>Ticker</th>
+      <th>Company</th>
+      <th>KPI Metric</th>
+      <th>Target Period</th>
+      <th style="text-align:right">Bloomberg Consensus</th>
+      <th style="text-align:right">Street Range</th>
+      <th>Data Status</th>
+      <th>Next Earnings</th>
+    </tr></thead>
+    <tbody id="market-tbody"><tr><td colspan="8" class="loading">Loading from D1...</td></tr></tbody>
+  </table>
+</div>
+
+<div class="footer">
+  Consensus Market Bloomberg Pipeline &bull; Live from D1 &bull; Syncs daily 06:00 + 06:30 HKT &bull; Click any row to see detail
+</div>
+</div>
+
+<!-- Right Side Panel -->
+<div class="side-panel" id="side-panel">
+  <div class="side-header">
+    <h2 id="side-title">Detail</h2>
+    <button class="side-close" onclick="closePanel()">&times;</button>
+  </div>
+  <div class="side-body" id="side-body"></div>
+</div>
+</div>
+
+<script>
+const API = 'https://consensusmarket.com';
+
+// Load market definitions from markets.json (embedded)
+const MARKETS = [
+  {ticker:'TSLA', company:'Tesla', metric:'Vehicle deliveries', slug:'tesla-deliveries', period:'Q2 2026', seedConsensus:410000, display:'410,000 vehicles'},
+  {ticker:'UBER', company:'Uber', metric:'Trips', slug:'uber-trips', period:'Q2 2026', seedConsensus:3350000000, display:'3.35B trips'},
+  {ticker:'DASH', company:'DoorDash', metric:'Marketplace orders', slug:'doordash-orders', period:'Q2 2026', seedConsensus:760000000, display:'760M orders'},
+  {ticker:'ABNB', company:'Airbnb', metric:'Nights and experiences booked', slug:'airbnb-nights', period:'Q2 2026', seedConsensus:145000000, display:'145M'},
+  {ticker:'SPOT', company:'Spotify', metric:'Monthly active users', slug:'spotify-maus', period:'Q2 2026', seedConsensus:720000000, display:'720M MAUs'},
+  {ticker:'GRAB', company:'Grab', metric:'Monthly transacting users', slug:'grab-mtu', period:'Q2 2026', seedConsensus:44000000, display:'44M MTUs'},
+  {ticker:'NFLX', company:'Netflix', metric:'Paid memberships', slug:'netflix-paid-memberships', period:'Q2 2026', seedConsensus:320000000, display:'320M'},
+  {ticker:'META', company:'Meta', metric:'Family daily active people', slug:'meta-dap', period:'Q2 2026', seedConsensus:3450000000, display:'3.45B'},
+  {ticker:'SE', company:'Sea', metric:'Gross orders', slug:'sea-gross-orders', period:'Q2 2026', seedConsensus:3100000000, display:'3.10B'},
+  {ticker:'PINS', company:'Pinterest', metric:'Monthly active users', slug:'pinterest-maus', period:'Q2 2026', seedConsensus:585000000, display:'585M MAUs'},
+  {ticker:'MELI', company:'MercadoLibre', metric:'Unique active buyers', slug:'meli-active-buyers', period:'Q2 2026', seedConsensus:112000000, display:'112M'},
+  {ticker:'COIN', company:'Coinbase', metric:'Monthly transacting users', slug:'coinbase-mtu', period:'Q2 2026', seedConsensus:9200000, display:'9.2M MTUs'},
+  {ticker:'RBLX', company:'Roblox', metric:'Daily active users', slug:'roblox-dau', period:'Q2 2026', seedConsensus:112000000, display:'112M DAU'},
+  {ticker:'LYFT', company:'Lyft', metric:'Rides', slug:'lyft-rides', period:'Q2 2026', seedConsensus:232000000, display:'232M rides'},
+  {ticker:'BKNG', company:'Booking Holdings', metric:'Room nights', slug:'booking-room-nights', period:'Q2 2026', seedConsensus:335000000, display:'335M'},
+  {ticker:'DIS', company:'Disney', metric:'Disney+ core subscribers', slug:'disney-plus-subs', period:'Q2 2026', seedConsensus:131000000, display:'131M'},
+  {ticker:'1810.HK', company:'Xiaomi', metric:'Smartphone shipments', slug:'xiaomi-shipments', period:'Q2 2026', seedConsensus:42000000, display:'42M'},
+  {ticker:'0700.HK', company:'Tencent', metric:'Weixin/WeChat combined MAU', slug:'tencent-wechat-mau', period:'Q2 2026', seedConsensus:1420000000, display:'1.42B'},
+  {ticker:'AAPL', company:'Apple', metric:'iPhone shipments', slug:'apple-iphone-shipments', period:'Q2 2026', seedConsensus:48500000, display:'48.5M'},
+  {ticker:'RDDT', company:'Reddit', metric:'Daily active uniques', slug:'reddit-dauq', period:'Q2 2026', seedConsensus:142000000, display:'142M'},
+  // These 4 are in market tickers but not in markets.json yet
+  {ticker:'SNAP', company:'Snap', metric:'Daily active users', slug:null, period:'Q2 2026', seedConsensus:null, display:'-'},
+  {ticker:'SHOP', company:'Shopify', metric:'Gross merchandise volume', slug:null, period:'Q2 2026', seedConsensus:null, display:'-'},
+  {ticker:'MTCH', company:'Match Group', metric:'Total paying users', slug:null, period:'Q2 2026', seedConsensus:null, display:'-'},
+  {ticker:'ROKU', company:'Roku', metric:'Active accounts', slug:null, period:'Q2 2026', seedConsensus:null, display:'-'},
+];
+
+// Human-readable names for Bloomberg field codes
+const FIELD_LABELS = {
+  'FS265':                          'Smartphone Shipments',
+  'NUMBER_OF_VEHICLES_SOLD':        'Vehicle Deliveries',
+  'MONTHLY_ACTIVE_USERS':           'Monthly Active Users',
+  'DAILY_ACTIVE_USERS':             'Daily Active Users',
+  'DAILY_ACTIVE_UNIQUES':           'Daily Active Uniques',
+  'MONTHLY_TRANSACTING_USERS':      'Monthly Transacting Users',
+  'GLOBAL_STREAMING_PAID_MEMBERSHIPS': 'Paid Memberships',
+  'NIGHTS_AND_EXPERIENCES_BOOKED':  'Nights & Experiences Booked',
+  'ROOM_NIGHTS_SOLD':               'Room Nights Sold',
+  'TOTAL_PAID_SUBSCRIBERS':         'Total Paid Subscribers',
+  'IPHONE_UNIT_SALES':              'iPhone Unit Sales',
+  'GROSS_ORDERS':                   'Gross Orders',
+  'GROSS_MERCHANDISE_VOLUME':       'Gross Merchandise Volume',
+  'UNIQUE_ACTIVE_BUYERS':           'Unique Active Buyers',
+  'NUMBER_OF_RIDES':                'Number of Rides',
+  'TOTAL_ORDERS':                   'Total Orders',
+  'ACTIVE_ACCOUNTS':                'Active Accounts',
+  'TOTAL_PAYING_USERS':             'Total Paying Users',
+};
+
+function fieldLabel(field) {
+  return FIELD_LABELS[field] || field;
+}
+
+// Bloomberg field mapping per ticker
+// BQL data (quarterly: 1Q2026 etc) is in ACTUAL units — no multiplier needed
+// Old BDP data (FY periods) was in Bloomberg units (millions) — needs scaling
+// We prefer quarterly BQL data; fall back to FY BDP with multiplier
+const BBG = {
+  'TSLA': {field:'NUMBER_OF_VEHICLES_SOLD', fyMult:1},
+  'UBER': {field:'MONTHLY_ACTIVE_USERS', fyMult:1e6},
+  'DASH': {field:'TOTAL_ORDERS', fyMult:1},
+  'ABNB': {field:'NIGHTS_AND_EXPERIENCES_BOOKED', fyMult:1},
+  'SPOT': {field:'MONTHLY_ACTIVE_USERS', fyMult:1e6},
+  'GRAB': {field:'MONTHLY_TRANSACTING_USERS', fyMult:1e6},
+  'NFLX': {field:'GLOBAL_STREAMING_PAID_MEMBERSHIPS', fyMult:1e6},
+  'PINS': {field:'MONTHLY_ACTIVE_USERS', fyMult:1e6},
+  'META': {field:'DAILY_ACTIVE_USERS', fyMult:1e6},
+  'SE':   {field:'GROSS_ORDERS', fyMult:1},
+  'MELI': {field:'UNIQUE_ACTIVE_BUYERS', fyMult:1e6},
+  'COIN': {field:'MONTHLY_ACTIVE_USERS', fyMult:1e6},
+  'RBLX': {field:'DAILY_ACTIVE_USERS', fyMult:1e6},
+  'LYFT': {field:'NUMBER_OF_RIDES', fyMult:1},
+  'BKNG': {field:'ROOM_NIGHTS_SOLD', fyMult:1},
+  'DIS':  {field:'TOTAL_PAID_SUBSCRIBERS', fyMult:1},
+  '1810.HK': {field:'FS265', fyMult:1e3},
+  '0700.HK': {field:'MONTHLY_ACTIVE_USERS', fyMult:1e6},
+  'AAPL': {field:'IPHONE_UNIT_SALES', fyMult:1},
+  'RDDT': {field:'DAILY_ACTIVE_UNIQUES', fyMult:1e6},
+  'SNAP': {field:'DAILY_ACTIVE_USERS', fyMult:1e6},
+  'SHOP': {field:'GROSS_MERCHANDISE_VOLUME', fyMult:1},
+  'MTCH': {field:'TOTAL_PAYING_USERS', fyMult:1e6},
+  'ROKU': {field:'ACTIVE_ACCOUNTS', fyMult:1e6},
+};
+
+let dash = null;
+let selectedTicker = null;
+
+// BQL quarterly data is in actual units (mult=1).
+// Old BDP FY data is in Bloomberg units (needs fyMult).
+function kpiMult(b, period) {
+  if (!b || !period) return 1;
+  return period.startsWith('FY') ? (b.fyMult || 1) : 1;
+}
+
+function fmt(v) {
+  if (v == null || v === 0) return '-';
+  const a = Math.abs(v);
+  if (a >= 1e12) return (v/1e12).toFixed(2)+'T';
+  if (a >= 1e9) return (v/1e9).toFixed(2)+'B';
+  if (a >= 1e6) return (v/1e6).toFixed(1)+'M';
+  if (a >= 1e3) return Math.round(v).toLocaleString();
+  return v.toLocaleString(undefined, {maximumFractionDigits:1});
+}
+
+async function load() {
+  try {
+    const r = await fetch(API+'/api/dashboard');
+    dash = await r.json();
+    document.getElementById('gen-date').textContent = 'Live \u2014 ' + new Date(dash.generated).toLocaleString();
+    render();
+  } catch(e) {
+    document.getElementById('gen-date').textContent = 'Error';
+    document.getElementById('market-tbody').innerHTML = '<tr><td colspan="8" class="error">'+e.message+'</td></tr>';
+  }
+}
+
+function render() {
+  renderSummary();
+  renderMarkets();
+}
+
+function renderSummary() {
+  const bbgCount = Object.keys(BBG).length;
+  const marketCount = MARKETS.filter(m => m.slug).length;
+  const qPeriods = new Set(['1Q2026','2Q2026','3Q2026','4Q2026']);
+  const qTickers = new Set((dash.latest_values||[]).filter(r => qPeriods.has(r.period)).map(r => r.ticker));
+  const qCount = qTickers.size;
+  const items = [
+    {l:'Active Markets', v:marketCount, d:'KPI prediction markets on consensusmarket.com'},
+    {l:'Bloomberg KPI', v:bbgCount+'/'+MARKETS.length, d:bbgCount+' have Bloomberg consensus data'},
+    {l:'Data Gap', v:(MARKETS.length-bbgCount), d:'Need Visible Alpha or manual entry'},
+    {l:'Consensus Rows', v:dash.totals.consensus_rows.toLocaleString(), d:'Total snapshots in D1'},
+    {l:'Earnings Dates', v:dash.totals.calendar_rows, d:'Upcoming report dates'},
+    {l:'Quarterly Data', v:qCount+'/'+bbgCount, d:qCount+' tickers have Q-level consensus (BQL)'},
+  ];
+  document.getElementById('summary').innerHTML = items.map(i=>`
+    <div class="step"><div class="step-label">${i.l}</div><div class="step-value">${i.v}</div><div class="step-detail">${i.d}</div></div>
+  `).join('');
+}
+
+function renderMarkets() {
+  // Build lookup from D1 data
+  const lv = {};
+  for (const r of (dash.latest_values||[])) lv[r.ticker+'|'+r.field+'|'+r.period] = r;
+  const cal = {};
+  for (const r of (dash.calendar||[])) cal[r.ticker] = r;
+
+  document.getElementById('market-tbody').innerHTML = MARKETS.map(m => {
+    const b = BBG[m.ticker];
+    const c = cal[m.ticker];
+    const sel = selectedTicker===m.ticker?' selected':'';
+
+    // Try to find Bloomberg data — prefer quarterly (BQL), fall back to FY (BDP)
+    let bbgVal=null, bbgHi=null, bbgLo=null, bbgEst=null, bbgPeriod=null;
+    if (b) {
+      for (const p of ['2Q2026','1Q2026','3Q2026','4Q2026','FY2026','FY2025','FY2027']) {
+        const v = lv[m.ticker+'|'+b.field+'|'+p];
+        if (v && v.value) {
+          const mult = kpiMult(b, p);
+          bbgVal = v.value * mult;
+          bbgHi = v.high != null ? v.high * mult : null;
+          bbgLo = v.low != null ? v.low * mult : null;
+          bbgEst = v.analyst_count;
+          bbgPeriod = p;
+          break;
+        }
+      }
+    }
+
+    // Status badge
+    let statusBadge;
+    if (bbgVal != null && bbgPeriod === '2Q2026') {
+      statusBadge = '<span class="badge badge-green">Q2 ready</span>';
+    } else if (bbgVal != null) {
+      statusBadge = '<span class="badge badge-yellow">FY only</span>';
+    } else {
+      statusBadge = '<span class="badge badge-red">no data</span>';
+    }
+
+    const range = (bbgLo != null && bbgHi != null)
+      ? fmt(bbgLo)+' \u2013 '+fmt(bbgHi)
+      : (bbgVal != null ? '<span style="color:var(--muted)">no range</span>' : '-');
+
+    const earningsBadge = c
+      ? '<span class="badge badge-green">'+c.next_earnings_date+'</span>'
+      : '<span class="badge badge-gray">-</span>';
+
+    // Link to main site
+    const link = m.slug ? ` <a href="https://consensusmarket.com/#market=${m.slug}" target="_blank" style="color:var(--muted);font-size:10px">\u2197</a>` : '';
+
+    return `<tr class="clickable${sel}" onclick="openPanel('${m.ticker}')">
+      <td class="ticker-cell">${m.ticker}${link}</td>
+      <td>${m.company}</td>
+      <td>${m.metric}</td>
+      <td><span class="badge badge-blue">${m.period}</span>${bbgPeriod && bbgPeriod!=='2Q2026' ? ' <span class="badge badge-orange">have: '+bbgPeriod+'</span>' : ''}</td>
+      <td class="value-cell">${bbgVal != null ? fmt(bbgVal) : '<span style="color:var(--red)">-</span>'}</td>
+      <td class="value-cell" style="color:var(--muted)">${range}</td>
+      <td>${statusBadge}</td>
+      <td>${earningsBadge}</td>
+    </tr>`;
+  }).join('');
+}
+
+// --- Side Panel ---
+async function openPanel(ticker) {
+  selectedTicker = ticker;
+  renderMarkets();
+  const market = MARKETS.find(m => m.ticker === ticker);
+  if (!market) return;
+
+  const panel = document.getElementById('side-panel');
+  const body = document.getElementById('side-body');
+  document.getElementById('side-title').textContent = market.company + ' \u2014 ' + market.metric;
+  body.innerHTML = '<div class="loading">Loading...</div>';
+  panel.classList.add('open');
+
+  const b = BBG[ticker];
+
+  // Fetch consensus history + actuals
+  const [consR, actR] = await Promise.all([
+    fetch(API+'/api/consensus/'+encodeURIComponent(ticker)).then(r=>r.json()).catch(()=>({data:[]})),
+    fetch(API+'/api/actuals/'+encodeURIComponent(ticker)).then(r=>r.json()).catch(()=>({data:[]})),
+  ]);
+
+  let html = '';
+
+  // --- Market Info ---
+  html += '<div class="side-section">';
+  html += '<div class="side-section-title">Market Definition</div>';
+  html += `<table class="side-table">
+    <tr><td style="color:var(--muted);width:120px">KPI Metric</td><td style="font-weight:600">${market.metric}</td></tr>
+    <tr><td style="color:var(--muted)">Target Period</td><td>${market.period}</td></tr>
+    <tr><td style="color:var(--muted)">Seed Consensus</td><td>${market.display || '-'}</td></tr>
+    <tr><td style="color:var(--muted)">Bloomberg Field</td><td><code style="font-size:11px">${b ? b.field : ''}</code>${b && FIELD_LABELS[b.field] ? ' <span style="color:var(--muted)">— '+FIELD_LABELS[b.field]+'</span>' : (!b ? '<span style="color:var(--red)">not found</span>' : '')}</td></tr>
+    <tr><td style="color:var(--muted)">Market Page</td><td>${market.slug ? '<a href="https://consensusmarket.com/#market='+market.slug+'" target="_blank" style="color:var(--accent)">consensusmarket.com</a>' : '<span style="color:var(--muted)">not listed</span>'}</td></tr>
+  </table></div>`;
+
+  // --- Bloomberg Consensus (KPI field) ---
+  if (b) {
+    const kpiRows = consR.data.filter(r => r.field === b.field);
+    if (kpiRows.length > 0) {
+      // Deduplicate by date+period
+      const seen = new Set();
+      const deduped = kpiRows.filter(r => {
+        const k = r.snapshot_date+'|'+r.period;
+        if (seen.has(k)) return false;
+        seen.add(k); return true;
+      }).sort((a,c) => c.snapshot_date.localeCompare(a.snapshot_date) || a.period.localeCompare(c.period));
+
+      // Key metric cards from latest
+      const latest = deduped[0];
+      const _m = kpiMult(b, latest.period);
+      const v = latest.value * _m;
+      const hi = latest.high != null ? latest.high * _m : null;
+      const lo = latest.low != null ? latest.low * _m : null;
+
+      html += '<div class="metric-cards">';
+      html += `<div class="metric-card"><div class="mc-value">${fmt(v)}</div><div class="mc-label">${market.metric}</div><div class="mc-sub">${latest.period} &bull; ${latest.snapshot_date}</div></div>`;
+      if (lo != null && hi != null) {
+        html += `<div class="metric-card"><div class="mc-value" style="font-size:16px">${fmt(lo)} &ndash; ${fmt(hi)}</div><div class="mc-label">Street Range</div><div class="mc-sub">${latest.analyst_count||'?'} analysts</div></div>`;
+      } else {
+        html += `<div class="metric-card"><div class="mc-value" style="color:var(--muted)">-</div><div class="mc-label">Street Range</div><div class="mc-sub">high/low not available</div></div>`;
+      }
+      html += '</div>';
+
+      // Warning if FY-only
+      if (deduped.every(r => r.period.startsWith('FY') || deduped.filter(x=>x.snapshot_date===r.snapshot_date).every(x=>x.value===r.value))) {
+        html += '<div class="gap-note"><strong>FY-only data:</strong> Bloomberg Desktop API returns the same annual estimate for all quarters. Quarterly breakdown requires B-PIPE or Visible Alpha.</div>';
+      }
+
+      // History table
+      html += '<div class="side-section">';
+      html += `<div class="side-section-title">${market.metric} &mdash; Consensus History</div>`;
+      html += '<div class="table-wrap"><table class="side-table"><thead><tr>';
+      html += '<th>Snapshot</th><th>Period</th><th style="text-align:right">Consensus</th><th style="text-align:right">Low</th><th style="text-align:right">High</th><th style="text-align:right">#Est</th>';
+      html += '</tr></thead><tbody>';
+      for (const r of deduped) {
+        html += `<tr>
+          <td>${r.snapshot_date}</td>
+          <td><span class="badge ${r.period.startsWith('FY')?'badge-yellow':'badge-green'}">${r.period}</span></td>
+          <td class="value-cell">${fmt(r.value * kpiMult(b, r.period))}</td>
+          <td class="value-cell" style="color:var(--muted)">${r.low!=null?fmt(r.low*kpiMult(b, r.period)):'-'}</td>
+          <td class="value-cell" style="color:var(--muted)">${r.high!=null?fmt(r.high*kpiMult(b, r.period)):'-'}</td>
+          <td class="value-cell">${r.analyst_count||'-'}</td>
+        </tr>`;
+      }
+      html += '</tbody></table></div></div>';
+    } else {
+      html += '<div class="gap-note"><strong>No Bloomberg KPI data yet.</strong> The field <code>'+b.field+'</code> has not returned data. Check the sync logs.</div>';
+    }
+  } else {
+    html += '<div class="gap-note"><strong>No Bloomberg field found</strong> for "'+market.metric+'". This KPI needs Visible Alpha or manual consensus entry from sell-side research.</div>';
+  }
+
+  // --- Actuals & Beat/Miss ---
+  html += '<div class="side-section">';
+  html += '<div class="side-section-title">Reported Actuals &amp; Beat/Miss</div>';
+  if (actR.data && actR.data.length > 0) {
+    html += '<div class="table-wrap"><table class="side-table"><thead><tr>';
+    html += '<th>Period</th><th style="text-align:right">Actual</th><th style="text-align:right">Consensus</th><th>Result</th>';
+    html += '</tr></thead><tbody>';
+    for (const a of actR.data) {
+      const mult = kpiMult(b, a.period);
+      const actual = a.value * mult;
+      const matchCons = b ? consR.data.find(c => c.field === b.field && c.period === a.period) : null;
+      const cons = matchCons ? matchCons.value * mult : null;
+      let result = '<span class="badge badge-gray">-</span>';
+      if (cons != null) {
+        const diff = ((actual - cons) / cons * 100).toFixed(1);
+        if (actual > cons) result = `<span class="badge badge-green">BEAT +${diff}%</span>`;
+        else if (actual < cons) result = `<span class="badge badge-red">MISS ${diff}%</span>`;
+        else result = '<span class="badge badge-yellow">INLINE</span>';
+      }
+      html += `<tr>
+        <td><span class="badge badge-blue">${a.period}</span></td>
+        <td class="value-cell" style="font-weight:600">${fmt(actual)}</td>
+        <td class="value-cell" style="color:var(--muted)">${cons!=null?fmt(cons):'-'}</td>
+        <td>${result}</td>
+      </tr>`;
+    }
+    html += '</tbody></table></div>';
+  } else {
+    html += '<div style="color:var(--muted);font-size:12px;padding:8px 0">No actuals reported yet. Beat/miss will appear after earnings are released.</div>';
+  }
+  html += '</div>';
+
+  // --- Per-Firm KPI Estimates ---
+  html += '<div class="side-section">';
+  html += '<div class="side-section-title">Per-Firm KPI Estimates</div>';
+  html += '<div class="gap-note"><strong>Not available from Bloomberg Desktop API.</strong> Per-firm operating KPI estimates (e.g. what Morgan Stanley thinks TSLA will deliver) require <strong>Visible Alpha</strong>. Bloomberg only provides aggregate consensus (mean, high, low). The stock price targets from BEST_ANALYST_RECS_BULK are for stock prices, not KPIs.</div>';
+  html += '</div>';
+
+  // --- Financial Consensus (Sales/EBITDA) ---
+  const finRows = consR.data.filter(r => r.field === 'BEST_SALES' || r.field === 'BEST_EBITDA');
+  if (finRows.length > 0) {
+    const seen2 = new Set();
+    const dedupedFin = finRows.filter(r => {
+      const k = r.snapshot_date+'|'+r.field+'|'+r.period;
+      if (seen2.has(k)) return false;
+      seen2.add(k); return true;
+    }).sort((a,c) => c.snapshot_date.localeCompare(a.snapshot_date) || a.field.localeCompare(c.field) || a.period.localeCompare(c.period));
+
+    html += '<div class="side-section">';
+    html += '<div class="side-section-title">Financial Consensus (Revenue &amp; EBITDA)</div>';
+    html += '<div class="table-wrap"><table class="side-table"><thead><tr>';
+    html += '<th>Snapshot</th><th>Period</th><th>Metric</th><th style="text-align:right">Consensus</th><th style="text-align:right">Low</th><th style="text-align:right">High</th><th style="text-align:right">#Est</th>';
+    html += '</tr></thead><tbody>';
+    for (const r of dedupedFin) {
+      const label = r.field === 'BEST_SALES' ? 'Revenue' : 'EBITDA';
+      const m = 1e6; // financials in millions
+      html += `<tr>
+        <td>${r.snapshot_date}</td>
+        <td><span class="badge badge-green">${r.period}</span></td>
+        <td>${label}</td>
+        <td class="value-cell">$${fmt(r.value*m)}</td>
+        <td class="value-cell" style="color:var(--muted)">${r.low!=null?'$'+fmt(r.low*m):'-'}</td>
+        <td class="value-cell" style="color:var(--muted)">${r.high!=null?'$'+fmt(r.high*m):'-'}</td>
+        <td class="value-cell">${r.analyst_count||'-'}</td>
+      </tr>`;
+    }
+    html += '</tbody></table></div></div>';
+  }
+
+  body.innerHTML = html;
+}
+
+function closePanel() {
+  document.getElementById('side-panel').classList.remove('open');
+  selectedTicker = null;
+  renderMarkets();
+}
+
+load();
+</script>
+</body>
+</html>
